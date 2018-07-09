@@ -4,7 +4,7 @@
 
 ##  ............................................................................
 ##  Javascript code                                                         ####
-jscode <- trackeR:::get_javascript()
+jscode <- trackeRapp:::get_javascript()
 
 ##  ............................................................................
 ##  User interface                                                          ####
@@ -13,7 +13,7 @@ ui <- shinydashboard::dashboardPage(
   skin = "black",
   shinydashboard::dashboardHeader(title = span(tagList(icon("dashboard"), "trackeR dashboard"))),
   shinydashboard::dashboardSidebar(
-    tags$head(tags$style(trackeR:::appCSS)),
+    tags$head(tags$style(trackeRapp:::appCSS)),
     shinydashboard::sidebarMenu(
       div(
         fileInput(
@@ -43,15 +43,15 @@ ui <- shinydashboard::dashboardPage(
         div(class = "input-group", downloadButton("download_data", "Download procesed data"))
       ),
       hr(),
-      div(style = "display: inline-block;vertical-align:top; width: 100px;", 
-          actionButton("resetButton", "Reset", icon("eraser"), 
-                       style = "color: #fff; background-color: #ED90A4; border-color: #E16A86", 
+      div(style = "display: inline-block;vertical-align:top; width: 100px;",
+          actionButton("resetButton", "Reset", icon("eraser"),
+                       style = "color: #fff; background-color: #ED90A4; border-color: #E16A86",
                        width = "80px")),
       hr()
     ),
     div(
       class = "form-group shiny-input-container",
-      p("Design and original development", br(), a("Robin Hornak"), br(), 
+      p("Design and original development", br(), a("Robin Hornak"), br(),
         a("Ioannis Kosmidis", href = "http://www.ucl.ac.uk/~ucakiko")),
       p(
         "Licence",
@@ -59,7 +59,7 @@ ui <- shinydashboard::dashboardPage(
           "GPL3",
           href = "https://www.gnu.org/licenses/gpl-3.0.en.html",
           br(),
-          a("Bugs, issues, feature requests", 
+          a("Bugs, issues, feature requests",
             href = "https://github.com/hfrick/trackeR/issues")
         )
       )
