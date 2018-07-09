@@ -1,5 +1,5 @@
 inst/doc
 *.Rhistory
-.DS_Store
+*.DS_Store
 *.R~
-GBR_msk_alt*
+*GBR_msk_alt*
