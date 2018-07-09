@@ -2,9 +2,12 @@
 % Please edit documentation in R/trackeRapp.R
 \name{trackeR_app}
 \alias{trackeR_app}
+\alias{trackeRapp}
 \title{Launch the trackeR dashboard}
 \usage{
 trackeR_app(quiet = FALSE)
+
+trackeRapp(quiet = FALSE)
 }
 \arguments{
 \item{quiet}{Should Shiny status messages be shown? Defaults to FALSE.}

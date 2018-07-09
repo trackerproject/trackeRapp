@@ -42,10 +42,10 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
   }
 
   if (is.null(unit_reference_sport)) {
-    unit_reference_sport <- find_unit_reference_sport(x)
+    unit_reference_sport <- trackeR:::find_unit_reference_sport(x)
   }
   ## Match units to those of unit_reference_sport
-  un <- collect_units(units, unit_reference_sport)
+  un <- trackeR:::collect_units(units, unit_reference_sport)
   for (va in unique(un$variable)) {
     units$unit[units$variable == va] <- un$unit[un$variable == va]
   }
@@ -106,11 +106,11 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
     df_subset$Index <- dates
     df_subset$id <- i
     df_subset$SessionID <- i
-    df_subset$SessionID <- paste0(paste(df_subset$SessionID, get_sport(x[which(i == session)]), 
-                                        sep = ": "), 
+    df_subset$SessionID <- paste0(paste(df_subset$SessionID, get_sport(x[which(i == session)]),
+                                        sep = ": "),
                                "\n", format(df_subset$Index, "%Y-%m-%d"))
     df_subset$numericDate <- as.numeric(df_subset$Index)
-   
+
     n_plot <- n_plot + 1
     colnames(df_subset)[which(colnames(df_subset) == what)] <- "Value"
     # df_subset <- df[df$id == i, ]

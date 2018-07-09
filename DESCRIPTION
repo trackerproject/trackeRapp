@@ -10,9 +10,9 @@ Description: Provides an integrated user interface and workflow for
              the analysis of running and cycling data from GPS-enabled
              tracking devices through the 'trackeR' R package.
 Depends:
-    R (>= 3.5.0)
+    R (>= 3.5.0),
+    trackeR
 Imports:
-    trackeR,
     plotly,
     DT,
     shinyFiles,

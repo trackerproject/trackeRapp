@@ -227,8 +227,8 @@ output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
 
         preped_route_map <- reactive({
           session <- seq_along(data$object)
-          prepare_route(data$object,
-                    session = session, threshold = TRUE)
+          trackeR:::prepare_route(data$object,
+                                  session = session, threshold = TRUE)
         })
         output$map <- plotly::renderPlotly({
           trackeRapp:::plot_map(

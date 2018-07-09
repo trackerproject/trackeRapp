@@ -18,14 +18,14 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
   units <- get_units(x)
   duration_unit <- units$unit[units$sport == "running" & units$variable == "duration"]
   ## fortify
-  df <- fortify(x, melt = TRUE)
+  df <- trackeR:::fortify.conProfile(x, melt = TRUE)
   df$Series <- as.numeric(sapply(strsplit(as.character(df$Series), "session"), function(x) x[2]))
   df$Profile <- factor(df$Profile)
 
   ## make basic plot and facets
   lab_data <- function(series) {
     thisunit <- units$unit[units$sport == "running" & units$variable == series]
-    prettyUnit <- prettifyUnits(thisunit)
+    prettyUnit <- trackeR:::prettifyUnits(thisunit)
     paste0(series, " [", prettyUnit, "]")
   }
   df$series <- paste("Session", sprintf(paste0("%0", nchar(max(df$Series)), "d"), df$Series))

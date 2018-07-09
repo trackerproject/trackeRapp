@@ -1,9 +1,9 @@
 #' trackeRapp: Interface for the analysis of running and cycling data
 #' from GPS-enabled tracking devices.
 #'
-#' trackeRapp provides rovides an integrated user interface and
-#' workflow for the analysis of running and cycling data from
-#' GPS-enabled tracking devices through the 'trackeR' R package.
+#' 'trackeRapp' provides an integrated dashboard and workflow for the
+#' analysis of running and cycling data from GPS-enabled tracking
+#' devices through the 'trackeR' R package.
 #'
 #' @section Launching the app:
 #'
@@ -60,3 +60,6 @@ trackeR_app <- function(quiet = FALSE) {
 
 }
 
+#' @rdname trackeR_app
+#' @export
+trackeRapp <- trackeR_app

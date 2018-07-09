@@ -55,7 +55,7 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
   ## get data
   class(x) <- "trackeRWprime"
 
-  df <- fortify(x, melt = TRUE)
+  df <- trackeR:::fortify.trackeRWprime(x, melt = TRUE)
   df$id <- format(session[df$SessionID])
   ## prepare session id for panel header
   if (dates) {

@@ -19,7 +19,7 @@ plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
   } else {
     group <- c('moving')
   }
-  
+
   if (what != "wrRatio") {
     feature <- lab_sum(feature = what, data = sumX)
     units_text <- lab_sum(feature = what, data = sumX, whole_text = FALSE)
@@ -38,7 +38,7 @@ plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
   units <- get_units(sumX)
 
   ## subsets on variables and type
-  dat <- fortify(sumX, melt = TRUE)
+  dat <- trackeR:::fortify.trackeRdataSummary(sumX, melt = TRUE)
   dat$sport <- sports
   if (!is.null(what)) {
     dat <- subset(dat, variable %in% what)

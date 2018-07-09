@@ -25,7 +25,7 @@ plot_zones <- function(x, session, what = c("heart_rate"), n_zones) {
   units <- getUnits(x)
   lab_data <- function(series) {
     thisunit <- units$unit[units$variable == series]
-    prettyUnit <- prettifyUnits(thisunit)
+    prettyUnit <- trackeR:::prettifyUnits(thisunit)
     paste0(series, " [", prettyUnit, "]")
   }
   pal <- leaflet::colorFactor(c("deepskyblue", "dodgerblue4"), dat$Session)

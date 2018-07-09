@@ -18,7 +18,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
     concept <- feature
   }
   thisunit <- units$unit[units$variable == concept]
-  prettyUnit <- prettifyUnits(thisunit)
+  prettyUnit <- trackeR:::prettifyUnits(thisunit)
   if (whole_text) {
     if (transform_feature) {
       ret <- switch(feature,
