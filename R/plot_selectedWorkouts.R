@@ -101,7 +101,7 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
   # Loop through each session
   for (i in session) {
     df_subset <- x[[which(i == session)]]
-    dates <- index(df_subset)
+    dates <- zoo::index(df_subset)
     df_subset <- as.data.frame(df_subset)
     df_subset$Index <- dates
     df_subset$id <- i
@@ -170,7 +170,7 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
       smoothed_data <- mgcv::predict.gam(smoothed_model, newdata = df_subset)
       smoothed_values$minimum <- c(smoothed_values$minimum, min(smoothed_data))
       smoothed_values$maximum <- c(smoothed_values$maximum, max(smoothed_data))
-      sampled_rows <- sort(sample(index(df_subset), size = length(index(df_subset)) * desampling))
+      sampled_rows <- sort(sample(zoo::index(df_subset), size = length(zoo::index(df_subset)) * desampling))
       a <- plotly::plot_ly(
         df_subset[sampled_rows, ],
         x = ~ Index, y = ~ Value, hoverinfo = "none",

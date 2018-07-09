@@ -523,17 +523,12 @@ generate_objects <- function(data, output, session, choices) {
   shinyjs::click("createDashboard")
   # TODO incorporate update
   # update_metrics_to_plot_workouts(session, choices, data$hasData)
-  sports_options <- trackeRapp:::sports_options
+  sports_options <- c("Running" = "running",
+                      "Cycling" = "cycling",
+                      "Swimming" = "swimming")
   identified_sports <- sports_options %in% unique(trackeR::get_sport(data$object))
   data$identified_sports <- sports_options[identified_sports]
 }
-
-#' Currently available sports in the trackeRdashboard.
-sports_options <- c(
-  "Running" = "running",
-  "Cycling" = "cycling",
-  "Swimming" = "swimming"
-)
 
 #' Test whether we can plot work capacity for at least one of cycling or running.
 #' @param data An object of class \code{reactivevalues}.

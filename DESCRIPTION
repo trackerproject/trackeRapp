@@ -13,15 +13,15 @@ Depends:
     R (>= 3.5.0),
     trackeR
 Imports:
+    foreach,
+    leaflet,
+    mgcv,
     plotly,
     DT,
-    shinyFiles,
     shiny,
     shinyjs,
     shinycssloaders,
     shinydashboard,
-    sp,
-    V8,
     class,
     changepoint,
     shinyWidgets

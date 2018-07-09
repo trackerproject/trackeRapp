@@ -39,7 +39,7 @@ read_directory_shiny <- function(directory,
             read_fun <- function(j) {
                 currentType <- fileType[j]
                 incProgress(1/lall, detail = paste(j, "out of", lall, paste0("(", currentType, ")")))
-                
+
                 out <- try(read_container(file = allFiles[j],
                                    type = currentType,
                                    table = table,
@@ -56,7 +56,7 @@ read_directory_shiny <- function(directory,
                                    lskip = lskip,
                                    m = m,
                                    silent = silent))
-                
+
                 out
             }
 
@@ -68,9 +68,9 @@ read_directory_shiny <- function(directory,
             else {
                 allData <- foreach::`%do%`(foreach_object, read_fun(j))
             }
-            
+
             allData <- do.call("c", allData[!sapply(allData, inherits, what = "try-error")])
-            
+
         })
         withProgress(expr = in_expression, message = 'Loading data', value = 0, quoted = TRUE)
         if (verbose) {
@@ -85,7 +85,7 @@ read_directory_shiny <- function(directory,
         allData <- allData[!sapply(allData, is.null)]
         allData
   })
-  out <- reactive(read_expression, quote = TRUE)
+  out <- reactive(read_expression, quoted = TRUE)
   return(out())
 }
 

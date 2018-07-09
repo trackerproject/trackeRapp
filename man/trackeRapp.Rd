@@ -4,12 +4,24 @@
 \name{trackeRapp}
 \alias{trackeRapp}
 \alias{trackeRapp-package}
+\alias{trackeRapp}
+\alias{trackeR_app}
 \title{trackeRapp: Interface for the analysis of running and cycling data
 from GPS-enabled tracking devices.}
+\usage{
+trackeRapp(quiet = FALSE)
+
+trackeR_app(quiet = FALSE)
+}
+\arguments{
+\item{quiet}{Should Shiny status messages be shown? Defaults to FALSE.}
+}
 \description{
 'trackeRapp' provides an integrated dashboard and workflow for the
 analysis of running and cycling data from GPS-enabled tracking
 devices through the 'trackeR' R package.
+
+Launch the trackeR dashboard
 }
 \note{
 'trackeRapp' has been designed and developed by Robin Hornak and

@@ -41,25 +41,27 @@
 #' @name trackeRapp
 #' @import trackeR
 #' @import shiny
-#' @importFrom stats quantile gaussian plogis
+#' @importFrom stats na.omit median
+#' @importFrom utils read.csv
 #' @importFrom plotly "%>%"
 NULL
 
 
-
+## Define global variables
+if (getRversion() >= "2.15.1") {
+    utils::globalVariables(c("Series"))  # plot_selectedWorkouts
+}
 
 #' Launch the trackeR dashboard
 #'
 #' @inheritParams shiny::runApp
 #'
 #' @export
-trackeR_app <- function(quiet = FALSE) {
-
+trackeRapp <- function(quiet = FALSE) {
     shiny::runApp(appDir = system.file('shiny', package = 'trackeRapp'),
                   launch.browser = TRUE, quiet = quiet)
-
 }
 
-#' @rdname trackeR_app
+#' @rdname trackeRapp
 #' @export
-trackeRapp <- trackeR_app
+trackeR_app <- trackeRapp

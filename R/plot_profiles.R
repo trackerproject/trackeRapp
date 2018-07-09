@@ -5,8 +5,7 @@
 #' @param what A vector of variable names to be plotted.
 #' @param profiles_calculated Pre-calculated concentration profiles for all sessions.
 plot_concentration_profiles <- function(x, session, profiles_calculated,
-                                        what = c("speed"),
-                                        smooth = TRUE, limits = NULL) {
+                                        what = c("speed")) {
 
   ## Generate distribution profile
   # dProfile <- distributionProfile(x, session = session, what = what, auto_grid = TRUE)

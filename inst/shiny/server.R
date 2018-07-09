@@ -183,7 +183,9 @@ observeEvent(input$resetSelection, {
       })
       # Re-render all plots
       # removeUI(selector = ".main_plots", immediate = TRUE, multiple = TRUE)
-      sports_options <- trackeRapp:::sports_options
+      sports_options <- c("Running" = "running",
+                          "Cycling" = "cycling",
+                          "Swimming" = "swimming")
       identified_sports <- sports_options %in% unique(trackeR::get_sport(data$object))
       metrics_available <- reactive({c(choices[sapply(choices, function(x) {
         data$hasData[[x]]

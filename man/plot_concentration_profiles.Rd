@@ -5,7 +5,7 @@
 \title{Plot concentration profiles for given variables.}
 \usage{
 plot_concentration_profiles(x, session, profiles_calculated,
-  what = c("speed"), smooth = TRUE, limits = NULL)
+  what = c("speed"))
 }
 \arguments{
 \item{x}{An object of class \code{trackeRdata}.}

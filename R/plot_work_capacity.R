@@ -40,10 +40,9 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
     mMov <- mean(unlist(lapply(x, function(z) z$movement)), na.rm = TRUE)
 
     x <- lapply(x, function(z) {
-      if (!all(z$wprime == 0 | is.na(z$wprime))) {
-        w <- (coredata(z$wprime) - mean(coredata(z$wprime), na.rm = TRUE)) / stats::sd(coredata(z$wprime),
-          na.rm = TRUE
-        )
+        if (!all(z$wprime == 0 | is.na(z$wprime))) {
+            wdat <- zoo::coredata(z$wprime)
+            w <- (wdat - mean(wdat, na.rm = TRUE)) / stats::sd(wdat, na.rm = TRUE)
         w <- w * sdMov # sd(coredata(z$movement), na.rm = TRUE)
         z$wprime <- w + mMov
       }

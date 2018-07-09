@@ -11,7 +11,7 @@ plot_map <- function(x, sumX, preped_route = NULL, session = NULL, threshold = T
   all_sessions <- seq_along(x)
   if (is.null(preped_route)) {
     ## get prepared data.frame
-    df <- prepRoute(x, session = session, threshold = threshold)
+    df <- trackeR:::prepare_route(x, session = session, threshold = threshold)
   } else {
     df <- preped_route
   }

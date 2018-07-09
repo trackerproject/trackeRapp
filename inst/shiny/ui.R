@@ -11,7 +11,7 @@ jscode <- trackeRapp:::get_javascript()
 ui <- shinydashboard::dashboardPage(
   title = "TrackeR",
   skin = "black",
-  shinydashboard::dashboardHeader(title = span(tagList(icon("dashboard"), "trackeR dashboard"))),
+  shinydashboard::dashboardHeader(title = span(tagList(icon("dashboard"), "trackeRapp"))),
   shinydashboard::dashboardSidebar(
     tags$head(tags$style(trackeRapp:::appCSS)),
     shinydashboard::sidebarMenu(
