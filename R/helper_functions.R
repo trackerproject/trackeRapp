@@ -249,7 +249,7 @@ get_javascript <- function() {
 #' Classify sessions by sport using the KNN model and 'sport_classification_train' dataset as a training set
 #' @param data An object of class \code{reactivevalues}.
 classify_sessions_by_sport <- function(data) {
-  filepath <- system.file("inst/extdata/sport_classification_train.csv", package = "trackeR")
+  filepath <- system.file("inst/extdata/sport_classification_train.csv", package = "trackeRapp")
   sport_classification_train <- read.csv(filepath)
   n_train <- nrow(sport_classification_train)
   merged_df <- rbind(
@@ -294,15 +294,15 @@ process_dataset <- function(data) {
       each = 3
     )
   )
-  
+
   data$object <- threshold(data$object)
   data$object <- threshold(data$object,
                            variable = rep("distance", 3),
                            lower = rep(0, 3),
                            upper = rep(500000, 3),
                            sport = c("cycling", "running", "swimming")
-                           )  
-  
+                           )
+
   # Create trackeRdataSummary object
   data$summary <- summary(data$object, movingThreshold = 0.4)
   data$summary <- change_units(data$summary,
@@ -523,7 +523,7 @@ generate_objects <- function(data, output, session, choices) {
   shinyjs::click("createDashboard")
   # TODO incorporate update
   # update_metrics_to_plot_workouts(session, choices, data$hasData)
-  sports_options <- trackeR:::sports_options
+  sports_options <- trackeRapp:::sports_options
   identified_sports <- sports_options %in% unique(trackeR::get_sport(data$object))
   data$identified_sports <- sports_options[identified_sports]
 }
