@@ -16,7 +16,7 @@ plot_map <- function(x, sumX, preped_route = NULL, session = NULL, threshold = T
     df <- preped_route
   }
   ## prepare popups
-  units <- getUnits(x)
+  units <- collect_units(get_units(sumX), unit_reference_sport = 'cycling')
   popupText <- function(session, start = TRUE, speed) {
     session <- unique(session)
     w <- which(sumX$session == session)
@@ -30,7 +30,7 @@ plot_map <- function(x, sumX, preped_route = NULL, session = NULL, threshold = T
       paste("Session:", session),
       # paste(sumX$sessionStart[w], "-", sumX$sessionEnd[w]),
       paste("Distance:", round(sumX$distance[w], 2), units$unit[units$variable == "distance"]),
-      paste("Duration:", round(as.numeric(sumX$duration[w]), 2), units(sumX$duration[w])),
+      paste("Duration:", round(as.numeric(sumX$duration[w]), 2), units$unit[units$variable == "duration"]),
       paste(
         paste0("Avg. pace (per 1 ", unitDist4pace, "):"),
         paste(floor(avgPace), round(avgPace %% 1 * 60, 0), sep = ":"), "min:sec"

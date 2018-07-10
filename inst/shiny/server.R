@@ -82,6 +82,7 @@ server <- function(input, output, session) {
       data$no_location_data <- sapply(data$object,
           function(x) all((is.na(x[, 'longitude'])) | (x[, 'longitude'] == 0))
         )
+      trackeRapp:::update_sport_selection(data, session)
     }
   })
 ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
@@ -181,17 +182,13 @@ observeEvent(input$resetSelection, {
       })
       # Re-render all plots
       # removeUI(selector = ".main_plots", immediate = TRUE, multiple = TRUE)
-      sports_options <- c("Running" = "running",
-                          "Cycling" = "cycling",
-                          "Swimming" = "swimming")
-      identified_sports <- sports_options %in% unique(trackeR::get_sport(data$object))
+
       metrics_available <- reactive({c(choices[sapply(choices, function(x) {
         data$hasData[[x]]
       })])
       })
-      trackeRapp:::create_option_box(sport_options = sports_options[identified_sports],
-                                  metrics_available = metrics_available())
-
+      trackeRapp:::create_option_box(sport_options = data$identified_sports,
+                                    metrics_available = metrics_available())
 
 ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
 ### Summary table                                                           ####
@@ -201,15 +198,15 @@ observeEvent(input$resetSelection, {
 
 ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
 ### Summary boxes                                                           ####
-trackeRapp:::create_summary_boxes()
-output$avgDistance_box <- trackeRapp:::render_summary_box("distance",
-                                                       "Average distance", data)
-output$avgDuration_box <- trackeRapp:::render_summary_box("duration",
-                                                       "Average duration", data)
-output$avgHeartRate_box <- trackeRapp:::render_summary_box("avgHeartRate",
-                                                        "Average heart rate", data)
-output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
-                                                   "Average pace", data)
+      trackeRapp:::create_summary_boxes()
+      output$avgDistance_box <- trackeRapp:::render_summary_box("distance",
+                                                             "Average distance", data)
+      output$avgDuration_box <- trackeRapp:::render_summary_box("duration",
+                                                             "Average duration", data)
+      output$avgHeartRate_box <- trackeRapp:::render_summary_box("avgHeartRate",
+                                                              "Average heart rate", data)
+      output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
+                                                         "Average pace", data)
 
 ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
 ### Map                                                                     ####
