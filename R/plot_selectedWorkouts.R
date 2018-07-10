@@ -101,17 +101,19 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
   # Loop through each session
   for (i in session) {
     df_subset <- x[[which(i == session)]]
+    df_subset <- df_subset[, what]
     dates <- zoo::index(df_subset)
-    df_subset <- as.data.frame(df_subset)
+    df_subset <- data.frame(df_subset)
+    names(df_subset) <- what
     df_subset$Index <- dates
     df_subset$id <- i
-    df_subset$SessionID <- i
-    df_subset$SessionID <- paste0(paste(df_subset$SessionID, get_sport(x[which(i == session)]),
+    df_subset$SessionID <- paste0(paste(i, get_sport(x[which(i == session)]),
                                         sep = ": "),
-                               "\n", format(df_subset$Index, "%Y-%m-%d"))
+                                  "\n", format(df_subset$Index, "%Y-%m-%d"))
     df_subset$numericDate <- as.numeric(df_subset$Index)
 
     n_plot <- n_plot + 1
+
     colnames(df_subset)[which(colnames(df_subset) == what)] <- "Value"
     # df_subset <- df[df$id == i, ]
     non_na_values <- sum(!is.na(df_subset[, "Value"]))
