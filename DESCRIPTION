@@ -11,7 +11,7 @@ Description: Provides an integrated user interface and workflow for
              tracking devices through the 'trackeR' R package.
 Depends:
     R (>= 3.5.0),
-    trackeR
+    trackeR (>= 1.0.5)
 Imports:
     zoo,
     foreach,
