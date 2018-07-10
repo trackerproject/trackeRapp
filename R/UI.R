@@ -305,7 +305,7 @@ create_zones_box <- function(inputId, plotId, choices) {
           collapsed = FALSE,
           title = tagList(shiny::icon("gear"), "Time in Zones"),
           fluidRow(
-            column(2, 
+            column(2,
             #        selectizeInput(
             #   inputId = inputId,
             #   label = "Select zone metrics to plot:",
@@ -396,7 +396,7 @@ create_option_box <- function(sport_options, metrics_available) {
         collapsible = TRUE,
         title = tagList("Other tools"),
         shinyWidgets::actionBttn(inputId = "showModalUnits", label = "Change units",
-                                 icon = icon("balance-scale"), style = 'unite', 
+                                 icon = icon("balance-scale"), style = 'unite',
                                  color = 'primary', size = 'sm')
       ),
       shinydashboard::box(
@@ -415,7 +415,7 @@ create_option_box <- function(sport_options, metrics_available) {
         status = "primary",
         width = 6,
         collapsible = TRUE,
-        title = tagList("Classified sports"),
+        title = tagList("Identified sports"),
         shinyWidgets::checkboxGroupButtons(
           inputId = "sports",
           choices = sport_options, selected = sport_options,
