@@ -249,7 +249,7 @@ get_javascript <- function() {
 #' Classify sessions by sport using the KNN model and 'sport_classification_train' dataset as a training set
 #' @param data An object of class \code{reactivevalues}.
 classify_sessions_by_sport <- function(data) {
-  filepath <- system.file("inst/extdata/sport_classification_train.csv", package = "trackeRapp")
+  filepath <- system.file("extdata/sport_classification_train.csv", package = "trackeRapp")
   sport_classification_train <- read.csv(filepath)
   n_train <- nrow(sport_classification_train)
   merged_df <- rbind(
