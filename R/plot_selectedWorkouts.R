@@ -42,10 +42,10 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
   }
 
   if (is.null(unit_reference_sport)) {
-    unit_reference_sport <- trackeR:::find_unit_reference_sport(x)
+    unit_reference_sport <- find_unit_reference_sport(x)
   }
   ## Match units to those of unit_reference_sport
-  un <- trackeR:::collect_units(units, unit_reference_sport)
+  un <- collect_units(units, unit_reference_sport)
   for (va in unique(un$variable)) {
     units$unit[units$variable == va] <- un$unit[un$variable == va]
   }

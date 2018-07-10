@@ -43,18 +43,16 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
         if (!all(z$wprime == 0 | is.na(z$wprime))) {
             wdat <- zoo::coredata(z$wprime)
             w <- (wdat - mean(wdat, na.rm = TRUE)) / stats::sd(wdat, na.rm = TRUE)
-        w <- w * sdMov # sd(coredata(z$movement), na.rm = TRUE)
+        w <- w * sdMov
         z$wprime <- w + mMov
       }
-      # max(mMov, abs(min(w, na.rm = TRUE))) max(mean(coredata(z$movement), na.rm = TRUE),
-      # abs(min(w, na.rm = TRUE)))
       z
     })
   }
   ## get data
   class(x) <- "trackeRWprime"
 
-  df <- trackeR:::fortify.trackeRWprime(x, melt = TRUE)
+  df <- fortify_trackeRWprime(x, melt = TRUE)
   df$id <- format(session[df$SessionID])
   ## prepare session id for panel header
   if (dates) {

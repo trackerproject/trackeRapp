@@ -97,7 +97,6 @@ observeEvent(plotly::event_data("plotly_selected"), {
   } else {
     DT::selectRows(proxy = proxy, selected = NULL)
   }
-  # trackeR:::update_sport_selection(data, session)
 })
 
 # Sessions selected by sport using radio buttons
@@ -129,7 +128,6 @@ observeEvent(input$sports, {
 
 # Sessions selected through summary table
 observeEvent(input$summary_rows_selected,  {
-    # trackeR:::update_sport_selection(data, session)
     shinyjs::js$resetSelection()
     trackeRapp:::generate_selected_sessions_object(data, input,
                                                 table_selection = TRUE)

@@ -38,7 +38,7 @@ plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
   units <- get_units(sumX)
 
   ## subsets on variables and type
-  dat <- trackeR:::fortify.trackeRdataSummary(sumX, melt = TRUE)
+  dat <- fortify_trackeRdataSummary(sumX, melt = TRUE)
   dat$sport <- sports
   if (!is.null(what)) {
     dat <- subset(dat, variable %in% what)
