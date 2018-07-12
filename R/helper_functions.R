@@ -428,6 +428,14 @@ update_map <- function(plot_df, session, data) {
   )
   plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
     "restyle",
+    list(opacity = 0.8), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
+  )
+  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+    "restyle",
+    list(hovertextsrc = 'ble'), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
+  )
+  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+    "restyle",
     list(line.color = "rgba(0, 154, 205, 1)"), as.list(which(!(data$sessions_map %in% data$selectedSessions)) - 1)
   )
   plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
@@ -435,8 +443,12 @@ update_map <- function(plot_df, session, data) {
     list(line.fillcolor = "rgba(0, 154, 205, 1)"), as.list(which(!(data$sessions_map %in% data$selectedSessions)) - 1)
   )
   plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+    "restyle",
+    list(opacity = 0.2), as.list(which(!(data$sessions_map %in% data$selectedSessions)) - 1)
+  )
+  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
     "relayout",
-    list(mapbox.zoom = 7)
+    list(mapbox.zoom = 9)
   )
   plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
     "relayout",
@@ -528,6 +540,10 @@ generate_objects <- function(data, output, session, choices) {
                       "Swimming" = "swimming")
   identified_sports <- sports_options %in% unique(trackeR::get_sport(data$object))
   data$identified_sports <- sports_options[identified_sports]
+  data$limits <- trackeR::compute_limits(data$object, a = 0.05)
+  data$is_location_data <- sapply(data$object,
+                                  function(x) !all((is.na(x[, 'longitude'])) | (x[, 'longitude'] == 0))
+  )
 }
 
 #' Test whether we can plot work capacity for at least one of cycling or running.

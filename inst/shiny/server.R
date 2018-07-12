@@ -78,10 +78,6 @@ server <- function(input, output, session) {
                                                          data$object)), decreasing = FALSE)
       ## See helper file
       trackeRapp:::generate_objects(data, output, session, choices)
-      data$limits <- trackeR::compute_limits(data$object, a = 0.05)
-      data$no_location_data <- sapply(data$object,
-          function(x) all((is.na(x[, 'longitude'])) | (x[, 'longitude'] == 0))
-        )
       trackeRapp:::update_sport_selection(data, session)
     }
   })
@@ -217,29 +213,31 @@ observeEvent(input$resetSelection, {
       } else {
         is_internet_connection <- TRUE
       }
-      # do not generate map if no location data for at least one session
+      # do not generate map if no location data for any of the sessions
       # TODO allow to plot only sessions that do have location data
-      if ((!any(data$no_location_data)) & (is_internet_connection)) {
+      if ((any(data$is_location_data)) & (is_internet_connection)) {
         trackeRapp:::create_map()
 
         preped_route_map <- reactive({
-          session <- seq_along(data$object)
-          trackeR:::prepare_route(data$object,
-                                  session = session, threshold = TRUE)
+          sessions <- seq_along(data$object)[data$is_location_data]
+          route <- trackeR:::prepare_route(data$object,
+                                           session = sessions, threshold = TRUE)
+          route$SessionID <- sessions[route$SessionID]
+          route
         })
         output$map <- plotly::renderPlotly({
           trackeRapp:::plot_map(
-            x = data$object,
-            preped_route = preped_route_map(),
-            session = isolate({data$selectedSessions}),
+            df = preped_route_map(),
+            # session = isolate({data$selectedSessions}),
             sumX = data$summary
           )
         })
+
         # Update map based on current selection
         observeEvent(data$selectedSessions, {
           sessions_rows <- which(preped_route_map()$SessionID %in% data$selectedSessions)
           plot_df <- preped_route_map()[sessions_rows, ]
-          trackeRapp:::update_map(plot_df, session, data)
+          if (nrow(plot_df) != 0) {trackeRapp:::update_map(plot_df, session, data)}
         })
       }
 
