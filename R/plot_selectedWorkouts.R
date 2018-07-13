@@ -14,11 +14,12 @@
 #' @param unit_reference_sport A character. The sport to be used as reference for units.
 #' @param moving_threshold A numeric for the threshold.
 #' @param desampling A numeric proportion between (0-1] for the proportion of raw data to be plotted.
+#' @param y_axis_range A vector with an upper and a lower limit for the given variable.
 plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smooth = FALSE,
                                   trend = TRUE, dates = TRUE, changepoints = FALSE,
                                   n_changepoints = 6, print_changepoints = FALSE,
                                   unit_reference_sport = NULL, moving_threshold = NULL,
-                                  desampling = 1) {
+                                  desampling = 1, y_axis_range = NULL) {
   sports <- get_sport(x)[session]
 
     var_name_units <- lab_sum(
@@ -98,6 +99,7 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
   changepoint_y_values <- c()
   step_size <- 1 / length(unique(session))
   start <- 0
+
   # Loop through each session
   for (i in session) {
     df_subset <- x[[which(i == session)]]
@@ -188,7 +190,7 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
         )
       a <- a %>% plotly::layout(
         annotations = annotations_list,
-        xaxis = axis_list, yaxis = c(axis_list, list(range = c(0, max(smoothed_data) * 1.1)))
+        xaxis = axis_list, yaxis = c(axis_list, list(range = y_axis_range))
       )
       # xaxis = axis_list, yaxis = c(axis_list, list(range = maximal_range * 1.02))
     }
@@ -206,7 +208,7 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
           xaxis = axis_list, yaxis = c(
             axis_list,
             list(
-              range = maximal_range * 1.02,
+              range = y_axis_range,
               showticklabels = TRUE
             )
           )
@@ -231,21 +233,14 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
     )
     start <- start + step_size
   }
-  y_axis_range <- if (what == "heart.rate") {
-    c(80, 200)
-  } else {
-    c(
-      0.5 * min(c(changepoint_y_values, smoothed_values$minimum)),
-      max(c(changepoint_y_values, smoothed_values$maximum)) * 1.5
-    )
-  }
-  y <- list(title = var_name_units, fixedrange = TRUE, range = y_axis_range)
+
+  y <- list(title = var_name_units, fixedrange = TRUE)
   x <- list(title = "Time", fixedrange = TRUE)
 
-  return(plotly::subplot(plot_stored, nrows = 1, shareY = TRUE, margin = 0.003) %>%
+  return(plotly::subplot(plot_stored, nrows = 1,  titleY = FALSE, margin = 0.003) %>%
     plotly::config(displayModeBar = FALSE) %>%
     plotly::layout(
-      showlegend = FALSE, yaxis = y, xaxis = x, images = images,
-      hovermode = "x", shapes = shapes
+      showlegend = FALSE, xaxis = x, yaxis = y, images = images,
+      hovermode = "x", shapes = shapes, dragmode = "pan"
     ))
 }

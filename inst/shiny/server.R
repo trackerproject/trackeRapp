@@ -362,7 +362,7 @@ observeEvent(input$resetSelection, {
           sumX = data$summary, changepoints = fit_changepoint,
           threshold = FALSE,
           n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
-          desampling = 1
+          desampling = 1, y_axis_range = data$limits[[i]]
         )
       })
 
