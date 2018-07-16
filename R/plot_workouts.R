@@ -9,10 +9,11 @@
 #' @param shiny Logical. Whether plots are in a shiny environment.
 #' @param sessions A vector. Selected sessions by session number.
 #' @param sports A vector of sports of the sessions to be plotted.
+#' @param dat A dataframe for plotting. 
 #' @param ... Currently not used.
 #' @seealso \code{\link{summary.trackeRdata}}
 
-plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
+plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
                           group = c("total"), lines = TRUE, sports) {
   if (what %in% c('distance', 'duration', 'wrRatio')) {
     group <- c('total')
@@ -38,7 +39,7 @@ plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
   units <- get_units(sumX)
 
   ## subsets on variables and type
-  dat <- fortify_trackeRdataSummary(sumX, melt = TRUE)
+  
   dat$sport <- sports
   if (!is.null(what)) {
     dat <- subset(dat, variable %in% what)
@@ -46,6 +47,7 @@ plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
   if (!is.null(group)) {
     dat <- subset(dat, type %in% group)
   }
+  dat <- subset(dat, session %in% sumX$session)
 
   ## remove empty factor levels
   dat$variable <- factor(dat$variable)

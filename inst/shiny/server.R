@@ -94,13 +94,14 @@ observeEvent(plotly::event_data("plotly_selected"), {
 # Sessions selected by sport using radio buttons
 observeEvent(input$sports, {
   shinyjs::js$resetSelection()
-  trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE)
-
+  shinyjs::delay(1000, trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
+  shinyjs::delay(1000, 
   if (length(data$selectedSessions) != length(data$summary$session)) {
     DT::selectRows(proxy = proxy, selected = as.numeric(data$selectedSessions))
   } else {
     DT::selectRows(proxy = proxy, selected = NULL)
   }
+  )
   ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
   ### Update metrics available based on sport selected                        ####
   has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% input$sports)], function(session_summaries) {
@@ -113,16 +114,20 @@ observeEvent(input$sports, {
     has_data_sport[[x]]
   })])
   })
+  shinyjs::delay(1000, 
   shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
                                   selected = selected_metrics,
-                                  choices = metrics_available_sport())
+                                  choices = metrics_available_sport()))
+
 }, ignoreNULL = FALSE, ignoreInit = TRUE)
 
 # Sessions selected through summary table
 observeEvent(input$summary_rows_selected,  {
+    if (!all(input$summary_rows_selected == data$selectedSessions)) {
     shinyjs::js$resetSelection()
-    trackeRapp:::generate_selected_sessions_object(data, input,
-                                                table_selection = TRUE)
+    shinyjs::delay(5000, trackeRapp:::generate_selected_sessions_object(data, input,
+                                                table_selection = TRUE))
+    }
 }, ignoreNULL = TRUE)
 
 # Reset button clicked
@@ -232,12 +237,23 @@ observeEvent(input$resetSelection, {
         observeEvent(data$selectedSessions, {
           sessions_rows <- which(preped_route_map()$SessionID %in% data$selectedSessions)
           plot_df <- preped_route_map()[sessions_rows, ]
-          if (nrow(plot_df) != 0) {trackeRapp:::update_map(plot_df, session, data)}
+          if (nrow(plot_df) != 0) {
+            trackeRapp:::update_map(session,
+                                    data, longitude = plot_df$longitude,
+                                    latitude = plot_df$latitude)
+            } else {
+            trackeRapp:::update_map(session, data,
+                                    longitude = preped_route_map()$longitude,
+                                    latitude = preped_route_map()$latitude)
+          }
         })
       }
 
 ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
 ### Sessions summaries plots                                                ####
+      plot_dataframe <- reactive({ 
+        trackeR:::fortify_trackeRdataSummary(data$summary, melt = TRUE)
+        })
       # Generate conditional plot for each metric irrespective of whether data available
       for (metric in c(choices)) {
         trackeRapp:::create_workout_plots(metric)
@@ -251,6 +267,7 @@ observeEvent(input$resetSelection, {
             }
           trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                   what = i,
+                                  dat =  plot_dataframe(),
                                   sessions = data$selectedSessions,
                                   sports = trackeR::get_sport(data$object)[sessions_to_plot])
         })
@@ -287,7 +304,10 @@ observeEvent(input$resetSelection, {
   })
 #   ____________________________________________________________________________
 #   Individual sessions page                                                ####
+
   observeEvent(input$plotSelectedWorkouts, {
+
+   
     shinyjs::addClass(selector = "body", class = "sidebar-collapse")
     ##  ............................................................................
     ##  Time in zones                                                           ####
@@ -522,7 +542,7 @@ observeEvent(input$resetSelection, {
         }
       })
     })
-
+    
   }, once = TRUE)
 
 #   ____________________________________________________________________________
@@ -537,6 +557,7 @@ observeEvent(input$resetSelection, {
     data$show_work_capacity <- FALSE
   })
   observeEvent(input$plotSelectedWorkouts, {
+    
     shinyjs::addClass(selector = "body", class = "sidebar-collapse")
     output$cond <- reactive({
       FALSE
@@ -544,11 +565,35 @@ observeEvent(input$resetSelection, {
     data$show_summary_plots <- FALSE
     data$show_individual_sessions <- TRUE
     data$show_work_capacity <- TRUE
-  })
+    
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
 ##  ............................................................................
 ##  Reset button                                                            ####
   observeEvent(input$resetButton, {
     shinyjs::js$reset_page()
   })
+
+### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+### Warning message too many sessions selected                              ####
+  observeEvent(input$plotSelectedWorkouts, {
+    if (length(data$selectedSessions) > 60) {
+      shinyalert::shinyalert(
+        title = "Warning",
+        text = "Interface is unstable when more than 60 sessions are selected",
+        closeOnEsc = TRUE,
+        closeOnClickOutside = FALSE,
+        html = FALSE,
+        type = "warning",
+        showConfirmButton = TRUE,
+        # showCancelButton = TRUE,
+        confirmButtonText = "OK",
+        confirmButtonCol = "#AEDEF4",
+        cancelButtonText = "Cancel",
+        timer = 0,
+        imageUrl = "",
+        animation = TRUE
+      )
+    }
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
 }
 

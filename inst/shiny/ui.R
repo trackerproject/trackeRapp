@@ -67,6 +67,7 @@ ui <- shinydashboard::dashboardPage(
   ),
   shinydashboard::dashboardBody(
     shinyjs::useShinyjs(),
+    shinyalert::useShinyalert(),
     shinyjs::extendShinyjs(text = jscode)
   )
 )

@@ -295,13 +295,13 @@ process_dataset <- function(data) {
     )
   )
 
-  data$object <- threshold(data$object)
-  data$object <- threshold(data$object,
-                           variable = rep("distance", 3),
-                           lower = rep(0, 3),
-                           upper = rep(500000, 3),
-                           sport = c("cycling", "running", "swimming")
-                           )
+  # data$object <- threshold(data$object)
+  # data$object <- threshold(data$object,
+  #                          variable = rep("distance", 3),
+  #                          lower = rep(0, 3),
+  #                          upper = rep(500000, 3),
+  #                          sport = c("cycling", "running", "swimming")
+  #                          )
 
   # Create trackeRdataSummary object
   data$summary <- summary(data$object, movingThreshold = 0.4)
@@ -417,7 +417,7 @@ cursor: default;
 "
 
 # Update map based on current selection
-update_map <- function(plot_df, session, data) {
+update_map <- function(session, data, longitude, latitude) {
   plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
     "restyle",
     list(line.color = "rgba(238, 118, 0, 1)"), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
@@ -425,6 +425,10 @@ update_map <- function(plot_df, session, data) {
   plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
     "restyle",
     list(line.fillcolor = "rgba(238, 118, 0, 1)"), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
+  )
+  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+    "restyle",
+    list(line.width = 4), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
   )
   plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
     "restyle",
@@ -453,8 +457,8 @@ update_map <- function(plot_df, session, data) {
   plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
     "relayout",
     list(mapbox.center = list(
-      lat = median(plot_df$latitude),
-      lon = median(plot_df$longitude)
+      lat = median(latitude),
+      lon = median(longitude)
     ))
   )
 }
@@ -531,7 +535,7 @@ generate_objects <- function(data, output, session, choices) {
   output$download_data <- download_handler(data)
   shinyjs::disable(selector = "#processedDataPath")
   data$selectedSessions <- data$summary$session
-  data$sessions_map <- rep(data$summary$session, times = 1, each = 2)
+  
   shinyjs::click("createDashboard")
   # TODO incorporate update
   # update_metrics_to_plot_workouts(session, choices, data$hasData)
@@ -544,6 +548,8 @@ generate_objects <- function(data, output, session, choices) {
   data$is_location_data <- sapply(data$object,
                                   function(x) !all((is.na(x[, 'longitude'])) | (x[, 'longitude'] == 0))
   )
+  data$sessions_map <- rep(seq_along(data$object)[data$is_location_data],
+                           times = 1, each = 2)
 }
 
 #' Test whether we can plot work capacity for at least one of cycling or running.
