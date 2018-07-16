@@ -25,7 +25,8 @@ Imports:
     shinydashboard,
     class,
     changepoint,
-    shinyWidgets
+    shinyWidgets, 
+    shinyalert
 Suggests:
     testthat,
     knitr,
