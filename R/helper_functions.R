@@ -242,9 +242,18 @@ get_javascript <- function() {
     };
     // shinyjs.resetClick = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }
     shinyjs.reset_page = function() { location.reload(); };
-    shinyjs.resetSelection = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }
+    shinyjs.resetSelection = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); };
+    shinyjs.is_map_collapse = function() {
+      
+        $('#box1').parent().find('button').click(function(){
+          // alert($('#box1').css('display'));
+          Shiny.onInputChange('is_collapse_box1', $('#box1').css('display'))
+        })
+    };
   "
-}
+ }
+# $('#box1').closest('.box').on('hidden.bs.collapse', function () {});
+# $('#box1').closest('.box').on('shown.bs.collapse', function () {})
 
 #' Classify sessions by sport using the KNN model and 'sport_classification_train' dataset as a training set
 #' @param data An object of class \code{reactivevalues}.

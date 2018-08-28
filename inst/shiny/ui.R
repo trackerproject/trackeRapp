@@ -1,11 +1,6 @@
 #   ____________________________________________________________________________
 #   Interface when trackeRdashboard is first loaded                         ####
 
-
-##  ............................................................................
-##  Javascript code                                                         ####
-jscode <- trackeRapp:::get_javascript()
-
 ##  ............................................................................
 ##  User interface                                                          ####
 ui <- shinydashboard::dashboardPage(
@@ -68,6 +63,6 @@ ui <- shinydashboard::dashboardPage(
   shinydashboard::dashboardBody(
     shinyjs::useShinyjs(),
     shinyalert::useShinyalert(),
-    shinyjs::extendShinyjs(text = jscode)
+    shinyjs::extendShinyjs(text = trackeRapp:::get_javascript())
   )
 )

@@ -1,12 +1,13 @@
 #' Insert map
 create_map <- function() {
-  insertUI(
+  insertUI(immediate = TRUE,
     selector = ".content",
     where = "beforeEnd",
     ui = conditionalPanel(
       condition = "output.cond == true",
       div(class = "main_plots", fluidRow(shinydashboard::box(
         status = "primary",
+        id = "box1",
         width = 12,
         collapsible = TRUE,
         collapsed = TRUE,
@@ -24,7 +25,7 @@ create_map <- function() {
 
 #' Insert summary boxes
 create_summary_boxes <- function() {
-  insertUI(
+  insertUI(immediate = TRUE,
     selector = ".content",
     where = "beforeEnd",
     ui = conditionalPanel(
@@ -351,6 +352,7 @@ create_zones_box <- function(inputId, plotId, choices) {
 #' @param metrics_available A vector of metrics that are found in the dataset.
 create_option_box <- function(sport_options, metrics_available) {
   insertUI(
+    immediate = TRUE,
     selector = ".content",
     where = "afterBegin",
     ui = div(class = "option_boxes", fluidRow(
@@ -432,6 +434,7 @@ create_option_box <- function(sport_options, metrics_available) {
 #'
 create_summary_timeline_boxes <- function() {
   insertUI(
+    immediate = TRUE,
     selector = ".content",
     where = "beforeEnd",
     ui = div(class = "main_plots", fluidRow(

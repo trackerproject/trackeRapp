@@ -22,9 +22,10 @@ server <- function(input, output, session) {
   # Ensure that when button for changepoints clicked, the window does not
   # dissapear by a click in the window.
   shinyjs::runjs(
-    "$(document).on('click', '.dropdown-menu', function (e) {
+    '$(document).on("click", ".dropdown-menu", function (e) {
     e.stopPropagation();
-  });"
+  });
+    '
   )
   # Main object where most data is stored
   data <- reactiveValues(
@@ -217,8 +218,8 @@ observeEvent(input$resetSelection, {
       # TODO allow to plot only sessions that do have location data
       if ((any(data$is_location_data)) & (is_internet_connection)) {
         trackeRapp:::create_map()
-
         preped_route_map <- reactive({
+          # shinyjs::js$is_map_collapse(id = 'box1')
           sessions <- seq_along(data$object)[data$is_location_data]
           route <- trackeR:::prepare_route(data$object,
                                            session = sessions, threshold = TRUE)
@@ -232,9 +233,11 @@ observeEvent(input$resetSelection, {
             sumX = data$summary
           )
         })
-
         # Update map based on current selection
         observeEvent(data$selectedSessions, {
+          # shinyjs::js$is_map_collapse()
+          try(
+          if (input$is_collapse_box1 != 'block') {
           sessions_rows <- which(preped_route_map()$SessionID %in% data$selectedSessions)
           plot_df <- preped_route_map()[sessions_rows, ]
           if (nrow(plot_df) != 0) {
@@ -245,13 +248,16 @@ observeEvent(input$resetSelection, {
             trackeRapp:::update_map(session, data,
                                     longitude = preped_route_map()$longitude,
                                     latitude = preped_route_map()$latitude)
-          }
-        })
+            }
+          }) 
+        }, ignoreInit = TRUE, priority = 0)
+        
+        shinyjs::js$is_map_collapse()
       }
 
 ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
 ### Sessions summaries plots                                                ####
-      plot_dataframe <- reactive({ 
+      plot_dataframe <- reactive({
         trackeR:::fortify_trackeRdataSummary(data$summary, melt = TRUE)
         })
       # Generate conditional plot for each metric irrespective of whether data available
@@ -380,7 +386,7 @@ observeEvent(input$resetSelection, {
         trackeRapp:::plot_selectedWorkouts(
           x = data$object, session = data$selectedSessions, what = i,
           sumX = data$summary, changepoints = fit_changepoint,
-          threshold = FALSE,
+          threshold = FALSE, smooth = FALSE,
           n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
           desampling = 1, y_axis_range = data$limits[[i]]
         )
