@@ -77,16 +77,16 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
     x <- threshold(x, th$variable, th$lower, th$upper, th$sport)
   }
 
-  speed_unit <- strsplit(un$unit[un$variable == "speed"], split = "_per_")[[1]]
-  pace_unit <- paste(speed_unit[2], speed_unit[1], sep = "_per_")
-  convert_pace <- match.fun(paste(pace_unit, un$unit[un$variable == "pace"], sep = "2"))
+  # speed_unit <- strsplit(un$unit[un$variable == "speed"], split = "_per_")[[1]]
+  # pace_unit <- paste(speed_unit[2], speed_unit[1], sep = "_per_")
+  # convert_pace <- match.fun(paste(pace_unit, un$unit[un$variable == "pace"], sep = "2"))
 
-  x <- threshold(x,
-    variable = c("pace", "pace", "pace"),
-    lower = c(0, 0, 0),
-    upper = convert_pace(1 / moving_threshold),
-    sport = names(moving_threshold)
-  )
+  # x <- threshold(x,
+  #   variable = c("pace", "pace", "pace"),
+  #   lower = c(0, 0, 0),
+  #   upper = convert_pace(1 / moving_threshold),
+  #   sport = names(moving_threshold)
+  # )
 
   ##  ............................................................................
   ##  trackeR dashboard unique code                                           ####
@@ -133,6 +133,7 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
       y = 1,
       showarrow = FALSE
     )
+    # tick_step_size <- signif(abs(y_axis_range[2] - y_axis_range[1]) / 5, 2)
     axis_list <- list(zeroline = FALSE, fixedrange = TRUE)
     if (has_values) {
       if (changepoints) {
@@ -170,24 +171,27 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
           shapes[[length(shapes) + 1]] <- line
         }
       }
-      smoothed_model <- mgcv::gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
-      smoothed_data <- mgcv::predict.gam(smoothed_model, newdata = df_subset)
-      smoothed_values$minimum <- c(smoothed_values$minimum, min(smoothed_data))
-      smoothed_values$maximum <- c(smoothed_values$maximum, max(smoothed_data))
       sampled_rows <- sort(sample(zoo::index(df_subset), size = length(zoo::index(df_subset)) * desampling))
       a <- plotly::plot_ly(
         df_subset[sampled_rows, ],
         x = ~ Index, y = ~ Value, hoverinfo = "none",
         type = "scatter", mode = "lines",
         showlegend = FALSE, alpha = 0.1, color = I("black")
-      ) %>%
-        plotly::add_lines(
+      ) 
+      
+      if (smooth) {
+        smoothed_model <- mgcv::gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
+        smoothed_data <- mgcv::predict.gam(smoothed_model, newdata = df_subset)
+        smoothed_values$minimum <- c(smoothed_values$minimum, min(smoothed_data))
+        smoothed_values$maximum <- c(smoothed_values$maximum, max(smoothed_data))
+        a <- a %>% plotly::add_lines(
           data = df_subset,
           x = ~ Index, y = smoothed_data, hoverinfo = "text",
           text = paste(round(smoothed_data, 2), var_units),
           color = I("deepskyblue3"),
           showlegend = FALSE, alpha = 1
         )
+      }
       a <- a %>% plotly::layout(
         annotations = annotations_list,
         xaxis = axis_list, yaxis = c(axis_list, list(range = y_axis_range))

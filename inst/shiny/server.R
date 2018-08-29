@@ -331,6 +331,7 @@ observeEvent(input$resetSelection, {
         height = trackeRapp:::calculate_plot_height(input$zonesMetricsPlot)
       ), size = 2)
     })
+
     ## Render actual plot
     output$zones_plot <- plotly::renderPlotly({
       trackeRapp:::plot_zones(
@@ -386,7 +387,7 @@ observeEvent(input$resetSelection, {
         trackeRapp:::plot_selectedWorkouts(
           x = data$object, session = data$selectedSessions, what = i,
           sumX = data$summary, changepoints = fit_changepoint,
-          threshold = FALSE, smooth = FALSE,
+          threshold = FALSE, smooth = TRUE,
           n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
           desampling = 1, y_axis_range = data$limits[[i]]
         )

@@ -4,8 +4,10 @@
 #' @param session A vector of selected sessions.
 #' @param what A vector of variable names to be plotted.
 #' @param n_zones A numeric. The number of zones to split the dataset into.
-plot_zones <- function(x, session, what = c("heart_rate"), n_zones) {
-  x <- zones(x, session = session, what = what, auto_breaks = TRUE, n_zones = n_zones)
+#' @param parallel A logical. Whether use parallel computing. 
+plot_zones <- function(x, session, what = c("heart_rate"), n_zones, parallel = TRUE) {
+  x <- zones(x, session = session, what = what, auto_breaks = TRUE,
+             n_zones = n_zones, parallel = parallel)
 
   dat <- do.call("rbind", x)
   dat$zoneF <- factor(
@@ -40,7 +42,7 @@ plot_zones <- function(x, session, what = c("heart_rate"), n_zones) {
       feature_zones,
       x = ~ zoneF, y = ~ percent,
       color = ~ Session, colors = pal(feature_zones$Session), legendgroup = ~ Session, hoverinfo = "text",
-      text = ~ paste0(round(percent, 1), "%")
+      text = ~ paste0("Proportion of a session: ", round(percent, 1), "%", "\n", Session)
     ) %>%
       plotly::add_bars() %>%
       plotly::layout(xaxis = x, yaxis = y, hovermode = "closest")

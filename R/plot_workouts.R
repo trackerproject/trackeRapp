@@ -40,7 +40,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
 
   ## subsets on variables and type
   
-  dat$sport <- sports
+  
   if (!is.null(what)) {
     dat <- subset(dat, variable %in% what)
   }
@@ -48,6 +48,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
     dat <- subset(dat, type %in% group)
   }
   dat <- subset(dat, session %in% sumX$session)
+  dat$sport <- sports
 
   ## remove empty factor levels
   dat$variable <- factor(dat$variable)

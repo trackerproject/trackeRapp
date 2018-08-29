@@ -45,7 +45,7 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
       feature_profile,
       x = ~ Index, y = ~ Value,
       color = ~ series, colors = pal(feature_profile$series), legendgroup = ~ Series,
-      hoverinfo = "text", text = ~ round(Index, 1)
+      hoverinfo = "text", text = ~ paste(" Value:", round(Index, 1), "\n", series)
     ) %>%
       plotly::add_lines() %>%
       plotly::layout(xaxis = x, yaxis = y, hovermode = "closest")

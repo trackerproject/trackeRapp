@@ -540,7 +540,7 @@ show_warning_no_data_selected <- function() {
 generate_objects <- function(data, output, session, choices) {
   process_dataset(data)
   ## Update sport attribute of data$object with classified sports
-  classify_sessions_by_sport(data)
+  # classify_sessions_by_sport(data)
   output$download_data <- download_handler(data)
   shinyjs::disable(selector = "#processedDataPath")
   data$selectedSessions <- data$summary$session
