@@ -54,10 +54,15 @@ server <- function(input, output, session) {
         }
       }
       if (!no_raw_directory_selected) {
-        file <- input$rawDataDirectory$datapath[[1]]
-        directory <- as.list(strsplit(file, "/")[[1]])
-        directory <- directory[1:(length(directory) - 1)]
-        directory <- paste0(do.call(paste, c(directory, sep = "/")), '/')
+        from <- input$rawDataDirectory$datapath
+        to <- file.path(dirname(from), basename(input$rawDataDirectory$name))
+        file.rename(from, to)
+        directory <- dirname(to)
+        
+        # file <- input$rawDataDirectory$datapath[[1]]
+        # directory <- as.list(strsplit(file, "/")[[1]])
+        # directory <- directory[1:(length(directory) - 1)]
+        # directory <- paste0(do.call(paste, c(directory, sep = "/")), '/')
         # Process raw data
         raw_data <- trackeRapp:::read_directory_shiny(
           directory = directory,
