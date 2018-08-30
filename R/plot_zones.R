@@ -5,8 +5,10 @@
 #' @param what A vector of variable names to be plotted.
 #' @param n_zones A numeric. The number of zones to split the dataset into.
 #' @param parallel A logical. Whether use parallel computing. 
-plot_zones <- function(x, session, what = c("heart_rate"), n_zones, parallel = TRUE) {
-  x <- zones(x, session = session, what = what, auto_breaks = TRUE,
+#' @param breaks A named list of computed breaks for zones from \code{compute_breaks()}.
+plot_zones <- function(x, session, what = c("heart_rate"), 
+                       n_zones, parallel = TRUE, breaks) {
+  x <- zones(x, session = session, what = what, breaks = breaks, 
              n_zones = n_zones, parallel = parallel)
 
   dat <- do.call("rbind", x)

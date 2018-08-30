@@ -44,7 +44,9 @@ generate_selected_sessions_object <- function(data, input,
     data$selectedSessions <- data$summary$session[get_sport(data$object) %in% input$sports]
   }
   if (plot_selection) {
-    data$selectedSessions <- unique(na.omit(as.numeric(data$hover$key)))
+    sessions <- data$hover$key
+    sessions[sapply(sessions, is.null)] <- NULL
+    data$selectedSessions <- unique(na.omit(as.numeric(sessions)))
   }
   if (table_selection) {
     data$selectedSessions <- input$summary_rows_selected

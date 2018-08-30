@@ -4,7 +4,8 @@
 \alias{plot_zones}
 \title{Plot training zones.}
 \usage{
-plot_zones(x, session, what = c("heart_rate"), n_zones)
+plot_zones(x, session, what = c("heart_rate"), n_zones, parallel = TRUE,
+  breaks)
 }
 \arguments{
 \item{x}{An object of class \code{trackeRdata}.}
@@ -14,6 +15,10 @@ plot_zones(x, session, what = c("heart_rate"), n_zones)
 \item{what}{A vector of variable names to be plotted.}
 
 \item{n_zones}{A numeric. The number of zones to split the dataset into.}
+
+\item{parallel}{A logical. Whether use parallel computing.}
+
+\item{breaks}{A named list of computed breaks for zones from \code{compute_breaks()}.}
 }
 \description{
 Plot training zones.

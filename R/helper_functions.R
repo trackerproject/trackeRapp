@@ -243,6 +243,12 @@ get_javascript <- function() {
     // shinyjs.resetClick = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }
     shinyjs.reset_page = function() { location.reload(); };
     shinyjs.resetSelection = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); };
+    shinyjs.initialize_map_collapse = function() {
+      Shiny.onInputChange('is_collapse_box1', 'none')
+    };
+    shinyjs.check_map_collapse = function() {
+      $('#box1').css('display')
+    };
     shinyjs.is_map_collapse = function() {
       
         $('#box1').parent().find('button').click(function(){
@@ -555,7 +561,11 @@ generate_objects <- function(data, output, session, choices) {
   data$identified_sports <- sports_options[identified_sports]
   data$limits <- trackeR::compute_limits(data$object, a = 0.025)
   data$is_location_data <- sapply(data$object,
-                                  function(x) !all((is.na(x[, 'longitude'])) | (x[, 'longitude'] == 0))
+                                  function(x) {
+                                    size <- nrow(x)
+                                    x_sample <- sample(x[, 'longitude'], round(size / 1000))
+                                    !all((is.na(x_sample)) | (x_sample == 0))
+                                    }
   )
   data$sessions_map <- rep(seq_along(data$object)[data$is_location_data],
                            times = 1, each = 2)

@@ -7,7 +7,8 @@
 plot_selectedWorkouts(x, session, what, sumX, threshold = TRUE,
   smooth = FALSE, trend = TRUE, dates = TRUE, changepoints = FALSE,
   n_changepoints = 6, print_changepoints = FALSE,
-  unit_reference_sport = NULL, moving_threshold = NULL, desampling = 1)
+  unit_reference_sport = NULL, moving_threshold = NULL, desampling = 1,
+  y_axis_range = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{\link{trackeRdata}}.}
@@ -37,6 +38,8 @@ plot_selectedWorkouts(x, session, what, sumX, threshold = TRUE,
 \item{moving_threshold}{A numeric for the threshold.}
 
 \item{desampling}{A numeric proportion between (0-1] for the proportion of raw data to be plotted.}
+
+\item{y_axis_range}{A vector with an upper and a lower limit for the given variable.}
 }
 \description{
 Plot the profile for each selected session for a given variable (heart rate, altitude, pace).

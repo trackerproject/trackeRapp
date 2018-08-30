@@ -4,13 +4,15 @@
 \alias{plot_workouts}
 \title{Plot an object of class trackeRdataSummary.}
 \usage{
-plot_workouts(sumX, what, sessions, shiny = TRUE, date = TRUE,
+plot_workouts(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
   group = c("total"), lines = TRUE, sports)
 }
 \arguments{
 \item{sumX}{An object of class \code{trackeRdataSummary}.}
 
 \item{what}{Name of variables which should be plotted. Default is all.}
+
+\item{dat}{A dataframe for plotting.}
 
 \item{sessions}{A vector. Selected sessions by session number.}
 

@@ -57,7 +57,7 @@ server <- function(input, output, session) {
         from <- input$rawDataDirectory$datapath
         to <- file.path(dirname(from), basename(input$rawDataDirectory$name))
         file.rename(from, to)
-        directory <- dirname(to)
+        directory <- dirname(to[1])
         
         # file <- input$rawDataDirectory$datapath[[1]]
         # directory <- as.list(strsplit(file, "/")[[1]])
@@ -131,7 +131,7 @@ observeEvent(input$sports, {
 observeEvent(input$summary_rows_selected,  {
     if (!all(input$summary_rows_selected == data$selectedSessions)) {
     shinyjs::js$resetSelection()
-    shinyjs::delay(5000, trackeRapp:::generate_selected_sessions_object(data, input,
+    shinyjs::delay(1000, trackeRapp:::generate_selected_sessions_object(data, input,
                                                 table_selection = TRUE))
     }
 }, ignoreNULL = TRUE)
@@ -227,35 +227,40 @@ observeEvent(input$resetSelection, {
           # shinyjs::js$is_map_collapse(id = 'box1')
           sessions <- seq_along(data$object)[data$is_location_data]
           route <- trackeR:::prepare_route(data$object,
-                                           session = sessions, threshold = TRUE)
+                                           session = sessions, threshold = FALSE)
           route$SessionID <- sessions[route$SessionID]
-          route
+          list(route = route, sessions = sessions)
         })
         output$map <- plotly::renderPlotly({
           trackeRapp:::plot_map(
-            df = preped_route_map(),
+            df = preped_route_map()$route,
+            all_sessions = preped_route_map()$sessions,
             # session = isolate({data$selectedSessions}),
-            sumX = data$summary
+            sumX = data$summary, 
+            colour_sessions = isolate(data$selectedSessions)
           )
         })
         # Update map based on current selection
-        observeEvent(data$selectedSessions, {
+        observeEvent(c(data$selectedSessions, input$is_collapse_box1) , {
           # shinyjs::js$is_map_collapse()
           try(
           if (input$is_collapse_box1 != 'block') {
-          sessions_rows <- which(preped_route_map()$SessionID %in% data$selectedSessions)
-          plot_df <- preped_route_map()[sessions_rows, ]
+          sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selectedSessions)
+          plot_df <- preped_route_map()$route[sessions_rows, ]
           if (nrow(plot_df) != 0) {
+           
             trackeRapp:::update_map(session,
                                     data, longitude = plot_df$longitude,
                                     latitude = plot_df$latitude)
+            
+            
             } else {
             trackeRapp:::update_map(session, data,
-                                    longitude = preped_route_map()$longitude,
-                                    latitude = preped_route_map()$latitude)
+                                    longitude = preped_route_map()$route$longitude,
+                                    latitude = preped_route_map()$route$latitude)
             }
           }) 
-        }, ignoreInit = TRUE, priority = 0)
+        }, ignoreInit = TRUE, priority = -1)
         
         shinyjs::js$is_map_collapse()
       }
@@ -336,12 +341,16 @@ observeEvent(input$resetSelection, {
         height = trackeRapp:::calculate_plot_height(input$zonesMetricsPlot)
       ), size = 2)
     })
-
+    breaks <- reactive({ 
+      compute_breaks(object = data$object, limits = data$limits, 
+                     n_breaks = as.numeric(input$n_zones),
+                     what = input$zonesMetricsPlot)
+      })
     ## Render actual plot
     output$zones_plot <- plotly::renderPlotly({
       trackeRapp:::plot_zones(
         x = data$object, session = data$selectedSessions,
-        what = input$zonesMetricsPlot,
+        what = input$zonesMetricsPlot, breaks = breaks(),
         n_zones = as.numeric(input$n_zones)
       )
     })
@@ -495,9 +504,10 @@ observeEvent(input$resetSelection, {
         # If button to change units is pressed re-render plot with new units
         change_power[[sport_id]]
 
-        work_capacity_sessions <- trackeR::get_sport(data$summary[data$selectedSessions]) %in% sport_id
+        work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selectedSessions] %in% sport_id
         trackeRapp:::plot_work_capacity(
-          x = data$object, session = data$selectedSessions[work_capacity_sessions],
+          x = data$object,
+          session = data$selectedSessions[work_capacity_sessions],
           cp = isolate(as.numeric(input[[paste0('critical_power_', sport_id)]]))
         )
       })

@@ -39,13 +39,18 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
       data = tracker_object, whole_text = TRUE,
       transform_feature = FALSE
     ))
+    var_units <- lab_sum(
+      feature = feature, data = tracker_object,
+      whole_text = FALSE, transform_feature = FALSE
+    )
     feature_profile <- df[df$Profile == feature, ]
     feature_profile$Value[is.na(feature_profile$Value)] <- 0
+
     p <- plotly::plot_ly(
       feature_profile,
       x = ~ Index, y = ~ Value,
       color = ~ series, colors = pal(feature_profile$series), legendgroup = ~ Series,
-      hoverinfo = "text", text = ~ paste(" Value:", round(Index, 1), "\n", series)
+      hoverinfo = "text", text = ~ paste(" Value:", round(Index, 1), var_units, "\n", series)
     ) %>%
       plotly::add_lines() %>%
       plotly::layout(xaxis = x, yaxis = y, hovermode = "closest")
