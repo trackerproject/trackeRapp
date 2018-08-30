@@ -444,7 +444,7 @@ create_summary_timeline_boxes <- function() {
         width = 6,
         title = tagList(
           shiny::icon("reorder"),
-          "Summary of selected workouts"
+          "Summary of workouts"
         ),
         DT::dataTableOutput("summary", height = "auto"),
         collapsible = FALSE
