@@ -21,12 +21,7 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
   df$Series <- as.numeric(sapply(strsplit(as.character(df$Series), "session"), function(x) x[2]))
   df$Profile <- factor(df$Profile)
 
-  ## make basic plot and facets
-  lab_data <- function(series) {
-    thisunit <- units$unit[units$sport == "running" & units$variable == series]
-    prettyUnit <- prettifyUnits(thisunit)
-    paste0(series, " [", prettyUnit, "]")
-  }
+
   df$series <- paste("Session", sprintf(paste0("%0", nchar(max(df$Series)), "d"), df$Series))
   pal <- leaflet::colorFactor(c("deepskyblue", "dodgerblue4"), df$series)
 
@@ -35,10 +30,7 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
 
   for (feature in what) {
     y <- list(title = "dtime")
-    x <- list(title = lab_sum(feature,
-      data = tracker_object, whole_text = TRUE,
-      transform_feature = FALSE
-    ))
+    x <- list(title = lab_data(feature, units))
     var_units <- lab_sum(
       feature = feature, data = tracker_object,
       whole_text = FALSE, transform_feature = FALSE

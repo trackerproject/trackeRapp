@@ -624,3 +624,12 @@ convert_to_name <- function(what) {
     "wrRatio" = "work-to-rest ratio"
   )
 }
+
+#' Get units of a measurement in a nice format for a given variable. 
+#' @param feature A character. The variable for which to generate units.
+#' @param units A vector of units generated from \code{trackeR} package \code{getUnits()}.
+lab_data <- function(feature, units) {
+  thisunit <- units$unit[units$variable == feature]
+  prettyUnit <- prettifyUnits(thisunit)
+  paste0(feature, " [", prettyUnit, "]")
+}
