@@ -171,14 +171,15 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
           shapes[[length(shapes) + 1]] <- line
         }
       }
-      sampled_rows <- sort(sample(zoo::index(df_subset), size = length(zoo::index(df_subset)) * desampling))
+      sampled_rows <- sort(sample(zoo::index(df_subset),
+                                  size = length(zoo::index(df_subset)) * desampling))
       a <- plotly::plot_ly(
         df_subset[sampled_rows, ],
         x = ~ Index, y = ~ Value, hoverinfo = "none",
         type = "scatter", mode = "lines",
         showlegend = FALSE, alpha = 0.1, color = I("black")
-      ) 
-      
+      )
+
       if (smooth) {
         smoothed_model <- mgcv::gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
         smoothed_data <- mgcv::predict.gam(smoothed_model, newdata = df_subset)

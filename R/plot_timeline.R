@@ -8,19 +8,20 @@
 plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
   if (plotly) {
     d <- if (shiny) plotly::event_data("plotly_selected") else NULL
-    startdates <- as.POSIXct(as.Date(sumX$sessionStart))
-    enddates <- as.POSIXct(as.Date(sumX$sessionEnd))
+    startdates <- as.Date(sumX$sessionStart)
+    enddates <- as.Date(sumX$sessionEnd)
     ## Hack to extract times
-    endtimes <- sumX$sessionEnd
-    starttimes <- sumX$sessionStart
-    endtimes <- as.POSIXct(
-      as.numeric(difftime(endtimes, trunc(endtimes, "days"), units = "secs")),
-      origin = Sys.Date()
-    )
-    starttimes <- as.POSIXct(as.numeric(difftime(
-      starttimes, trunc(starttimes, "days"),
-      units = "secs"
-    )), origin = Sys.Date())
+    endtimes <- as.POSIXct(paste(Sys.Date(), format(sumX$sessionStart, "%H:%M:%S")))
+    starttimes <- as.POSIXct(paste(Sys.Date(), format(sumX$sessionEnd, "%H:%M:%S")))
+    #
+    # endtimes <- as.POSIXct(
+    #   as.numeric(difftime(endtimes, trunc(endtimes, "days"), units = "secs")),
+    #   origin = Sys.Date()
+    # )
+    # starttimes <- as.POSIXct(as.numeric(difftime(
+    #   starttimes, trunc(starttimes, "days"),
+    #   units = "secs"
+    # )), origin = Sys.Date())
     df <- data.frame(sday = startdates, eday = enddates, start = starttimes, end = endtimes, session = sumX$session)
 
     p <- plotly::plot_ly()

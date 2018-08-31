@@ -9,7 +9,7 @@
 #' @param shiny Logical. Whether plots are in a shiny environment.
 #' @param sessions A vector. Selected sessions by session number.
 #' @param sports A vector of sports of the sessions to be plotted.
-#' @param dat A dataframe for plotting. 
+#' @param dat A dataframe for plotting.
 #' @param ... Currently not used.
 #' @seealso \code{\link{summary.trackeRdata}}
 
@@ -39,8 +39,8 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
   units <- get_units(sumX)
 
   ## subsets on variables and type
-  
-  
+
+
   if (!is.null(what)) {
     dat <- subset(dat, variable %in% what)
   }
@@ -85,7 +85,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
     dat,
     x = ~ xaxis, y = ~ value, hoverinfo = "text",
     text = ~ paste(
-      "Session:", session, "\n",
+      " Session:", session, "\n",
       "Date:", format(sessionStart, format = "%Y-%m-%d"),
       "\n", convert_to_name(what), ":", round(value, 2), units_text, "\n",
       "Sport:", sport
@@ -122,7 +122,18 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
     ra[2] <- ra[2] + 0.01 * diff(ra)
     ra[1] <- ra[1] - 0.01 * diff(ra)
   }
-  y <- list(title = feature, range = c(0, max(dat$value, na.rm = TRUE) * 2))
+  features <- c('avgSpeed', 'avgPace', 'avgCadenceCycling', 'avgCadenceRunning')
+  lower_range_y <- function(feature, dat) {
+    if (feature == 'avgHeartRate') {
+      80
+      } else if (feature %in% features){
+        min(dat$value, na.rm = TRUE) * 0.6
+        } else {
+          0
+        }
+    }
+  y <- list(title = feature, range = c(lower_range_y(what, dat),
+                                       max(dat$value, na.rm = TRUE) * 1.2))
   x <- list(title = "Date",  range = ra)
 
   plotly::layout(p,

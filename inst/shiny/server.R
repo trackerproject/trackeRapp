@@ -341,13 +341,14 @@ observeEvent(input$resetSelection, {
         height = trackeRapp:::calculate_plot_height(input$zonesMetricsPlot)
       ), size = 2)
     })
+    limits_zones <- reactive({ trackeR::compute_limits(data$object, a = 0.2) })
     breaks <- reactive({
-      compute_breaks(object = data$object, limits = data$limits,
+      compute_breaks(object = data$object, limits = limits_zones(),
                      n_breaks = as.numeric(input$n_zones),
                      what = input$zonesMetricsPlot)
     })
     observeEvent(input$updateUnits, {
-      data$limits <- trackeR::compute_limits(data$object, a = 0.075)
+      limits_zones <- reactive({ trackeR::compute_limits(data$object, a = 0.2) })
     })
     ## Render actual plot
     output$zones_plot <- plotly::renderPlotly({

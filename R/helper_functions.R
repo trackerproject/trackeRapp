@@ -559,7 +559,7 @@ generate_objects <- function(data, output, session, choices) {
                       "Swimming" = "swimming")
   identified_sports <- sports_options %in% unique(trackeR::get_sport(data$object))
   data$identified_sports <- sports_options[identified_sports]
-  data$limits <- trackeR::compute_limits(data$object, a = 0.075)
+  data$limits <- trackeR::compute_limits(data$object, a = 0.1)
   data$is_location_data <- sapply(data$object,
                                   function(x) {
                                     size <- nrow(x)
