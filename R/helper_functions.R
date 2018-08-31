@@ -250,7 +250,7 @@ get_javascript <- function() {
       $('#box1').css('display')
     };
     shinyjs.is_map_collapse = function() {
-      
+
         $('#box1').parent().find('button').click(function(){
           // alert($('#box1').css('display'));
           Shiny.onInputChange('is_collapse_box1', $('#box1').css('display'))
@@ -550,7 +550,7 @@ generate_objects <- function(data, output, session, choices) {
   output$download_data <- download_handler(data)
   shinyjs::disable(selector = "#processedDataPath")
   data$selectedSessions <- data$summary$session
-  
+
   shinyjs::click("createDashboard")
   # TODO incorporate update
   # update_metrics_to_plot_workouts(session, choices, data$hasData)
@@ -559,7 +559,7 @@ generate_objects <- function(data, output, session, choices) {
                       "Swimming" = "swimming")
   identified_sports <- sports_options %in% unique(trackeR::get_sport(data$object))
   data$identified_sports <- sports_options[identified_sports]
-  data$limits <- trackeR::compute_limits(data$object, a = 0.025)
+  data$limits <- trackeR::compute_limits(data$object, a = 0.075)
   data$is_location_data <- sapply(data$object,
                                   function(x) {
                                     size <- nrow(x)
@@ -625,7 +625,7 @@ convert_to_name <- function(what) {
   )
 }
 
-#' Get units of a measurement in a nice format for a given variable. 
+#' Get units of a measurement in a nice format for a given variable.
 #' @param feature A character. The variable for which to generate units.
 #' @param units A vector of units generated from \code{trackeR} package \code{getUnits()}.
 lab_data <- function(feature, units) {

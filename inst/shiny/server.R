@@ -58,7 +58,7 @@ server <- function(input, output, session) {
         to <- file.path(dirname(from), basename(input$rawDataDirectory$name))
         file.rename(from, to)
         directory <- dirname(to[1])
-        
+
         # file <- input$rawDataDirectory$datapath[[1]]
         # directory <- as.list(strsplit(file, "/")[[1]])
         # directory <- directory[1:(length(directory) - 1)]
@@ -101,7 +101,7 @@ observeEvent(plotly::event_data("plotly_selected"), {
 observeEvent(input$sports, {
   shinyjs::js$resetSelection()
   shinyjs::delay(1000, trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
-  shinyjs::delay(1000, 
+  shinyjs::delay(1000,
   if (length(data$selectedSessions) != length(data$summary$session)) {
     DT::selectRows(proxy = proxy, selected = as.numeric(data$selectedSessions))
   } else {
@@ -120,7 +120,7 @@ observeEvent(input$sports, {
     has_data_sport[[x]]
   })])
   })
-  shinyjs::delay(1000, 
+  shinyjs::delay(1000,
   shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
                                   selected = selected_metrics,
                                   choices = metrics_available_sport()))
@@ -236,7 +236,7 @@ observeEvent(input$resetSelection, {
             df = preped_route_map()$route,
             all_sessions = preped_route_map()$sessions,
             # session = isolate({data$selectedSessions}),
-            sumX = data$summary, 
+            sumX = data$summary,
             colour_sessions = isolate(data$selectedSessions)
           )
         })
@@ -248,20 +248,20 @@ observeEvent(input$resetSelection, {
           sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selectedSessions)
           plot_df <- preped_route_map()$route[sessions_rows, ]
           if (nrow(plot_df) != 0) {
-           
+
             trackeRapp:::update_map(session,
                                     data, longitude = plot_df$longitude,
                                     latitude = plot_df$latitude)
-            
-            
+
+
             } else {
             trackeRapp:::update_map(session, data,
                                     longitude = preped_route_map()$route$longitude,
                                     latitude = preped_route_map()$route$latitude)
             }
-          }) 
+          })
         }, ignoreInit = TRUE, priority = -1)
-        
+
         shinyjs::js$is_map_collapse()
       }
 
@@ -323,7 +323,7 @@ observeEvent(input$resetSelection, {
 
   observeEvent(input$plotSelectedWorkouts, {
 
-   
+
     shinyjs::addClass(selector = "body", class = "sidebar-collapse")
     ##  ............................................................................
     ##  Time in zones                                                           ####
@@ -341,11 +341,14 @@ observeEvent(input$resetSelection, {
         height = trackeRapp:::calculate_plot_height(input$zonesMetricsPlot)
       ), size = 2)
     })
-    breaks <- reactive({ 
-      compute_breaks(object = data$object, limits = data$limits, 
+    breaks <- reactive({
+      compute_breaks(object = data$object, limits = data$limits,
                      n_breaks = as.numeric(input$n_zones),
                      what = input$zonesMetricsPlot)
-      })
+    })
+    observeEvent(input$updateUnits, {
+      data$limits <- trackeR::compute_limits(data$object, a = 0.075)
+    })
     ## Render actual plot
     output$zones_plot <- plotly::renderPlotly({
       trackeRapp:::plot_zones(
@@ -564,7 +567,7 @@ observeEvent(input$resetSelection, {
         }
       })
     })
-    
+
   }, once = TRUE)
 
 #   ____________________________________________________________________________
@@ -579,7 +582,7 @@ observeEvent(input$resetSelection, {
     data$show_work_capacity <- FALSE
   })
   observeEvent(input$plotSelectedWorkouts, {
-    
+
     shinyjs::addClass(selector = "body", class = "sidebar-collapse")
     output$cond <- reactive({
       FALSE
@@ -587,7 +590,7 @@ observeEvent(input$resetSelection, {
     data$show_summary_plots <- FALSE
     data$show_individual_sessions <- TRUE
     data$show_work_capacity <- TRUE
-    
+
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
 ##  ............................................................................
 ##  Reset button                                                            ####

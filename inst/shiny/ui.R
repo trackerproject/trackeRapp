@@ -4,7 +4,7 @@
 ##  ............................................................................
 ##  User interface                                                          ####
 ui <- shinydashboard::dashboardPage(
-  title = "TrackeR",
+  title = "trackeRapp",
   skin = "black",
   shinydashboard::dashboardHeader(title = span(tagList(icon("dashboard"), "trackeRapp"))),
   shinydashboard::dashboardSidebar(
