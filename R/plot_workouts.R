@@ -133,7 +133,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
         }
     }
   y <- list(title = feature, range = c(lower_range_y(what, dat),
-                                       max(dat$value, na.rm = TRUE) * 1.2))
+                                       max(dat$value, na.rm = TRUE) * 1.5))
   x <- list(title = "Date",  range = ra)
 
   plotly::layout(p,
