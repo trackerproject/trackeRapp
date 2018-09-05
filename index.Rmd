@@ -1,0 +1,35 @@
+---
+title: "Tour de trackerApp"
+site: bookdown::bookdown_site
+documentclass: book
+output:
+  bookdown::gitbook:
+    fig_caption: true
+    number_sections: true
+bibliography: ["bibliography.bib"]
+link-citations: true  
+---
+
+# Introduction {-}
+
+The [**trackeRapp**](https://github.com/trackerproject/trackeRapp)
+ was developed in order to provide an open-source platform
+with a friendly and intuitive user interface and with flexible and extensive tools for
+analysis of sports data.
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+
+```{r}
+library(shiny)
+library(vembedr)
+```
+
+
+```{r}
+embed_youtube("lDiu58otgSI", width = '650', height = '365.63') %>% div(align = 'center') 
+```
+
+
