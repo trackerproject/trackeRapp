@@ -18,7 +18,7 @@
 # The trackeRapp
 
 The goal of the
-[**trackeRapp**](trackerapp.com) is to
+[**trackeRapp**](https://trackerapp.com) is to
 provide an integrated workflow and a web interface for the analysis of sports
 data from GPS-enabled tracking devices. The **trackeRapp** is a platform with flexible and extensive
 visualisation and analysis tools. It has a user friendly, intuitive and
@@ -47,7 +47,7 @@ trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn about the *
 
 ## Example
 
-A user can run the web interface on their local machine by running the
+A user can access the web interface remotely at <https://www.trackerapp.com> or on their local machine by running the
 following commands:
 
 ``` r
