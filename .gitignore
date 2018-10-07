@@ -1,5 +1,4 @@
-inst/doc
 .Rhistory
 .DS_Store
-.R~
+.Rbuildignore
 GBR_msk_alt*

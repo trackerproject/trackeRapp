@@ -261,40 +261,6 @@ get_javascript <- function() {
 # $('#box1').closest('.box').on('hidden.bs.collapse', function () {});
 # $('#box1').closest('.box').on('shown.bs.collapse', function () {})
 
-#' Classify sessions by sport using the KNN model and 'sport_classification_train' dataset as a training set
-#' @param data An object of class \code{reactivevalues}.
-classify_sessions_by_sport <- function(data) {
-  filepath <- system.file("extdata/sport_classification_train.csv", package = "trackeRapp")
-  sport_classification_train <- read.csv(filepath)
-  n_train <- nrow(sport_classification_train)
-  merged_df <- rbind(
-    sport_classification_train[, c("avgPaceMoving", "distance")],
-    data.frame(
-      avgPaceMoving = data$summary$avgPaceMoving,
-      distance = data$summary$distance
-    )
-  )
-  merged_df[is.na(merged_df)] <- 0
-  merged_df <- scale(merged_df)
-  classified_sports <- class::knn(
-    merged_df[1:n_train, ], merged_df[(n_train + 1):nrow(merged_df), ],
-    sport_classification_train[, "sport"],
-    k = 5
-  )
-
-  sports <- trackeR::get_sport(data$object)
-  for (i in c(1:length(sports))) {
-    if (is.na(sports[i])) {
-      sports[i] <- switch(as.vector(classified_sports)[i],
-        "Swim" = "swimming",
-        "Ride" = "cycling",
-        "Run" = "running"
-      )
-    }
-  }
-  attr(data$object, "sport") <- sports
-}
-
 
 #' Process \code{trackeRdata} object by: setting thresholds to remove wrong values, change units, set a moving threshold and test which variables contain data
 #' @param data An object of class \code{reactivevalues}.
@@ -545,8 +511,6 @@ show_warning_no_data_selected <- function() {
 #' @param choices A vector. See \code{\link{choices}}.
 generate_objects <- function(data, output, session, choices) {
   process_dataset(data)
-  ## Update sport attribute of data$object with classified sports
-  # classify_sessions_by_sport(data)
   output$download_data <- download_handler(data)
   shinyjs::disable(selector = "#processedDataPath")
   data$selectedSessions <- data$summary$session
