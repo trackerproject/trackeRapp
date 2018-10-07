@@ -17,12 +17,12 @@
 
 # The trackeRapp
 
-The goal of the
-[**trackeRapp**](https://trackerapp.com) is to
-provide an integrated workflow and a web interface for the analysis of sports
-data from GPS-enabled tracking devices. The **trackeRapp** is a platform with flexible and extensive
-visualisation and analysis tools. It has a user friendly, intuitive and
-adjustable interface and it was developed open-source on top of the
+The goal of the [**trackeRapp**](https://trackerapp.com) is to provide
+an integrated workflow and a web interface for the analysis of sports
+data from GPS-enabled tracking devices. The **trackeRapp** is a platform
+with flexible and extensive visualisation and analysis tools. It has a
+user friendly, intuitive and adjustable interface and it was developed
+open-source on top of the
 [**trackeR**](https://github.com/trackerproject/trackeR) package. The
 interface was fully built using the **shiny** package.
 
@@ -43,11 +43,29 @@ devtools::install_github("trackerproject/trackeRapp")
 ## Getting started
 
 Please see the [**tour de
-trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn about the **trackeRapp** and all its capabilities, including many tutorial videos and visualisations. 
+trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn
+about the **trackeRapp** and all its capabilities, including many
+tutorial videos and
+visualisations.
+
+<img src="Images_readme/map.png" width="95%" style="display: block; margin: auto;" />
+
+<br>
+
+<img src="Images_readme/session_summaries.png" width="95%" style="display: block; margin: auto;" />
+
+<br>
+
+<img src="Images_readme/evening_sessions.png" title="Session summaries" alt="Session summaries" width="95%" style="display: block; margin: auto;" />
+
+<br>
+
+<img src="Images_readme/zones_multiple_sessions.png" title="Time in zones" alt="Time in zones" width="95%" style="display: block; margin: auto;" />
 
 ## Example
 
-A user can access the web interface remotely at <https://www.trackerapp.com> or on their local machine by running the
+A user can access the web interface remotely at
+<https://www.trackerapp.com> or on their local machine by running the
 following commands:
 
 ``` r
