@@ -19,13 +19,10 @@
 
 The goal of the
 [**trackeRapp**](https://trackerproject.github.io/trackeRapp/) is to
-provide an integrated workflow and interface for the analysis of sports
-data from GPS-enabled tracking devices. Please see the [**tour de
-trackeRapp**](https://trackerproject.github.io/trackeRapp/) for a
-walkthrough of the interface and its capabilities, including tutorial
-videos. The **trackeRapp** is a platform with flexible and extensive
+provide an integrated workflow and a web interface for the analysis of sports
+data from GPS-enabled tracking devices. The **trackeRapp** is a platform with flexible and extensive
 visualisation and analysis tools. It has a user friendly, intuitive and
-adjustable interface and it was developed open-source as part of the
+adjustable interface and it was developed open-source on top of the
 [**trackeR**](https://github.com/trackerproject/trackeR) package. The
 interface was fully built using the **shiny** package.
 
@@ -42,6 +39,11 @@ You can also install the **trackeRapp** from github with:
 ``` r
 devtools::install_github("trackerproject/trackeRapp")
 ```
+
+## Getting started
+
+Please see the [**tour de
+trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn about the **trackeRapp** and all its capabilities, including many tutorial videos and visualisations. 
 
 ## Example
 
