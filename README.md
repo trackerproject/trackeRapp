@@ -45,18 +45,19 @@ devtools::install_github("trackerproject/trackeRapp")
 Please see the [**tour de
 trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn
 about the **trackeRapp** and all its capabilities, including many
-tutorial videos and
-visualisations.
+tutorial videos and visualisations. The following are screenshots from
+the **trackeRapp** web
+interface:
+
+<img src="Images_readme/evening_sessions.png" title="Session summaries" alt="Session summaries" width="95%" style="display: block; margin: auto;" />
+
+<br>
 
 <img src="Images_readme/map.png" width="95%" style="display: block; margin: auto;" />
 
 <br>
 
 <img src="Images_readme/session_summaries.png" width="95%" style="display: block; margin: auto;" />
-
-<br>
-
-<img src="Images_readme/evening_sessions.png" title="Session summaries" alt="Session summaries" width="95%" style="display: block; margin: auto;" />
 
 <br>
 
