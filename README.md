@@ -18,7 +18,7 @@
 # The trackeRapp
 
 The goal of the
-[**trackeRapp**](https://trackerproject.github.io/trackeRapp/) is to
+[**trackeRapp**](https://trackerapp.com) is to
 provide an integrated workflow and a web interface for the analysis of sports
 data from GPS-enabled tracking devices. The **trackeRapp** is a platform with flexible and extensive
 visualisation and analysis tools. It has a user friendly, intuitive and
