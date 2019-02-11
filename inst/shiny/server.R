@@ -129,7 +129,8 @@ observeEvent(input$sports, {
 
 # Sessions selected through summary table
 observeEvent(input$summary_rows_selected,  {
-    if (!all(input$summary_rows_selected == data$selectedSessions)) {
+    ## if (!all(input$summary_rows_selected == data$selectedSessions)) {
+    if (!isTRUE(setequal(input$summary_rows_selected, data$selectedSessions))) {
     shinyjs::js$resetSelection()
     shinyjs::delay(1000, trackeRapp:::generate_selected_sessions_object(data, input,
                                                 table_selection = TRUE))
