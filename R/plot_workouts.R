@@ -12,7 +12,6 @@
 #' @param dat A dataframe for plotting.
 #' @param ... Currently not used.
 #' @seealso \code{\link{summary.trackeRdata}}
-
 plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
                           group = c("total"), lines = TRUE, sports) {
   if (what %in% c('distance', 'duration', 'wrRatio')) {
@@ -89,13 +88,12 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
       "Date:", format(sessionStart, format = "%Y-%m-%d"),
       "\n", convert_to_name(what), ":", round(value, 2), units_text, "\n",
       "Sport:", sport
-    ), showlegend = FALSE
-  ) %>%
+      ), showlegend = FALSE) %>%
     plotly::add_markers(
       key = dat$session, color = I("deepskyblue3"), symbol = ~ sport,
-      symbols = c("circle", "x", "square"), size = I(6), legendgroup = ~ sport,
-      showlegend = TRUE
-    ) %>%
+      symbols = c("circle", "x", "square"), legendgroup = ~ sport,
+      showlegend = TRUE #, size = I(6)
+      ) %>%
     plotly::add_lines(
       color = I("deepskyblue3"), connectgaps = TRUE, legendgroup = ~ sport,
       line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE)
@@ -109,9 +107,9 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
       }
       p <- plotly::add_markers(p,
         data = m, color = I("darkorange3"),
-        size = I(9), symbol = ~ sport,
+        symbol = ~ sport,
         symbols = c("circle", "x", "square"),
-        showlegend = FALSE
+        showlegend = FALSE, #size = I(9)
       )
       # plotly::add_paths(data = m, color = I("darkorange3"))
     }
