@@ -215,11 +215,6 @@ observeEvent(input$resetSelection, {
 ### Map                                                                     ####
       # Check if there is internet connection
       test_connection <- curl::has_internet()
-      if (class(test_connection) == "try-error") {
-        is_internet_connection <- FALSE
-      } else {
-        is_internet_connection <- TRUE
-      }
       # do not generate map if no location data for any of the sessions
                                         # TODO allow to plot only sessions that do have location data
       if ((any(data$is_location_data)) & (is_internet_connection)) {
@@ -243,26 +238,28 @@ observeEvent(input$resetSelection, {
         })
         # Update map based on current selection
         observeEvent(c(data$selectedSessions, input$is_collapse_box1) , {
-          # shinyjs::js$is_map_collapse()
-          try(
-          if (input$is_collapse_box1 != 'block') {
-          sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selectedSessions)
-          plot_df <- preped_route_map()$route[sessions_rows, ]
-          if (nrow(plot_df) != 0) {
+                                        # shinyjs::js$is_map_collapse()
 
-            trackeRapp:::update_map(session,
-                                    data, longitude = plot_df$longitude,
-                                    latitude = plot_df$latitude)
+            try(
+                if (!is.null(input$is_collapse_box1)) {
+                    if (input$is_collapse_box1 != 'block') {
+                        sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selectedSessions)
+                        plot_df <- preped_route_map()$route[sessions_rows, ]
+                        if (nrow(plot_df) != 0) {
+
+                            trackeRapp:::update_map(session,
+                                                    data, longitude = plot_df$longitude,
+                                                    latitude = plot_df$latitude)
 
 
-            } else {
-            trackeRapp:::update_map(session, data,
-                                    longitude = preped_route_map()$route$longitude,
-                                    latitude = preped_route_map()$route$latitude)
-            }
-          }, silent = TRUE)
+                        } else {
+                            trackeRapp:::update_map(session, data,
+                                                    longitude = preped_route_map()$route$longitude,
+                                                    latitude = preped_route_map()$route$latitude)
+                        }
+                    }
+                }, silent = FALSE)
         }, ignoreInit = TRUE, priority = -1)
-
         shinyjs::js$is_map_collapse()
       }
 
