@@ -214,10 +214,10 @@ observeEvent(input$resetSelection, {
 ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
 ### Map                                                                     ####
       # Check if there is internet connection
-      test_connection <- curl::has_internet()
+      has_internet_connection <- curl::has_internet()
       # do not generate map if no location data for any of the sessions
                                         # TODO allow to plot only sessions that do have location data
-      if ((any(data$is_location_data)) & (is_internet_connection)) {
+      if ((any(data$is_location_data)) & (has_internet_connection)) {
         trackeRapp:::create_map()
         preped_route_map <- reactive({
           # shinyjs::js$is_map_collapse(id = 'box1')
