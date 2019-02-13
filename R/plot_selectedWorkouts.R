@@ -157,13 +157,13 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
         # initiate a line shape object
         line <- list(
           type = "line",
-          line = list(color = "darkred", dash = "dot"),
+          line = list(color = "grey", dash = "dot"),
           xref = paste0("x", n_plot),
           yref = paste0("y", n_plot)
         )
         line_v <- list(
           type = "line",
-          line = list(color = "darkblue", dash = "dot"),
+          line = list(color = "grey", dash = "dot"),
           xref = paste0("x", n_plot),
           yref = paste0("y", n_plot)
         )
@@ -175,7 +175,8 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
           changepoint_y_values <- c(changepoint_y_values, y_values[k])
           shapes[[length(shapes) + 1]] <- line
         }
-        for (k in c(1:(length(x_values) - 1))) {
+
+        for (k in c(2:(length(x_values) - 1))) {
           line_v[["x0"]] <- df_subset$Index[x_values[k]]
           line_v[["x1"]] <- df_subset$Index[x_values[k]]
           line_v[c("y0", "y1")] <- range(df_subset$Value)
