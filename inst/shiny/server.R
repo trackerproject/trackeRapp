@@ -260,7 +260,7 @@ observeEvent(input$resetSelection, {
                                     longitude = preped_route_map()$route$longitude,
                                     latitude = preped_route_map()$route$latitude)
             }
-          })
+          }, silent = TRUE)
         }, ignoreInit = TRUE, priority = -1)
 
         shinyjs::js$is_map_collapse()

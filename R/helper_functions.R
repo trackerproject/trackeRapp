@@ -97,7 +97,7 @@ create_icon <- function(feature) {
 #' @param feature A character for the feature whose units we want to access, for example 'altitude', 'distance',...
 #' @param data An object of class \code{reactivevalues}.
 get_selected_units <- function(feature, data) {
-  getUnits(data$summary)$unit[getUnits(data$summary)$variable %in% feature]
+  getUnits(data$summary)$unit[getUnits(data$summary)$variable %in% feature][1]
 }
 
 

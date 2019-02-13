@@ -476,7 +476,7 @@ show_change_unit_window <- function(data) {
         "mi" = "mi",
         "ft" = "ft"
       ),
-      checkbox = TRUE,
+      # checkbox = TRUE,
       inline = TRUE,
       selected = get_selected_units("altitude", data)
     ),
@@ -488,7 +488,7 @@ show_change_unit_window <- function(data) {
         "mi" = "mi",
         "ft" = "ft"
       ),
-      checkbox = TRUE,
+      # checkbox = TRUE,
       inline = TRUE,
       selected = get_selected_units("distance", data)
     ),
@@ -501,7 +501,7 @@ show_change_unit_window <- function(data) {
         "ft/s" = "ft_per_s",
         "mi/h" = "mi_per_h"
       ),
-      checkbox = TRUE,
+      # checkbox = TRUE,
       inline = TRUE,
       selected = get_selected_units("speed", data)
     ),
@@ -512,7 +512,7 @@ show_change_unit_window <- function(data) {
         "min/mi" = "min_per_mi",
         "s/min" = "s_per_m"
       ),
-      checkbox = TRUE,
+      # checkbox = TRUE,
       inline = TRUE,
       selected = get_selected_units("pace", data)
     ),
@@ -523,7 +523,7 @@ show_change_unit_window <- function(data) {
         "minutes" = "min",
         "hours" = "h"
       ),
-      checkbox = TRUE,
+      # checkbox = TRUE,
       inline = TRUE,
       selected = get_selected_units("duration", data)
     ),
@@ -533,7 +533,7 @@ show_change_unit_window <- function(data) {
         "W" = "W",
         "kW" = "kW"
       ),
-      checkbox = TRUE,
+      # checkbox = TRUE,
       inline = TRUE,
       selected = get_selected_units("power", data)
     ),
