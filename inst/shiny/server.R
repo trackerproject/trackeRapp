@@ -214,14 +214,14 @@ observeEvent(input$resetSelection, {
 ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
 ### Map                                                                     ####
       # Check if there is internet connection
-      test_connection <- try(RCurl::getURL("www.google.com"), silent = TRUE)
+      test_connection <- curl::has_internet()
       if (class(test_connection) == "try-error") {
         is_internet_connection <- FALSE
       } else {
         is_internet_connection <- TRUE
       }
       # do not generate map if no location data for any of the sessions
-      # TODO allow to plot only sessions that do have location data
+                                        # TODO allow to plot only sessions that do have location data
       if ((any(data$is_location_data)) & (is_internet_connection)) {
         trackeRapp:::create_map()
         preped_route_map <- reactive({
