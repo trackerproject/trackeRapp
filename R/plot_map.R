@@ -6,9 +6,11 @@
 #' @param all_sessions A vector of sessions being plotted.
 #' @param colour_sessions A vector of sessions to be colour to orange.
 plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_sessions) {
-  # if (is.null(session)) session <- seq_along(x)
-  # all_sessions <- unique(df$SessionID)
-  if(all(colour_sessions == all_sessions)){colour_sessions <-  NULL}
+    ## if (is.null(session)) session <- seq_along(x)
+    ## all_sessions <- unique(df$SessionID)
+    if (all(all_sessions %in% colour_sessions)) {
+        colour_sessions <-  NULL
+    }
   ## prepare popups
   units <- collect_units(get_units(sumX), unit_reference_sport = 'cycling')
   popupText <- function(session, start = TRUE, speed) {
@@ -78,9 +80,9 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
   #     )
   #   }
   # }
-  center_lat <- ifelse(is.null(colour_sessions), median(df$latitude), 
-                       median(df$latitude[df$SessionID %in% colour_sessions])) 
-  center_lon <- ifelse(is.null(colour_sessions), median(df$longitude), 
+  center_lat <- ifelse(is.null(colour_sessions), median(df$latitude),
+                       median(df$latitude[df$SessionID %in% colour_sessions]))
+  center_lon <- ifelse(is.null(colour_sessions), median(df$longitude),
                        median(df$longitude[df$SessionID %in% colour_sessions]))
 
   # map style buttons
@@ -131,6 +133,6 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
       style = "dark"
     ), dragmode = "pan", showlegend = FALSE, updatemenus = updatemenus,
     margin = list(l = 0, r = 0, t = 0, b = 0)
-  ) 
+  )
   return(p)
 }
