@@ -58,8 +58,14 @@ if (getRversion() >= "2.15.1") {
 #'
 #' @export
 trackeRapp <- function(quiet = FALSE) {
-    shiny::runApp(appDir = system.file('shiny', package = 'trackeRapp'),
-                  launch.browser = TRUE, quiet = quiet)
+    if (isTRUE(quiet)) {
+        suppressWarnings(shiny::runApp(appDir = system.file('shiny', package = 'trackeRapp'),
+                                       launch.browser = TRUE, quiet = TRUE))
+    }
+    else {
+        shiny::runApp(appDir = system.file('shiny', package = 'trackeRapp'),
+                      launch.browser = TRUE, quiet = FALSE)
+    }
 }
 
 #' @rdname trackeRapp
