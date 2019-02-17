@@ -20,8 +20,13 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
                                   n_changepoints = 6, print_changepoints = FALSE,
                                   unit_reference_sport = NULL, moving_threshold = NULL,
                                   desampling = 1, y_axis_range = NULL) {
-  sports <- get_sport(x)[session]
 
+  # altitude a lot less noisy, therefore need to ensure all data shown on graph
+  if(what == 'altitude'){
+    y_axis_range[[1]] <- y_axis_range[[1]] * 0.80
+    y_axis_range[[2]] <- y_axis_range[[2]] * 1.2
+  }
+  sports <- get_sport(x)[session]
     var_name_units <- lab_sum(
     feature = what, data = sumX,
     transform_feature = FALSE

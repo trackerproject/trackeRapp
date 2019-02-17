@@ -134,7 +134,7 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                 "11" = 11,
                 "12" = 12
               ),
-              selected = "4"
+              selected = "2"
             )
           ),
           hr(),
@@ -194,7 +194,7 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                 numericInput(
                   min = 2, max = 10, step = 0.1,
                   inputId = "critical_power_cycling",
-                  label = "Critical power [J]", value = 100
+                  label = "Critical power [W]", value = 4
                 )
               )
             ),
