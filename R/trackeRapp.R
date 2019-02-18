@@ -57,7 +57,7 @@ if (getRversion() >= "2.15.1") {
 #' @inheritParams shiny::runApp
 #'
 #' @export
-trackeRapp <- function(quiet = FALSE) {
+trackeRapp <- function(quiet = TRUE) {
     if (isTRUE(quiet)) {
         suppressWarnings(shiny::runApp(appDir = system.file('shiny', package = 'trackeRapp'),
                                        launch.browser = TRUE, quiet = TRUE))
