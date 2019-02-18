@@ -16,22 +16,22 @@ interface was fully built using the **shiny** package.
 
 ## Installation
 
-You can install the **trackeRapp** from CRAN:
+You can install the **trackeRapp** from CRAN by typing
 
 ```{r eval = FALSE}
-install.packages('trackeRapp')
+install.packages("trackeRapp")
 ```
 
-You can also install the **trackeRapp** from github with:
+You can also install the development version of **trackeRapp** from github by doing
 
 ```{r eval = FALSE}
+# install.packages("devtools")
 devtools::install_github("trackerproject/trackeRapp")
 ```
 
 ## Getting started
 
-Please see the [**tour de
-trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn about the **trackeRapp** and all its capabilities, including many tutorial videos and visualisations. The following are screenshots from the **trackeRapp** web interface:
+Please see the [**tour de trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn about the **trackeRapp** and all its capabilities, including many tutorial videos and visualisations. The following are a few screenshots from the **trackeRapp** web interface
 
 ```{r out.width='95%', fig.align='center', fig.cap='Session summaries', echo=FALSE}
 knitr::include_graphics('README_files/evening_sessions.png')
@@ -49,21 +49,19 @@ knitr::include_graphics('README_files/map.png')
 knitr::include_graphics('README_files/session_summaries.png')
 ```
 
-
 <br>
 
 ```{r out.width='95%', fig.align='center', fig.cap='Time in zones', echo=FALSE}
 knitr::include_graphics('README_files/zones_multiple_sessions.png')
 ```
 
-## Example
+## Launching the user-interface
 
-A user can access the web interface remotely at <https://www.trackerapp.com> or on their local machine by running the
-following commands:
+A user can access the web interface remotely at <https://www.trackerapp.com> or on their local machine by running the following commands:
 
 ```{r example, eval=FALSE}
 # Load the package
-library(trackeRapp)
+library("trackeRapp")
 # Open the interface in the browser
 trackeR_app()
 ```
