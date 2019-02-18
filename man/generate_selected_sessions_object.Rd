@@ -5,7 +5,8 @@
 \title{Generate an object with selected sessions}
 \usage{
 generate_selected_sessions_object(data, input, plot_selection = FALSE,
-  sport_selection = FALSE, table_selection = FALSE, no_selection = FALSE)
+  sport_selection = FALSE, table_selection = FALSE,
+  no_selection = FALSE)
 }
 \arguments{
 \item{data}{An object of class \code{reactivevalues}.}

@@ -7,8 +7,8 @@
 plot_selectedWorkouts(x, session, what, sumX, threshold = TRUE,
   smooth = FALSE, trend = TRUE, dates = TRUE, changepoints = FALSE,
   n_changepoints = 6, print_changepoints = FALSE,
-  unit_reference_sport = NULL, moving_threshold = NULL, desampling = 1,
-  y_axis_range = NULL)
+  unit_reference_sport = NULL, moving_threshold = NULL,
+  desampling = 1, y_axis_range = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{\link{trackeRdata}}.}

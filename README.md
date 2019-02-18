@@ -1,21 +1,5 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-<!-- ```{r, echo = FALSE} -->
-
-<!-- knitr::opts_chunk$set( -->
-
-<!--   collapse = TRUE, -->
-
-<!--   comment = "#>", -->
-
-<!--   fig.path = "README-" -->
-
-<!-- ) -->
-
-<!-- ``` -->
-
-# The trackeRapp
+The trackeRapp
+==============
 
 The goal of the [**trackeRapp**](https://trackerapp.com) is to provide
 an integrated workflow and a web interface for the analysis of sports
@@ -26,52 +10,54 @@ open-source on top of the
 [**trackeR**](https://github.com/trackerproject/trackeR) package. The
 interface was fully built using the **shiny** package.
 
-## Installation
+Installation
+------------
 
 You can install the **trackeRapp** from CRAN:
 
-``` r
-install.packages('trackeRapp')
-```
+    install.packages('trackeRapp')
 
 You can also install the **trackeRapp** from github with:
 
-``` r
-devtools::install_github("trackerproject/trackeRapp")
-```
+    devtools::install_github("trackerproject/trackeRapp")
 
-## Getting started
+Getting started
+---------------
 
 Please see the [**tour de
 trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn
 about the **trackeRapp** and all its capabilities, including many
 tutorial videos and visualisations. The following are screenshots from
-the **trackeRapp** web
-interface:
+the **trackeRapp** web interface:
 
-<img src="Images_readme/evening_sessions.png" title="Session summaries" alt="Session summaries" width="95%" style="display: block; margin: auto;" />
-
-<br>
-
-<img src="Images_readme/map.png" width="95%" style="display: block; margin: auto;" />
+<img src="README_files/evening_sessions.png" alt="Session summaries" width="95%" />
+<p class="caption">
+Session summaries
+</p>
 
 <br>
 
-<img src="Images_readme/session_summaries.png" width="95%" style="display: block; margin: auto;" />
+<img src="README_files/map.png" width="95%" style="display: block; margin: auto;" />
 
 <br>
 
-<img src="Images_readme/zones_multiple_sessions.png" title="Time in zones" alt="Time in zones" width="95%" style="display: block; margin: auto;" />
+<img src="README_files/session_summaries.png" width="95%" style="display: block; margin: auto;" />
 
-## Example
+<br>
+
+<img src="README_files/zones_multiple_sessions.png" alt="Time in zones" width="95%" />
+<p class="caption">
+Time in zones
+</p>
+
+Example
+-------
 
 A user can access the web interface remotely at
-<https://www.trackerapp.com> or on their local machine by running the
-following commands:
+<a href="https://www.trackerapp.com" class="uri">https://www.trackerapp.com</a>
+or on their local machine by running the following commands:
 
-``` r
-# Load the package
-library(trackeRapp)
-# Open the interface in the browser
-trackeR_app()
-```
+    # Load the package
+    library(trackeRapp)
+    # Open the interface in the browser
+    trackeR_app()

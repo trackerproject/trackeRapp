@@ -4,7 +4,8 @@
 \alias{plot_map}
 \title{Plot all selected workouts on an interactive leaflet map.}
 \usage{
-plot_map(sumX, df = NULL, threshold = TRUE, all_sessions, colour_sessions)
+plot_map(sumX, df = NULL, threshold = TRUE, all_sessions,
+  colour_sessions)
 }
 \arguments{
 \item{sumX}{An object of class \code{trackeRdataSummary}.}
