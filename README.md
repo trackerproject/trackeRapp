@@ -47,10 +47,7 @@ Session summaries
 
 <br>
 
-<img src="README_files/zones_multiple_sessions.png" alt="Time in zones" width="95%" />
-<p class="caption">
-Time in zones
-</p>
+<img src="README_files/zones_multiple_sessions.png" width="95%" style="display: block; margin: auto;" />
 
 Launching the user-interface
 ----------------------------

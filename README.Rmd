@@ -51,7 +51,7 @@ knitr::include_graphics('README_files/session_summaries.png')
 
 <br>
 
-```{r out.width='95%', fig.align='center', fig.cap='Time in zones', echo=FALSE}
+```{r out.width='95%', fig.align='center', echo=FALSE}
 knitr::include_graphics('README_files/zones_multiple_sessions.png')
 ```
 
