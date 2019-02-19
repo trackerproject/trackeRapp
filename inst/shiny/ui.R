@@ -58,25 +58,7 @@ ui <- shinydashboard::dashboardPage(
         br(),
         a("github.com/trackerproject",
           href = "https://github.com/trackerproject/trackeRapp/issues",
-          target="_blank")),
-      p("Credits",
-        br(),
-        "swimmer/cyclist icons",
-        a("(CC 3.0 BY)",
-          href="http://creativecommons.org/licenses/by/3.0/",
-          title="Creative Commons BY 3.0",
-          target="_blank"),
-        "by",
-        a("Scott de Jonge", href="https://www.flaticon.com/authors/scott-de-jonge", title="Scott de Jonge"),
-        br(),
-        "runner icon",
-        a("(Flaticon licence)",
-          href = "https://file000.flaticon.com/downloads/license/license.pdf",
-          title = "Flaticon basic licence",
-          target="_blank"),
-        "by",
-        a("Freepic", href="https://www.flaticon.com/authors/freepik", title="Freepic")
-        )
+          target="_blank"))
     )
 ),
   shinydashboard::dashboardBody(
