@@ -177,7 +177,7 @@ metrics <- function() {
 #' @param choices A vector. A list of features to plot, see \code{\link{choices}}.
 #' @param has_data A vector with boolean expressions representing which features have data.
 update_metrics_to_plot_workouts <- function(session, choices, has_data) {
-  shinyWidgets::updatePickerInput(
+  updatePickerInput(
     session = session,
     inputId = "metricsSelected",
     choices = c(choices[sapply(choices, function(x) {
@@ -307,12 +307,12 @@ withBusyIndicatorUI <- function(button) {
     button,
     span(
       class = "btn-loading-container",
-      shinyjs::hidden(
+      hidden(
         # img(src = "www/ajax-loader-bar.gif", class = "btn-loading-indicator"),
         icon("check", class = "btn-done-indicator")
       )
     ),
-    shinyjs::hidden(
+    hidden(
       div(
         class = "btn-err",
         div(
@@ -332,21 +332,21 @@ withBusyIndicatorServer <- function(buttonId, expr) {
   loadingEl <- sprintf("[data-for-btn=%s] .btn-loading-indicator", buttonId)
   doneEl <- sprintf("[data-for-btn=%s] .btn-done-indicator", buttonId)
   errEl <- sprintf("[data-for-btn=%s] .btn-err", buttonId)
-  shinyjs::disable(buttonId)
-  shinyjs::show(selector = loadingEl)
-  shinyjs::hide(selector = doneEl)
-  shinyjs::hide(selector = errEl)
+  disable(buttonId)
+  show(selector = loadingEl)
+  hide(selector = doneEl)
+  hide(selector = errEl)
   on.exit({
-    shinyjs::enable(buttonId)
-    shinyjs::hide(selector = loadingEl)
+    enable(buttonId)
+    hide(selector = loadingEl)
   })
 
   # Try to run the code when the button is clicked and show an error message if
   # an error occurs or a success message if it completes
   tryCatch({
     value <- expr
-    shinyjs::show(selector = doneEl)
-    shinyjs::delay(2000, shinyjs::hide(
+    show(selector = doneEl)
+    delay(2000, hide(
       selector = doneEl, anim = TRUE, animType = "fade",
       time = 0.5
     ))
@@ -361,8 +361,8 @@ errorFunc <- function(err, buttonId) {
   errEl <- sprintf("[data-for-btn=%s] .btn-err", buttonId)
   errElMsg <- sprintf("[data-for-btn=%s] .btn-err-msg", buttonId)
   errMessage <- gsub("^ddpcr: (.*)", "\\1", err$message)
-  shinyjs::html(html = errMessage, selector = errElMsg)
-  shinyjs::show(selector = errEl, anim = TRUE, animType = "fade")
+  html(html = errMessage, selector = errElMsg)
+  show(selector = errEl, anim = TRUE, animType = "fade")
 }
 
 appCSS <- "
@@ -399,43 +399,43 @@ cursor: default;
 
 # Update map based on current selection
 update_map <- function(session, data, longitude, latitude) {
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "restyle",
     list(line.color = "rgba(238, 118, 0, 1)"), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
   )
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "restyle",
     list(line.fillcolor = "rgba(238, 118, 0, 1)"), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
   )
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "restyle",
     list(line.width = 4), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
   )
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "restyle",
     list(opacity = 0.8), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
   )
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "restyle",
     list(hovertextsrc = 'ble'), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
   )
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "restyle",
     list(line.color = "rgba(0, 154, 205, 1)"), as.list(which(!(data$sessions_map %in% data$selectedSessions)) - 1)
   )
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "restyle",
     list(line.fillcolor = "rgba(0, 154, 205, 1)"), as.list(which(!(data$sessions_map %in% data$selectedSessions)) - 1)
   )
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "restyle",
     list(opacity = 0.2), as.list(which(!(data$sessions_map %in% data$selectedSessions)) - 1)
   )
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "relayout",
     list(mapbox.zoom = 9)
   )
-  plotly::plotlyProxy("map", session) %>% plotly::plotlyProxyInvoke(
+  plotlyProxy("map", session) %>% plotlyProxyInvoke(
     "relayout",
     list(mapbox.center = list(
       lat = median(latitude),
@@ -477,7 +477,7 @@ plot_work_capacities <- function(x, session, cp) {
       x = x, session = running_sessions,
       cp = cp
     )
-    plots <- do.call(plotly::subplot, c(
+    plots <- do.call(subplot, c(
       list(plot_cycling, plot_running),
       nrows = 2,
       margin = 0.05, shareY = FALSE, titleX = TRUE, titleY = TRUE
@@ -512,18 +512,18 @@ show_warning_no_data_selected <- function() {
 generate_objects <- function(data, output, session, choices) {
   process_dataset(data)
   output$download_data <- download_handler(data)
-  shinyjs::disable(selector = "#processedDataPath")
+  disable(selector = "#processedDataPath")
   data$selectedSessions <- data$summary$session
 
-  shinyjs::click("createDashboard")
+  click("createDashboard")
   # TODO incorporate update
   # update_metrics_to_plot_workouts(session, choices, data$hasData)
   sports_options <- c("Running" = "running",
                       "Cycling" = "cycling",
                       "Swimming" = "swimming")
-  identified_sports <- sports_options %in% unique(trackeR::get_sport(data$object))
+  identified_sports <- sports_options %in% unique(get_sport(data$object))
   data$identified_sports <- sports_options[identified_sports]
-  data$limits <- trackeR::compute_limits(data$object, a = 0.1)
+  data$limits <- compute_limits(data$object, a = 0.1)
   data$is_location_data <- sapply(data$object,
                                   function(x) {
                                     size <- nrow(x)
@@ -562,7 +562,7 @@ test_work_capacity <- function(data) {
 #' @param data An object of class \code{reactivevalues}.
 #' @param session A shiny object.
 update_sport_selection <- function(data, session) {
-  shinyWidgets::updateCheckboxGroupButtons(
+  updateCheckboxGroupButtons(
     session = session,
     inputId = "sports",
     choices = as.vector(data$identified_sports),

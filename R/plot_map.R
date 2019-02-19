@@ -35,27 +35,27 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
       sep = "\n"
     )
   }
-  p <- plotly::plot_mapbox()
+  p <- plot_mapbox()
   for (i in all_sessions) {
     plot_df <- df[which(df$SessionID == i), ]
     df_markers <- plot_df[round(seq(1, nrow(plot_df), length.out = 10)), ] #seq(1, nrow(plot_df), round(nrow(plot_df) / 10, 0)), ]
     df_markers$true_session_id <- i
 
-    p <- plotly::add_markers(
+    p <- add_markers(
       p,
       data = df_markers, x = ~ longitude, y = ~ latitude, alpha = 0,
       size = I(0.1), key = ~ true_session_id
     )
     colour <- ifelse(i %in% colour_sessions, "darkorange3", "deepskyblue3")
     if (colour == 'deepskyblue3') {
-    p <- plotly::add_paths(
+    p <- add_paths(
       p,
       data = plot_df, x = ~ longitude, y = ~ latitude,
       size = I(2), color = I(colour),
       opacity = 0.3,
       text = ~ popupText(session = SessionID, speed = speed))
       } else {
-        p <- plotly::add_paths(
+        p <- add_paths(
           p,
           data = plot_df, x = ~ longitude, y = ~ latitude,
           size = I(4), color = I(colour),
@@ -69,11 +69,11 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
   #     plot_df <- df[which(df$SessionID == i), ]
   #     df_markers <- plot_df[seq(1, nrow(plot_df), round(nrow(plot_df) / 10, 0)), ]
   #     df_markers$true_session_id <- i
-  #     p <- plotly::add_markers(
+  #     p <- add_markers(
   #       p, data = df_markers, x = ~longitude, y = ~latitude,
   #       size = I(2), key = ~true_session_id, color = I("darkorange3")
   #     )
-  #     p <- plotly::add_paths(
+  #     p <- add_paths(
   #       p, data = plot_df, x = ~longitude, y = ~latitude,
   #       size = I(2), color = I("darkorange3"),
   #       text = ~popupText(session = SessionID, speed = speed)
@@ -125,7 +125,7 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
 
   diff_lon <- abs(max(df$longitude) - min(df$longitude))
 
-  p <- plotly::layout(
+  p <- layout(
     p,
     mapbox = list(
       zoom = 9,

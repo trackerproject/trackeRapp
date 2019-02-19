@@ -77,10 +77,10 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
   ##  ............................................................................
   ##  Unique trackeR dashboard code                                           ####
 
-  # d <- if(shiny) plotly::event_data("plotly_selected") else NULL
+  # d <- if(shiny) event_data("plotly_selected") else NULL
 
   # print(d)
-  p <- plotly::plot_ly(
+  p <- plot_ly(
     dat,
     x = ~ xaxis, y = ~ value, hoverinfo = "text",
     text = ~ paste(
@@ -89,12 +89,12 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
       "\n", convert_to_name(what), ":", round(value, 2), units_text, "\n",
       "Sport:", sport
       ), showlegend = FALSE) %>%
-    plotly::add_markers(
+    add_markers(
       key = dat$session, color = I("deepskyblue3"), symbol = ~ sport,
       symbols = c("circle", "x", "square"), legendgroup = ~ sport,
       showlegend = TRUE #, size = I(6)
       ) %>%
-    plotly::add_lines(
+    add_lines(
       color = I("deepskyblue3"), connectgaps = TRUE, legendgroup = ~ sport,
       line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE)
     )
@@ -105,13 +105,13 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
       if (nrow(m) == 2) {
         m <- rbind(m, m)
       }
-      p <- plotly::add_markers(p,
+      p <- add_markers(p,
         data = m, color = I("darkorange3"),
         symbol = ~ sport,
         symbols = c("circle", "x", "square"),
         showlegend = FALSE, #size = I(9)
       )
-      # plotly::add_paths(data = m, color = I("darkorange3"))
+      # add_paths(data = m, color = I("darkorange3"))
     }
   }
 
@@ -134,7 +134,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
                                        max(dat$value, na.rm = TRUE) * 1.5))
   x <- list(title = "Date",  range = ra)
 
-  plotly::layout(p,
+  layout(p,
     dragmode = "select", showlegend = TRUE, yaxis = y, legend = list(y = 1.1, orientation = "h"),
     xaxis = x, margin = list(l = 80, b = 50, pad = 0)
   )

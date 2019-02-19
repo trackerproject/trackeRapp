@@ -7,7 +7,7 @@ setup_parallel <- function() {
       call. = FALSE)
     # EXCLUDE COVERAGE END
   }
-  if (foreach::getDoParWorkers() == 1) {
+  if (getDoParWorkers() == 1) {
     # EXCLUDE COVERAGE START
     warning("No parallel backend registered", call. = TRUE)
     # EXCLUDE COVERAGE END

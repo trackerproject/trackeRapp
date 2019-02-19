@@ -3,13 +3,13 @@
 
 ##  ............................................................................
 ##  User interface                                                          ####
-ui <- shinydashboard::dashboardPage(
+ui <- dashboardPage(
   title = "trackeRapp",
   skin = "black",
-  shinydashboard::dashboardHeader(title = span(tagList(icon("dashboard"), "trackeRapp"))),
-  shinydashboard::dashboardSidebar(
+  dashboardHeader(title = span(tagList(icon("dashboard"), "trackeRapp"))),
+  dashboardSidebar(
     tags$head(tags$style(trackeRapp:::appCSS)),
-    shinydashboard::sidebarMenu(
+    sidebarMenu(
       div(
         fileInput(
           "processedDataPath", "Choose processed file",
@@ -61,9 +61,9 @@ ui <- shinydashboard::dashboardPage(
           target="_blank"))
     )
 ),
-  shinydashboard::dashboardBody(
-    shinyjs::useShinyjs(),
-    shinyalert::useShinyalert(),
-    shinyjs::extendShinyjs(text = trackeRapp:::get_javascript())
+  dashboardBody(
+    useShinyjs(),
+    useShinyalert(),
+    extendShinyjs(text = trackeRapp:::get_javascript())
   )
 )

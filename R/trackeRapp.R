@@ -39,11 +39,6 @@
 #'
 #' @docType package
 #' @name trackeRapp
-#' @import trackeR
-#' @import shiny
-#' @importFrom stats na.omit median
-#' @importFrom utils read.csv
-#' @importFrom plotly "%>%"
 NULL
 
 
@@ -59,12 +54,12 @@ if (getRversion() >= "2.15.1") {
 #' @export
 trackeRapp <- function(quiet = TRUE) {
     if (isTRUE(quiet)) {
-        suppressWarnings(shiny::runApp(appDir = system.file('shiny', package = 'trackeRapp'),
-                                       launch.browser = TRUE, quiet = TRUE))
+        suppressWarnings(runApp(appDir = system.file('shiny', package = 'trackeRapp'),
+                                launch.browser = TRUE, quiet = TRUE))
     }
     else {
-        shiny::runApp(appDir = system.file('shiny', package = 'trackeRapp'),
-                      launch.browser = TRUE, quiet = FALSE)
+        runApp(appDir = system.file('shiny', package = 'trackeRapp'),
+               launch.browser = TRUE, quiet = FALSE)
     }
 }
 

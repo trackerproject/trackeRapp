@@ -23,7 +23,7 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
 
 
   df$series <- paste("Session", sprintf(paste0("%0", nchar(max(df$Series)), "d"), df$Series))
-  pal <- leaflet::colorFactor(c("deepskyblue", "dodgerblue4"), df$series)
+    pal <- colorRampPalette(c("deepskyblue", "dodgerblue4"))(max(df$Series))
 
   individual_plots <- list()
   legend_status <- TRUE
@@ -38,19 +38,19 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
     feature_profile <- df[df$Profile == feature, ]
     feature_profile$Value[is.na(feature_profile$Value)] <- 0
 
-    p <- plotly::plot_ly(
+    p <- plot_ly(
       feature_profile,
       x = ~ Index, y = ~ Value,
-      color = ~ series, colors = pal(feature_profile$series), legendgroup = ~ Series,
+      color = ~ series, colors = pal[feature_profile$Series], legendgroup = ~ Series,
       hoverinfo = "text", text = ~ paste(" Value:", round(Index, 1), var_units, "\n", series)
     ) %>%
-      plotly::add_lines() %>%
-      plotly::layout(xaxis = x, yaxis = y, hovermode = "closest")
-    individual_plots[[feature]] <- plotly::style(p, showlegend = legend_status)
+      add_lines() %>%
+      layout(xaxis = x, yaxis = y, hovermode = "closest")
+    individual_plots[[feature]] <- style(p, showlegend = legend_status)
     legend_status <- FALSE
   }
 
-  plots <- do.call(plotly::subplot, c(
+  plots <- do.call(subplot, c(
     individual_plots,
     nrows = length(what),
     margin = 0.05, shareY = FALSE, titleX = TRUE, titleY = TRUE

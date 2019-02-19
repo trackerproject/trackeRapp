@@ -7,7 +7,7 @@
 
 plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
   if (plotly) {
-    d <- if (shiny) plotly::event_data("plotly_selected") else NULL
+    d <- if (shiny) event_data("plotly_selected") else NULL
     startdates <- as.Date(sumX$sessionStart)
     enddates <- as.Date(sumX$sessionEnd)
     ## Hack to extract times
@@ -24,10 +24,10 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
     # )), origin = Sys.Date())
     df <- data.frame(sday = startdates, eday = enddates, start = starttimes, end = endtimes, session = sumX$session)
 
-    p <- plotly::plot_ly()
-    p <- plotly::add_markers(p, data = df, x = ~ start, y = ~ sday, key = ~ session, alpha = 0, hoverinfo = "none")
+    p <- plot_ly()
+    p <- add_markers(p, data = df, x = ~ start, y = ~ sday, key = ~ session, alpha = 0, hoverinfo = "none")
 
-    p <- plotly::add_segments(
+    p <- add_segments(
       p,
       data = df, x = ~ start, xend = ~ end, y = ~ sday, yend = ~ eday,
       color = I("deepskyblue3"), hoverinfo = "text",
@@ -39,7 +39,7 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
 
     all_sessions <- nrow(sumX)
     if (!(identical(all_sessions, length(session)))) {
-      p <- plotly::add_segments(
+      p <- add_segments(
         p,
         data = df[which(df$session %in% session), ], x = ~ start,
         xend = ~ end, y = ~ sday, yend = ~ eday,
@@ -54,8 +54,8 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
     }
     y <- list(title = "")
     x <- list(title = "")
-    p <- plotly::layout(p, dragmode = "select", showlegend = FALSE, yaxis = y, xaxis = x) %>%
-      plotly::config(displayModeBar = F)
+    p <- layout(p, dragmode = "select", showlegend = FALSE, yaxis = y, xaxis = x) %>%
+      config(displayModeBar = F)
     p
   } else {
     timeline(sumX)

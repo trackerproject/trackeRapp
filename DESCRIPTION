@@ -15,7 +15,6 @@ Depends:
 Imports:
     zoo,
     foreach,
-    leaflet,
     mgcv,
     plotly,
     DT,

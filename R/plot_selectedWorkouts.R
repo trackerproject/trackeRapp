@@ -109,7 +109,7 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
   for (i in session) {
     df_subset <- x[[which(i == session)]]
     df_subset <- df_subset[, what]
-    dates <- zoo::index(df_subset)
+    dates <- index(df_subset)
     df_subset <- data.frame(df_subset)
     names(df_subset) <- what
     df_subset$Index <- dates
@@ -143,21 +143,21 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
     if (has_values) {
       if (changepoints) {
 
-        # m.binseg <- changepoint::cpt.mean(df_subset$Value, method = "BinSeg",
+        # m.binseg <- cpt.mean(df_subset$Value, method = "BinSeg",
         #                      penalty = 'Manual', pen.value = '700 * log(n)',
         #                      minseglen = length(df_subset$Value) / 100, Q = n_changepoints)
         n_sessions <- length(df_subset$Value) - 5
-        m.binseg <- changepoint::cpt.mean(df_subset$Value[6:n_sessions],
+        m.binseg <- cpt.mean(df_subset$Value[6:n_sessions],
           method = "BinSeg",
           penalty = "BIC",
           minseglen = length(df_subset$Value) / 100, Q = n_changepoints
         )
-        x_values <- c(1, changepoint::cpts(m.binseg) + 5, length(df_subset$Value))
-        y_values <- changepoint::coef(m.binseg)$mean
+        x_values <- c(1, cpts(m.binseg) + 5, length(df_subset$Value))
+        y_values <- coef(m.binseg)$mean
 
         if (print_changepoints) {
-          print(df_subset$Index[changepoint::cpts(m.binseg)])
-          print(changepoint::coef(m.binseg))
+          print(df_subset$Index[cpts(m.binseg)])
+          print(coef(m.binseg))
         }
         # initiate a line shape object
         line <- list(
@@ -192,9 +192,9 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
 
       }
 
-      sampled_rows <- sort(sample(zoo::index(df_subset),
-                                  size = length(zoo::index(df_subset)) * desampling))
-      a <- plotly::plot_ly(
+      sampled_rows <- sort(sample(index(df_subset),
+                                  size = length(index(df_subset)) * desampling))
+      a <- plot_ly(
         df_subset[sampled_rows, ],
         x = ~ Index, y = ~ Value, hoverinfo = "none",
         type = "scatter", mode = "lines",
@@ -202,11 +202,11 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
       )
 
       if (smooth) {
-        smoothed_model <- mgcv::gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
-        smoothed_data <- mgcv::predict.gam(smoothed_model, newdata = df_subset)
+        smoothed_model <- gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
+        smoothed_data <- predict.gam(smoothed_model, newdata = df_subset)
         smoothed_values$minimum <- c(smoothed_values$minimum, min(smoothed_data))
         smoothed_values$maximum <- c(smoothed_values$maximum, max(smoothed_data))
-        a <- a %>% plotly::add_lines(
+        a <- a %>% add_lines(
           data = df_subset,
           x = ~ Index, y = smoothed_data, hoverinfo = "text",
           text = paste(round(smoothed_data, 2), var_units),
@@ -214,7 +214,7 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
           showlegend = FALSE, alpha = 1
         )
       }
-      a <- a %>% plotly::layout(
+      a <- a %>% layout(
         annotations = annotations_list,
         xaxis = axis_list, yaxis = c(axis_list, list(range = y_axis_range))
       )
@@ -223,13 +223,13 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
     else {
       maximal_range <- c(-1, 1)
       df_subset$Value <- 0
-      a <- plotly::plot_ly(
+      a <- plot_ly(
         df_subset,
         x = ~ Index, y = ~ Value, hoverinfo = "none",
         type = "scatter", mode = "none",
         showlegend = FALSE
       ) %>%
-        plotly::layout(
+        layout(
           annotations = annotations_list,
           xaxis = axis_list, yaxis = c(
             axis_list,
@@ -263,9 +263,9 @@ plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smoo
   y <- list(title = var_name_units, fixedrange = TRUE)
   x <- list(title = "Time", fixedrange = TRUE)
 
-  return(plotly::subplot(plot_stored, nrows = 1,  titleY = FALSE, margin = 0.003) %>%
-    plotly::config(displayModeBar = FALSE) %>%
-    plotly::layout(
+  return(subplot(plot_stored, nrows = 1,  titleY = FALSE, margin = 0.003) %>%
+    config(displayModeBar = FALSE) %>%
+    layout(
       showlegend = FALSE, xaxis = x, yaxis = y, images = images,
       hovermode = "x", shapes = shapes, dragmode = "pan"
     ))

@@ -14,10 +14,10 @@ render_summary_box <- function(short_name, long_name, data) {
       }
     })
     color <- if (value() == "not available") "olive" else "light-blue"
-    shinydashboard::valueBox(value(), subtitle, icon, color = color)
+    valueBox(value(), subtitle, icon, color = color)
   }
 
-  shinydashboard::renderValueBox({
+  renderValueBox({
     box_text(
       what = short_name,
       subtitle = long_name,
@@ -39,7 +39,7 @@ generate_selected_sessions_object <- function(data, input,
                                               sport_selection = FALSE,
                                               table_selection = FALSE,
                                               no_selection = FALSE) {
-  data$hover <- plotly::event_data("plotly_selected")
+  data$hover <- event_data("plotly_selected")
   if (sport_selection) {
     data$selectedSessions <- data$summary$session[get_sport(data$object) %in% input$sports]
   }
