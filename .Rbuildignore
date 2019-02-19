@@ -1,0 +1,14 @@
+^\.gitignore
+^\._*
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.Rmd$
+^\.travis\.yml$
+^codecov\.yml$
+^CONDUCT\.md$
+README.md
+README_files/
+README.html
+tests/
+inst/scratch/
+inst/approvals/
