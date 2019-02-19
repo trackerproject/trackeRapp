@@ -46,20 +46,39 @@ ui <- shinydashboard::dashboardPage(
     ),
     div(
       class = "form-group shiny-input-container",
-      p("Design and original development", br(), a("Robin Hornak"), br(),
-        a("Ioannis Kosmidis", href = "http://www.ucl.ac.uk/~ucakiko")),
-      p(
-        "Licence",
-        a(
-          "GPL3",
-          href = "https://www.gnu.org/licenses/gpl-3.0.en.html",
-          br(),
-          a("Bugs, issues, feature requests",
-            href = "https://github.com/hfrick/trackeR/issues")
+      p("Design and original development",
+        br(),
+        a("Robin Hornak"),
+        br(),
+        a("Ioannis Kosmidis", href = "http://www.ikosmidis.com", target="_blank")),
+      p("Licence",
+        br(),
+        a("GPL3", href = "https://www.gnu.org/licenses/gpl-3.0.en.html", target="_blank")),
+      p("Bugs, issues, feature requests",
+        br(),
+        a("github.com/trackerproject",
+          href = "https://github.com/trackerproject/trackeRapp/issues",
+          target="_blank")),
+      p("Credits",
+        br(),
+        "swimmer/cyclist icons",
+        a("(CC 3.0 BY)",
+          href="http://creativecommons.org/licenses/by/3.0/",
+          title="Creative Commons BY 3.0",
+          target="_blank"),
+        "by",
+        a("Scott de Jonge", href="https://www.flaticon.com/authors/scott-de-jonge", title="Scott de Jonge"),
+        br(),
+        "runner icon",
+        a("(Flaticon licence)",
+          href = "https://file000.flaticon.com/downloads/license/license.pdf",
+          title = "Flaticon basic licence",
+          target="_blank"),
+        "by",
+        a("Freepic", href="https://www.flaticon.com/authors/freepik", title="Freepic")
         )
-      )
     )
-  ),
+),
   shinydashboard::dashboardBody(
     shinyjs::useShinyjs(),
     shinyalert::useShinyalert(),

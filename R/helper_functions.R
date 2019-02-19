@@ -218,7 +218,7 @@ download_handler <- function(data) {
 #' Show warning window when no data uploaded
 show_warning_window <- function() {
   showModal(modalDialog(
-    title = "trackeR dashboard message",
+    title = "trackeRapp message",
     div(tags$b(
       "Load processed and/or raw data",
       class = "warningMessage"
@@ -489,7 +489,7 @@ plot_work_capacities <- function(x, session, cp) {
 #' Show a modal window to inform a user that no data was selected
 show_warning_no_data_selected <- function() {
   showModal(modalDialog(
-    title = "trackeR dashboard message",
+    title = "trackeRapp message",
     div(tags$b(
       "Select a processed data image or a directory with raw datafiles",
       class = "warningMessage"
