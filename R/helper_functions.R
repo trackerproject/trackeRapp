@@ -238,7 +238,7 @@ calculate_plot_height <- function(metrics) {
 get_javascript <- function() {
   "
     shinyjs.collapse = function(boxid) {
-    $('## + boxid).closest('.box').find('[data-widget=collapse]').click();
+    $('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
     };
     // shinyjs.resetClick = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }
     shinyjs.reset_page = function() { location.reload(); };
