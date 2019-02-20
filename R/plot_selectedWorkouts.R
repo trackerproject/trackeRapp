@@ -15,7 +15,7 @@
 #' @param moving_threshold A numeric for the threshold.
 #' @param desampling A numeric proportion between (0-1] for the proportion of raw data to be plotted.
 #' @param y_axis_range A vector with an upper and a lower limit for the given variable.
-plot_selectedWorkouts <- function(x, session, what, sumX, threshold = TRUE, smooth = FALSE,
+plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smooth = FALSE,
                                   trend = TRUE, dates = TRUE, changepoints = FALSE,
                                   n_changepoints = 6, print_changepoints = FALSE,
                                   unit_reference_sport = NULL, moving_threshold = NULL,

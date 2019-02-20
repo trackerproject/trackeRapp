@@ -1,4 +1,4 @@
-#' Insert map
+## Insert map
 create_map <- function() {
   insertUI(immediate = TRUE,
     selector = ".content",
@@ -23,7 +23,7 @@ create_map <- function() {
   )
 }
 
-#' Insert summary boxes
+## Insert summary boxes
 create_summary_boxes <- function() {
   insertUI(immediate = TRUE,
     selector = ".content",
@@ -40,8 +40,8 @@ create_summary_boxes <- function() {
   )
 }
 
-#' Create workout plots
-#' @param feature A character. The metric that is plotted, selected from \code{\link{choices}}.
+## Create workout plots
+## @param feature A character. The metric that is plotted, selected from \code{\link{choices}}.
 create_workout_plots <- function(feature) {
   name <- switch(as.character(feature),
     "distance" = "Distance",
@@ -76,9 +76,9 @@ create_workout_plots <- function(feature) {
   )
 }
 
-#' Create selected_workouts plot
-#' @param id A character. The ID of the plot.
-#' @param collapsed A logical. Whether or not the UI box should be collapsed.
+## Create selected_workouts plot
+## @param id A character. The ID of the plot.
+## @param collapsed A logical. Whether or not the UI box should be collapsed.
 create_selected_workout_plot <- function(id, collapsed = FALSE) {
   insertUI(
     selector = ".content",
@@ -148,9 +148,9 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
   )
 }
 
-#' Create work capacity plot
-#' @param id A character. The ID of the plot.
-#' @param collapsed A logical. Whether or not the UI box should be collapsed.
+## Create work capacity plot
+## @param id A character. The ID of the plot.
+## @param collapsed A logical. Whether or not the UI box should be collapsed.
 create_work_capacity_plot <- function(id, collapsed = TRUE) {
   insertUI(
     selector = ".content",
@@ -240,11 +240,11 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
 }
 
 
-#' Create concentration profile plot UI.
-#' @param inputId A character. The ID of the user input for the metrics that should be plotted
-#' @param plotId A character. The ID of the plot.
-#' @param choices A vector of the metrics a user can select to be plotted, selected from \code{\link{metrics}}.
-#' @param collapsed A logical. Whether or not the UI box should be collapsed.
+## Create concentration profile plot UI.
+## @param inputId A character. The ID of the user input for the metrics that should be plotted
+## @param plotId A character. The ID of the plot.
+## @param choices A vector of the metrics a user can select to be plotted, selected from \code{\link{metrics}}.
+## @param collapsed A logical. Whether or not the UI box should be collapsed.
 create_profiles_box <- function(inputId, plotId, choices, collapsed = FALSE) {
   ## Other metrics - Work capacity, Distribution profile, Concentration profile
   insertUI(
@@ -286,10 +286,10 @@ create_profiles_box <- function(inputId, plotId, choices, collapsed = FALSE) {
   )
 }
 
-#' Create time in zones plot UI.
-#' @param inputId A character. The ID of the user input for the metrics that should be plotted.
-#' @param plotId A character. The ID of the plot.
-#' @param choices A vector of the metrics a user can select to be plotted, selected from \code{\link{metrics}}.
+## Create time in zones plot UI.
+## @param inputId A character. The ID of the user input for the metrics that should be plotted.
+## @param plotId A character. The ID of the plot.
+## @param choices A vector of the metrics a user can select to be plotted, selected from \code{\link{metrics}}.
 create_zones_box <- function(inputId, plotId, choices) {
   ## Other metrics - Work capacity, Distribution profile, Concentration profile
   insertUI(
@@ -347,9 +347,9 @@ create_zones_box <- function(inputId, plotId, choices) {
   )
 }
 
-#' Create a return button from selected workouts plot
-#' @param sport_options A vector of sports identified from the uploaded sessions.
-#' @param metrics_available A vector of metrics that are found in the dataset.
+## Create a return button from selected workouts plot
+## @param sport_options A vector of sports identified from the uploaded sessions.
+## @param metrics_available A vector of metrics that are found in the dataset.
 create_option_box <- function(sport_options, metrics_available) {
   insertUI(
     immediate = TRUE,
@@ -430,8 +430,8 @@ create_option_box <- function(sport_options, metrics_available) {
 }
 
 
-#' Create a summary and timeline boxes
-#'
+## Create a summary and timeline boxes
+##
 create_summary_timeline_boxes <- function() {
   insertUI(
     immediate = TRUE,
@@ -446,7 +446,7 @@ create_summary_timeline_boxes <- function() {
           icon("reorder"),
           "Summary of workouts"
         ),
-        DT::dataTableOutput("summary", height = "auto"),
+        DTOutput("summary", height = "auto"),
         collapsible = FALSE
       ),
       box(
@@ -462,9 +462,9 @@ create_summary_timeline_boxes <- function() {
   )
 }
 
-#' Generate a modal window where user can chage units of measurement.
-#'
-#' @param data An object of class \code{reactivevalues}.
+## Generate a modal window where user can chage units of measurement.
+##
+## @param data An object of class \code{reactivevalues}.
 show_change_unit_window <- function(data) {
   showModal(modalDialog(
     title = "Change units",

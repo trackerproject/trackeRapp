@@ -13,12 +13,12 @@ trackeRapp(quiet = TRUE)
 trackeR_app(quiet = TRUE)
 }
 \arguments{
-\item{quiet}{Should Shiny status messages be shown? Defaults to FALSE.}
+\item{quiet}{If \code{TRUE} (default), then warnings and errors while using the interface are printed. If \code{FALSE}, then all warnings and errors are suppressed.}
 }
 \description{
-'trackeRapp' provides an integrated dashboard and workflow for the
+\code{trackeRapp} provides an integrated dashboard and workflow for the
 analysis of running and cycling data from GPS-enabled tracking
-devices through the 'trackeR' R package.
+devices through the \code{trackeR} R package.
 }
 \note{
 'trackeRapp' has been designed and developed by Robin Hornak and
@@ -40,6 +40,16 @@ The interface can be launched by typing \code{\link{trackeR_app}}
 or \code{\link{trackeRapp}}.
 }
 
+\examples{
+
+\dontrun{
+trackeRapp(quiet = TRUE)
+}
+\dontrun{
+trackeR_app(quiet = FALSE)
+}
+
+}
 \references{
 Frick, H., Kosmidis, I. (2017). trackeR: Infrastructure for Running
 and Cycling Data from GPS-Enabled Tracking Devices in

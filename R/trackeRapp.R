@@ -1,9 +1,9 @@
 #' trackeRapp: Interface for the analysis of running and cycling data
 #' from GPS-enabled tracking devices.
 #'
-#' 'trackeRapp' provides an integrated dashboard and workflow for the
+#' \code{trackeRapp} provides an integrated dashboard and workflow for the
 #' analysis of running and cycling data from GPS-enabled tracking
-#' devices through the 'trackeR' R package.
+#' devices through the \code{trackeR} R package.
 #'
 #' @section Launching the app:
 #'
@@ -39,17 +39,36 @@
 #'
 #' @docType package
 #' @name trackeRapp
+#' @import trackeR
+#' @import shiny
+#' @import plotly
+#' @importFrom grDevices colorRampPalette
+#' @importFrom shinyWidgets updatePickerInput dropdownButton tooltipOptions pickerInput actionBttn checkboxGroupButtons awesomeRadio updateCheckboxGroupButtons
+#' @importFrom shinyjs hidden disable show hide enable html click delay useShinyjs extendShinyjs runjs js addClass
+#' @importFrom shinyalert useShinyalert shinyalert
+#' @importFrom shinydashboard box dashboardPage dashboardHeader dashboardSidebar sidebarMenu dashboardBody valueBox valueBoxOutput renderValueBox
+#' @importFrom shinycssloaders withSpinner
+#' @importFrom zoo index coredata
+#' @importFrom changepoint cpt.mean cpts coef
+#' @importFrom mgcv gam predict.gam
+#' @importFrom stats sd na.omit median
+#' @importFrom utils read.csv
+#' @importFrom foreach getDoParWorkers foreach %dopar% %do%
+#' @importFrom DT renderDT datatable DTOutput dataTableProxy selectRows
 NULL
-
-
-## Define global variables
-if (getRversion() >= "2.15.1") {
-    utils::globalVariables(c("Series"))  # plot_selectedWorkouts
-}
 
 #' Launch the trackeR dashboard
 #'
-#' @inheritParams shiny::runApp
+#' @param quiet If \code{TRUE} (default), then warnings and errors while using the interface are printed. If \code{FALSE}, then all warnings and errors are suppressed.
+#'
+#' @examples
+#'
+#' \dontrun{
+#' trackeRapp(quiet = TRUE)
+#' }
+#' \dontrun{
+#' trackeR_app(quiet = FALSE)
+#' }
 #'
 #' @export
 trackeRapp <- function(quiet = TRUE) {
@@ -66,3 +85,9 @@ trackeRapp <- function(quiet = TRUE) {
 #' @rdname trackeRapp
 #' @export
 trackeR_app <- trackeRapp
+
+
+## Define global variables
+if (getRversion() >= "2.15.1") {
+    utils::globalVariables(c("Series", "session"))
+}

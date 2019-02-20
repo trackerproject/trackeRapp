@@ -1,7 +1,7 @@
-#' Render data in summary box
-#' @param short_name A character. The metric name, e.g., distance.
-#' @param long_name A character. The title of the box.
-#' @param data An object of class \code{reactivevalues}.
+## Render data in summary box
+## @param short_name A character. The metric name, e.g., distance.
+## @param long_name A character. The title of the box.
+## @param data An object of class \code{reactivevalues}.
 render_summary_box <- function(short_name, long_name, data) {
   box_text <- function(what, subtitle, icon, data) {
     value <- reactive({
@@ -27,13 +27,13 @@ render_summary_box <- function(short_name, long_name, data) {
   })
 }
 
-#' Generate an object with selected sessions
-#' @param data An object of class \code{reactivevalues}.
-#' @param input A shiny object with user input.
-#' @param plot_selection A logical. Whether session selection made from a plot.
-#' @param sport_selection A logical. Whether session selection made from sport selector.
-#' @param table_selection A logical. Whether session selection made from the summary table.
-#' @param no_selection A logical. Whether no sessions are selected.
+## Generate an object with selected sessions
+## @param data An object of class \code{reactivevalues}.
+## @param input A shiny object with user input.
+## @param plot_selection A logical. Whether session selection made from a plot.
+## @param sport_selection A logical. Whether session selection made from sport selector.
+## @param table_selection A logical. Whether session selection made from the summary table.
+## @param no_selection A logical. Whether no sessions are selected.
 generate_selected_sessions_object <- function(data, input,
                                               plot_selection = FALSE,
                                               sport_selection = FALSE,
@@ -60,11 +60,11 @@ generate_selected_sessions_object <- function(data, input,
   data$selectedSessions <- sort(data$selectedSessions)
 }
 
-#' Render summary table
-#' @param data An object of class \code{reactivevalues}.
-#' @param input A shiny object with user input.
+## Render summary table
+## @param data An object of class \code{reactivevalues}.
+## @param input A shiny object with user input.
 render_summary_table <- function(data, input) {
-  DT::renderDataTable({
+   renderDT({
     dataSelected <- data.frame(
       "Session" = data$summary[["session"]],
       "Date" =
@@ -90,7 +90,7 @@ render_summary_table <- function(data, input) {
       "Sport" =
         get_sport(data$object)
     )
-    DT::datatable(
+    datatable(
       dataSelected,
       rownames = FALSE,
       # selection = "none",

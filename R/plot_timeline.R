@@ -4,7 +4,6 @@
 #' @param plotly Logical. Return plotly plots or standard trackeR plots
 #' @param shiny Logical. Whether plots are in a shiny environment.
 #' @param session A vector. Selected session numbers.
-
 plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
   if (plotly) {
     d <- if (shiny) event_data("plotly_selected") else NULL

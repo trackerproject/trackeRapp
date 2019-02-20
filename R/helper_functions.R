@@ -1,9 +1,9 @@
-#' Generate a character of formatted units, either only the unit (e.g "[bpm]") or whole text (e.g. "Heart Rate [bpm]").
-#'
-#' @param feature A character representing the feature whose units we want to generate.
-#' @param data An object of class \code{trackeRdataSummary} or \code{trackeRdata}.
-#' @param whole_text Generate only unit (e.g "[bpm]") or whole text (e.g. "Heart Rate [bpm]").
-#' @param transform_feature If TRUE, expected format of \code{feature} is such as "avgCadence", "avgPower". If FALSE, expected format is "pace", "cadence", "heart_rate" or "altitude".
+## Generate a character of formatted units, either only the unit (e.g "[bpm]") or whole text (e.g. "Heart Rate [bpm]").
+##
+## @param feature character string representing the feature whose units we want to generate.
+## @param data object of class \code{trackeRdataSummary} or \code{trackeRdata}.
+## @param whole_text generate only unit (e.g "[bpm]") or whole text (e.g. "Heart Rate [bpm]").
+## @param transform_feature if \code{TRUE}, expected format of \code{feature} is such as "avgCadence", "avgPower". If \code{FALSE}, expected format is "pace", "cadence", "heart_rate" or "altitude".
 lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) {
   feature <- as.character(feature)
   units <- getUnits(data)
@@ -74,9 +74,9 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
   unique(ret)
 }
 
-#' Generate an icon for a given feature.
-#'
-#' @param feature A character representing the feature whose units we want to generate.
+## Generate an icon for a given feature.
+##
+## @param feature character string representing the feature for which we want to generate an icon
 create_icon <- function(feature) {
   icon <- switch(feature,
     "distance" = "area-chart",
@@ -92,20 +92,20 @@ create_icon <- function(feature) {
   icon
 }
 
-#' Get units of measurement for a given feature
-#'
-#' @param feature A character for the feature whose units we want to access, for example 'altitude', 'distance',...
-#' @param data An object of class \code{reactivevalues}.
+## Get units of measurement for a given feature
+##
+## @param feature character string for the feature whose units we want to access; for example \code{"altitude"}, \code{"distance"}.
+## @param data object of class \code{reactivevalues}
 get_selected_units <- function(feature, data) {
   getUnits(data$summary)$unit[getUnits(data$summary)$variable %in% feature][1]
 }
 
 
-#' Change units of variables.
-#'
-#' @param data An object of class \code{reactivevalues}.
-#' @param input An object of class \code{reactivevalues}.
-#' @param object A character of either 'summary' or 'object' to specify which objects' units to change.
+## Change units of variables.
+##
+## @param data object of class \code{reactivevalues}.
+## @param input object of class \code{reactivevalues}.
+## @param object \code{"summary"} or \code{"object"} to specify which objects' units to change.
 change_object_units <- function(data, input, object) {
 
   # unused_variables <- c("latitude", "longitude", "heart.rate", "duration", "temperature")
@@ -144,7 +144,7 @@ change_object_units <- function(data, input, object) {
   return(data_updated)
 }
 
-#' Generate choices for plots
+## Generate choices for plots
 choices <- function() {
   c(
     "Distance" = "distance",
@@ -159,7 +159,7 @@ choices <- function() {
   )
 }
 
-#' Generate metrics to test if they have data
+## Generate metrics to test if they have data
 metrics <- function() {
   c(
     "Speed" = "speed",
@@ -172,10 +172,10 @@ metrics <- function() {
   )
 }
 
-#' Update panel with metrics to plot
-#' @param session A shiny object.
-#' @param choices A vector. A list of features to plot, see \code{\link{choices}}.
-#' @param has_data A vector with boolean expressions representing which features have data.
+## Update panel with metrics to plot
+## @param session \code{shiny} object.
+## @param choices vector of features to plot, see \code{\link{choices}}.
+## @param has_data vector with boolean expressions representing which features have data.
 update_metrics_to_plot_workouts <- function(session, choices, has_data) {
   updatePickerInput(
     session = session,
@@ -187,11 +187,11 @@ update_metrics_to_plot_workouts <- function(session, choices, has_data) {
   )
 }
 
-#' Update metrics to plot for Work capacity and time in zones
-#' @param id A character. The ID of the input.
-#' @param session A shiny object.
-#' @param metrics A vector.  A list of features to plot, see \code{\link{metrics}}.
-#' @param has_data A vector with boolean expressions representing which features have data.
+## Update metrics to plot for Work capacity and time in zones
+## @param id character string; the ID of the input.
+## @param session \code{shiny} object.
+## @param metrics vector of features to plot, see \code{\link{metrics}}.
+## @param has_data vector with boolean expressions representing which features have data.
 update_metrics_to_plot_selected_workouts <- function(id, session, metrics, has_data) {
   updateSelectizeInput(
     session = session,
@@ -202,8 +202,8 @@ update_metrics_to_plot_selected_workouts <- function(id, session, metrics, has_d
   )
 }
 
-#' Download handler
-#' @param data An object of class \code{reactivevalues}.
+## Download handler
+## @param data object of class \code{reactivevalues}.
 download_handler <- function(data) {
   downloadHandler(
     filename = function() {
@@ -215,7 +215,7 @@ download_handler <- function(data) {
   )
 }
 
-#' Show warning window when no data uploaded
+## Show warning window when no data uploaded
 show_warning_window <- function() {
   showModal(modalDialog(
     title = "trackeRapp message",
@@ -228,17 +228,17 @@ show_warning_window <- function() {
   ))
 }
 
-#' Calculate plot height for either time in zones or work capacity
-#' @param metrics A vector of metrics that will be plotted.
+## Calculate plot height for either time in zones or work capacity
+## @param metrics vector of metrics that will be plotted.
 calculate_plot_height <- function(metrics) {
   paste0(250 * length(metrics), "px")
 }
 
-#' Get Javascript code for reseting page and collapsing boxes
+## Get Javascript code for reseting page and collapsing boxes
 get_javascript <- function() {
   "
     shinyjs.collapse = function(boxid) {
-    $('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
+    $('## + boxid).closest('.box').find('[data-widget=collapse]').click();
     };
     // shinyjs.resetClick = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }
     shinyjs.reset_page = function() { location.reload(); };
@@ -262,8 +262,8 @@ get_javascript <- function() {
 # $('#box1').closest('.box').on('shown.bs.collapse', function () {})
 
 
-#' Process \code{trackeRdata} object by: setting thresholds to remove wrong values, change units, set a moving threshold and test which variables contain data
-#' @param data An object of class \code{reactivevalues}.
+## Process \code{trackeRdata} object by setting thresholds to remove wrong values, change units, set a moving threshold and test which variables contain data
+## @param data object of class \code{reactivevalues}.
 process_dataset <- function(data) {
   data$object <- change_units(data$object,
     variable = rep(c(
@@ -444,22 +444,22 @@ update_map <- function(session, data, longitude, latitude) {
   )
 }
 
-#' #' Calculate plot height for work capacity
-#' calculate_plot_height_work_capacity <- function(name, data) {
-#'   if (name != 'work_capacity') {
-#'     "250px"
-#'   } else {
-#'     sports <- unique(sport(data$object[data$selectedSessions]))
-#'     # Work capacity only for running and cycling
-#'     sports <- intersect(c('running', 'cycling'), sports)
-#'     paste0(250 * length(sports), "px")
-#'   }
-#' }
+## ## Calculate plot height for work capacity
+## calculate_plot_height_work_capacity <- function(name, data) {
+##   if (name != 'work_capacity') {
+##     "250px"
+##   } else {
+##     sports <- unique(sport(data$object[data$selectedSessions]))
+##     # Work capacity only for running and cycling
+##     sports <- intersect(c('running', 'cycling'), sports)
+##     paste0(250 * length(sports), "px")
+##   }
+## }
 
-#' Plot work capacities for each sport
-#' @param x An object of class \code{\link{trackeRdata}}.
-#' @param session A numeric vector of the sessions to be used, defaults to all sessions.
-#' @param cp A numeric. Critical power/speed, i.e., the power/speed which can be maintained for longer period of time.
+## Plot work capacities for each sport
+## @param x object of class \code{\link{trackeRdata}}.
+## @param session numeric vector of the sessions to be used, defaults to all sessions.
+## @param cp numeric. Critical power/speed, i.e., the power/speed which can be maintained for longer period of time.
 plot_work_capacities <- function(x, session, cp) {
   sports <- unique(get_sport(x[session]))
   # Work capacity only for running and cycling
@@ -486,7 +486,7 @@ plot_work_capacities <- function(x, session, cp) {
   }
 }
 
-#' Show a modal window to inform a user that no data was selected
+## Show a modal window to inform a user that no data was selected
 show_warning_no_data_selected <- function() {
   showModal(modalDialog(
     title = "trackeRapp message",
@@ -502,13 +502,13 @@ show_warning_no_data_selected <- function() {
   ))
 }
 
-#' Classify sessions by sport, process dataset, generate download handler,
-#' generate selected sessions object, update what metrics are available
-#' to plot and other minor actions.
-#' @param data An object of class \code{reactivevalues}.
-#' @param output A shiny object.
-#' @param session A shiny object.
-#' @param choices A vector. See \code{\link{choices}}.
+## Classify sessions by sport, process dataset, generate download handler,
+## generate selected sessions object, update what metrics are available
+## to plot and other minor actions.
+## @param data object of class \code{reactivevalues}.
+## @param output \code{shiny} object.
+## @param session \code{shiny} object.
+## @param choices vector. See \code{\link{choices}}.
 generate_objects <- function(data, output, session, choices) {
   process_dataset(data)
   output$download_data <- download_handler(data)
@@ -535,8 +535,8 @@ generate_objects <- function(data, output, session, choices) {
                            times = 1, each = 2)
 }
 
-#' Test whether we can plot work capacity for at least one of cycling or running.
-#' @param data An object of class \code{reactivevalues}.
+## Test whether we can plot work capacity for at least one of cycling or running.
+## @param data An object of class \code{reactivevalues}.
 test_work_capacity <- function(data) {
   selected_sports <- unique(get_sport(data$object[data$selectedSessions]))
   is_data_power <- !all(sapply(data$object[data$selectedSessions], function(x) {
@@ -558,9 +558,9 @@ test_work_capacity <- function(data) {
   return(c(cycling, running))
 }
 
-#' Update selection of sports
-#' @param data An object of class \code{reactivevalues}.
-#' @param session A shiny object.
+## Update selection of sports
+## @param data object of class \code{reactivevalues}.
+## @param session \code{shiny} object.
 update_sport_selection <- function(data, session) {
   updateCheckboxGroupButtons(
     session = session,
@@ -573,8 +573,8 @@ update_sport_selection <- function(data, session) {
   )
 }
 
-#' Convert name
-#' @param what A character. The metric to convert.
+## Convert name
+## @param what A character. The metric to convert.
 convert_to_name <- function(what) {
   switch(what,
     "distance" = "Distance",
@@ -589,9 +589,9 @@ convert_to_name <- function(what) {
   )
 }
 
-#' Get units of a measurement in a nice format for a given variable.
-#' @param feature A character. The variable for which to generate units.
-#' @param units A vector of units generated from \code{trackeR} package \code{getUnits()}.
+## Get units of a measurement in a nice format for a given variable.
+## @param feature character string; the variable for which to generate units.
+## @param units vector of units generated from \code{trackeR} package \code{getUnits()}.
 lab_data <- function(feature, units) {
   thisunit <- units$unit[units$variable == feature]
   prettyUnit <- prettifyUnits(thisunit)

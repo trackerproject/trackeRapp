@@ -4,12 +4,21 @@
 live_version <- FALSE
 # Load packages for a live version
 if (live_version == TRUE) {
-  library(shiny)
-  library(shinyjs)
-  library(leaflet)
-  library(plotly)
-  library(shinycssloaders)
-  library(trackeR)
+    library("trackeR")
+    library("shiny")
+    library("plotly")
+    library("shinyWidgets")
+    library("shinyjs")
+    library("shinyalert")
+    library("shinydashboard")
+    library("shinycssloaders")
+    library("zoo")
+    library("changepoint")
+    library("mgcv")
+    library("stats")
+    library("utils")
+    library("foreach")
+    library("DT")
 }
 # Set token for Mapbox
 Sys.setenv("MAPBOX_TOKEN" = "pk.eyJ1IjoicnVnZWVyIiwiYSI6ImNqOTduN2phMTBmYXkyd29yNjR1amU2cjUifQ.IhNRZRmy1mlbLloz-p6vbw")
@@ -397,7 +406,7 @@ observeEvent(input$resetSelection, {
         if (!is.null(input[[paste0("detect_changepoints", i)]])) {
           fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
         }
-        trackeRapp:::plot_selectedWorkouts(
+        trackeRapp:::plot_selected_workouts(
           x = data$object, session = data$selectedSessions, what = i,
           sumX = data$summary, changepoints = fit_changepoint,
           threshold = FALSE, smooth = TRUE,
