@@ -5,22 +5,22 @@
 #' analysis of running and cycling data from GPS-enabled tracking
 #' devices through the \code{trackeR} R package.
 #'
-#' @section Launching the app:
+#' @section Launching the \code{trackeRapp} interface:
 #'
 #' The interface can be launched by typing \code{\link{trackeR_app}}
 #' or \code{\link{trackeRapp}}.
 #'
 #' @note
 #'
-#' 'trackeRapp' has been designed and developed by Robin Hornak and
-#' Ioannis Kosmidis, while Robin Hornak was completing his
+#' \code{trackeRapp} has been designed and developed by Robin Hornak
+#' and Ioannis Kosmidis, while Robin Hornak was completing his
 #' undergraduate research project in the Department of Statistical
 #' Science, University College London under the supervision of Ioannis
 #' Kosmidis. Ioannis Kosmidis has been supported by the Alan Turing
 #' Institute under the EPSRC grant EP/N510129/1 (Turing award number
 #' TU/B/000082) and Univeristy of Warwick. Robin Hornak and Ioannis
 #' Kosmidis have also been supported by University of Warwick through
-#' a Warwick Impact Fund Award that runs from May 2018 to May
+#' a Warwick Impact Fund Award that runs from May 2018 to December
 #' 2019. The support of the aforementioned organisations is greatly
 #' acknowledged.
 #'
@@ -57,9 +57,22 @@
 #' @importFrom DT renderDT datatable DTOutput dataTableProxy selectRows
 NULL
 
-#' Launch the trackeR dashboard
+#' Launch trackeRapp
+#'
+#' \code{trackerRapp} or \code{trackeR_app} launches the interface.
 #'
 #' @param quiet If \code{TRUE} (default), then warnings and errors while using the interface are printed. If \code{FALSE}, then all warnings and errors are suppressed.
+#'
+#' @section Features:
+#'
+#' The \code{trackeRapp} interface provides an integrated workflow for
+#' the analysis of running, cycling and swimming activity data. In
+#' particular, it allows users to:
+#'
+#' \itemize{
+#' \item input raw activity data files (in the form of \code{tcx}, \code{gpx}, \code{json} or \code{db3}
+#' \item
+#' }
 #'
 #' @examples
 #'
