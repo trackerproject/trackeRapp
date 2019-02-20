@@ -491,7 +491,7 @@ show_warning_no_data_selected <- function() {
   showModal(modalDialog(
     title = "trackeRapp message",
     div(tags$b(
-      "Select a processed data image or a directory with raw datafiles",
+      "Choose a processed file and/or at least one raw data file",
       class = "warningMessage"
     )),
     size = "s",
