@@ -45,7 +45,6 @@
 #' @importFrom grDevices colorRampPalette
 #' @importFrom shinyWidgets updatePickerInput dropdownButton tooltipOptions pickerInput actionBttn checkboxGroupButtons awesomeRadio updateCheckboxGroupButtons
 #' @importFrom shinyjs hidden disable show hide enable html click delay useShinyjs extendShinyjs runjs js addClass
-#' @importFrom shinyalert useShinyalert shinyalert
 #' @importFrom shinydashboard box dashboardPage dashboardHeader dashboardSidebar sidebarMenu dashboardBody valueBox valueBoxOutput renderValueBox
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom zoo index coredata

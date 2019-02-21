@@ -23,8 +23,7 @@ Imports:
     shinyjs,
     shinycssloaders,
     shinydashboard,
-    shinyWidgets,
-    shinyalert
+    shinyWidgets
 License: GPL-3
 URL: https://github.com/trackerproject/trackeRapp
 BugReports: https://github.com/trackerproject/trackeRapp/issues

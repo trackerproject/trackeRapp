@@ -367,28 +367,32 @@ create_option_box <- function(sport_options, metrics_available) {
           column(2,
         conditionalPanel(
           condition = "output.cond == false",
-          actionBttn(
+          actionButton(
             inputId = "return_to_main_page",
-            label = "Go back",
-            style = "pill",
-            color = "success"
+            label = "Summary view",
+            icon = icon("search-minus"),
+            ## style = "pill",
+            ## color = "success"
           )
         ),
         conditionalPanel(
           condition = "output.cond == true",
-          actionBttn(
+          actionButton(
             inputId = "plotSelectedWorkouts",
-            label = "Plot workouts",
-            style = "pill",
-            color = "success"
+            label = "Workouts view",
+            icon = icon("search-plus"),
+            ## style = "pill",
+            ## color = "success"
           )
-        )), column(4,
-        actionBttn(
-          inputId = "resetSelection",
-          label = "Reset session selection",
-          style = "unite",
-          color = "danger"
-        ))),
+        )),
+        column(4,
+               actionButton(
+                   inputId = "resetSelection",
+                   label = "Clear selection",
+                   icon = icon("times-circle")
+                   ## style = "unite",
+                   ## color = "danger"
+               ))),
         style='padding-bottom:2%;')
     ), fluidRow(
       # ),
@@ -397,9 +401,12 @@ create_option_box <- function(sport_options, metrics_available) {
         width = 2,
         collapsible = TRUE,
         title = tagList("Other tools"),
-        actionBttn(inputId = "showModalUnits", label = "Change units",
-                                 icon = icon("balance-scale"), style = 'unite',
-                                 color = 'primary', size = 'sm')
+        actionButton(inputId = "showModalUnits",
+                     label = "Change units",
+                     icon = icon("balance-scale"),
+                     style = 'unite',
+                     color = 'primary',
+                     size = 'sm')
       ),
       box(
         status = "primary",

@@ -73,13 +73,10 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
     xlab <- "Session"
   }
 
-
   ##  ............................................................................
   ##  Unique trackeR dashboard code                                           ####
 
-  # d <- if(shiny) event_data("plotly_selected") else NULL
 
-  # print(d)
   p <- plot_ly(
     dat,
     x = ~ xaxis, y = ~ value, hoverinfo = "text",
@@ -99,7 +96,6 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
       line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE)
     )
   if (shiny) {
-    ## if (length(unique(sessions)) != nsessions) {
       m <- as.data.frame(dat[dat$session %in% unique(sessions), ])
       # FIX for some reason cant plot when only 2 sessions selected
       if (nrow(m) == 2) {
@@ -111,9 +107,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
         symbols = c("circle", "x", "square"),
         showlegend = FALSE, #size = I(9)
       )
-      # add_paths(data = m, color = I("darkorange3"))
     }
-  ## }
 
   ra <- c(min(dat$xaxis), max(dat$xaxis))
   if(nsessions > 1) {

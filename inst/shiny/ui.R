@@ -51,7 +51,6 @@ shinydashboard::dashboardPage(
     ),
   shinydashboard::dashboardBody(
     shinyjs::useShinyjs(),
-    shinyalert::useShinyalert(),
     shinyjs::extendShinyjs(text = trackeRapp:::get_javascript())
     )
   )
