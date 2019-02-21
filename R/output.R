@@ -52,11 +52,11 @@ generate_selected_sessions_object <- function(data, input,
     data$selectedSessions <- input$summary_rows_selected
   }
   if (no_selection) {
-    data$selectedSessions <- data$summary$session
+      data$selectedSessions <- NULL #data$summary$session
   }
-  if (length(data$selectedSessions) == 0) {
-    data$selectedSessions <- data$summary$session
-  }
+  ## if (length(data$selectedSessions) == 0) {
+  ##   data$selectedSessions <- data$summary$session
+  ## }
   data$selectedSessions <- sort(data$selectedSessions)
 }
 

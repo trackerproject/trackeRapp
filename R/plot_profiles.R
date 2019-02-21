@@ -7,6 +7,10 @@
 plot_concentration_profiles <- function(x, session, profiles_calculated,
                                         what = c("speed")) {
 
+    if (is.null(session)) {
+        return(plotly_empty())
+    }
+
   ## Generate distribution profile
   # dProfile <- distributionProfile(x, session = session, what = what, auto_grid = TRUE)
   tracker_object <- x

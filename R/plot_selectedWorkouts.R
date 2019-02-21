@@ -20,6 +20,9 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
                                   n_changepoints = 6, print_changepoints = FALSE,
                                   unit_reference_sport = NULL, moving_threshold = NULL,
                                   desampling = 1, y_axis_range = NULL) {
+    if (is.null(session)) {
+        return(plotly_empty())
+    }
 
   # altitude a lot less noisy, therefore need to ensure all data shown on graph
   if(what == 'altitude'){

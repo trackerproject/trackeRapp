@@ -502,6 +502,24 @@ show_warning_no_data_selected <- function() {
   ))
 }
 
+##
+show_warning_too_many_sessions <- function(nsessions) {
+  msg <- paste("You have selected", nsessions, "sessions, which can result in an unstable 'Workouts view' session. Do you want to continue with this selection?")
+  showModal(modalDialog(
+    title = "trackeRapp message",
+    div(tags$b(
+      msg,
+      class = "warningMessage"
+      )),
+    size = "s",
+    footer = tagList(
+        modalButton("No"),
+        actionButton("proceed_modal", "Yes")
+    )
+  ))
+}
+
+
 ## Classify sessions by sport, process dataset, generate download handler,
 ## generate selected sessions object, update what metrics are available
 ## to plot and other minor actions.

@@ -41,7 +41,8 @@ shinydashboard::dashboardPage(
               href = "https://github.com/trackerproject/trackeRapp/issues",
               target="_blank"))),
       ## A hack to cause event in generate_objects after Load data button is clicked
-      actionLink("createDashboard", ""),
+      hidden(actionLink("createDashboard", "")),
+      hidden(actionLink("proceed", "")),
       # Some css to tidy up fileInput margins and padding
       shinyjs::inlineCSS(list(
         "section.sidebar .shiny-input-container" = "margin-bottom: 0px; margin-top: 0px; padding-top: 0px;",

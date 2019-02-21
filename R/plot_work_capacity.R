@@ -7,6 +7,12 @@
 #'     which is then plotted in the background?
 #' @param cp A numeric. Critical power/speed, i.e., the power/speed which can be maintained for longer period of time.
 plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) {
+
+    if (is.null(session)) {
+        return(plotly_empty())
+    }
+
+
   units <- getUnits(x)
   sports <- get_sport(x)[session]
 

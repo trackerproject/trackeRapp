@@ -8,6 +8,11 @@
 #' @param breaks A named list of computed breaks for zones from \code{compute_breaks()}.
 plot_zones <- function(x, session, what = c("heart_rate"),
                        n_zones, parallel = TRUE, breaks) {
+
+    if (is.null(session)) {
+        return(plotly_empty())
+    }
+
   x <- zones(x, session = session, what = what, breaks = breaks,
              n_zones = n_zones, parallel = parallel)
 

@@ -66,10 +66,6 @@ server <- function(input, output, session) {
                 to <- file.path(dirname(from), basename(input$rawDataDirectory$name))
                 file.rename(from, to)
                 directory <- dirname(to[1])
-                ## file <- input$rawDataDirectory$datapath[[1]]
-                ## directory <- as.list(strsplit(file, "/")[[1]])
-                ## directory <- directory[1:(length(directory) - 1)]
-                ## directory <- paste0(do.call(paste, c(directory, sep = "/")), '/')
                 ## Process raw data
                 raw_data <- trackeRapp:::read_directory_shiny(
                                              directory = directory,
@@ -78,7 +74,6 @@ server <- function(input, output, session) {
                                              correct_distances = FALSE)
             }
             previous_file_paths$processed <- input$processedDataPath$datapath
-
             ## Process uploaded data
             ## Remove duplicate sessions and create trackeRdata object from both raw and processed data
             data$object <- sort(unique(trackeR:::c.trackeRdata(processed_data, raw_data,
@@ -293,7 +288,8 @@ server <- function(input, output, session) {
     })
 
     ## Workouts analysis
-    observeEvent(input$plotSelectedWorkouts, {
+    observeEvent(input$proceed, {
+        removeModal()
         shinyjs::addClass(selector = "body", class = "sidebar-collapse")
         ##  Time in zones
         trackeRapp:::create_zones_box(
@@ -490,7 +486,8 @@ server <- function(input, output, session) {
         data$show_work_capacity <- FALSE
     })
 
-    observeEvent(input$plotSelectedWorkouts, {
+    observeEvent(input$proceed, {
+        removeModal()
         shinyjs::addClass(selector = "body", class = "sidebar-collapse")
         output$cond <- reactive({
             FALSE
@@ -507,23 +504,17 @@ server <- function(input, output, session) {
 
     ## Warning message too many sessions selected
     observeEvent(input$plotSelectedWorkouts, {
-        if (length(data$selectedSessions) > 60) {
-            shinyalert::shinyalert(
-                            title = "Warning",
-                            text = "Interface is unstable when more than 60 sessions are selected",
-                            closeOnEsc = TRUE,
-                            closeOnClickOutside = FALSE,
-                            html = FALSE,
-                            type = "warning",
-                            showConfirmButton = TRUE,
-                                        # showCancelButton = TRUE,
-                            confirmButtonText = "OK",
-                            confirmButtonCol = "#AEDEF4",
-                            cancelButtonText = "Cancel",
-                            timer = 0,
-                            imageUrl = "",
-                            animation = TRUE)
+        nsessions <- length(data$selectedSessions)
+        if (nsessions > 60) {
+            show_warning_too_many_sessions(nsessions)
+        }
+        else {
+            click("proceed")
         }
     }, ignoreNULL = TRUE, ignoreInit = TRUE)
-}
 
+    observeEvent(input$proceed_modal, {
+        click("proceed")
+    })
+
+}
