@@ -90,21 +90,16 @@ server <- function(input, output, session) {
     observeEvent(plotly::event_data("plotly_selected"), {
         trackeRapp:::generate_selected_sessions_object(data, input,
                                                        plot_selection = TRUE)
-        if (length(data$selectedSessions) == length(data$summary$session))
-            DT::selectRows(proxy = proxy, selected = NULL)
-        else
-            DT::selectRows(proxy = proxy, selected = as.numeric(data$selectedSessions))
+        DT::selectRows(proxy = proxy, selected = data$selectedSessions)
     })
 
     ## Sessions selected by sport using radio buttons
     observeEvent(input$sports, {
         shinyjs::js$resetSelection()
-        shinyjs::delay(1000, trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
         shinyjs::delay(1000,
-                       if (length(data$selectedSessions) == length(data$summary$session))
-                           DT::selectRows(proxy = proxy, selected = NULL)
-                       else
-                           DT::selectRows(proxy = proxy, selected = as.numeric(data$selectedSessions))
+                       trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
+        shinyjs::delay(1000,
+                       DT::selectRows(proxy = proxy, selected = data$selectedSessions)
                        )
 
         ## Update metrics available based on sport selected
@@ -254,6 +249,7 @@ server <- function(input, output, session) {
                                             data$summary$session
                                         else
                                             data$summary$session[get_sport(data$object) %in% input$sports]
+
                     trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                                what = i,
                                                dat =  plot_dataframe(),

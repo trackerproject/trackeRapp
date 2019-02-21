@@ -37,7 +37,7 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
     )
 
     all_sessions <- nrow(sumX)
-    if (!(identical(all_sessions, length(session)))) {
+    ## if (!(identical(all_sessions, length(session)))) {
       p <- add_segments(
         p,
         data = df[which(df$session %in% session), ], x = ~ start,
@@ -50,7 +50,7 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
           sumX$sessionEnd[which(df$session %in% session)]
         )
       )
-    }
+    ## }
     y <- list(title = "")
     x <- list(title = "")
     p <- layout(p, dragmode = "select", showlegend = FALSE, yaxis = y, xaxis = x) %>%
