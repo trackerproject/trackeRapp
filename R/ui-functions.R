@@ -419,10 +419,10 @@ create_option_box <- function(sport_options, metrics_available) {
         collapsible = TRUE,
         title = tagList("Identified sports"),
         checkboxGroupButtons(
-          inputId = "sports",
-          choices = sport_options, selected = sport_options,
-          justified = TRUE, status = "info",
-          checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon"))
+            inputId = "sports",
+            choices = sport_options, selected = sport_options,
+            justified = TRUE, status = "info",
+            checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon"))
         )
       )
     ))

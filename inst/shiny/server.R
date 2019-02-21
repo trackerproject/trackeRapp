@@ -95,13 +95,13 @@ server <- function(input, output, session) {
 
     ## Sessions selected by sport using radio buttons
     observeEvent(input$sports, {
-        shinyjs::js$resetSelection()
-        shinyjs::delay(1000,
-                       trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
-        shinyjs::delay(1000,
-                       DT::selectRows(proxy = proxy, selected = data$selectedSessions)
-                       )
-
+        ## shinyjs::js$resetSelection()
+        ## shinyjs::delay(1000,
+        trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE)
+        ## )
+        ## shinyjs::delay(1000,
+        DT::selectRows(proxy = proxy, selected = data$selectedSessions)
+        ## )
         ## Update metrics available based on sport selected
         has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% input$sports)],
                                  function(session_summaries) {
@@ -118,16 +118,16 @@ server <- function(input, output, session) {
                        shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
                                                        selected = selected_metrics,
                                                        choices = metrics_available_sport()))
-
     }, ignoreNULL = FALSE, ignoreInit = TRUE)
 
     ## Sessions selected through summary table
     observeEvent(input$summary_rows_selected,  {
         if (!isTRUE(setequal(input$summary_rows_selected, data$selectedSessions))) {
             shinyjs::js$resetSelection()
-            shinyjs::delay(1000,
-                           trackeRapp:::generate_selected_sessions_object(data, input,
-                                                                          table_selection = TRUE))
+            ## shinyjs::delay(1000,
+            trackeRapp:::generate_selected_sessions_object(data, input,
+                                                           table_selection = TRUE)
+            ## )
         }
     }, ignoreNULL = TRUE)
 
@@ -135,8 +135,8 @@ server <- function(input, output, session) {
     observeEvent(input$resetSelection, {
         trackeRapp:::update_sport_selection(data, session)
         shinyjs::js$resetSelection()
-        DT::selectRows(proxy = proxy, selected = NULL)
         trackeRapp:::generate_selected_sessions_object(data, input, no_selection = TRUE)
+        DT::selectRows(proxy = proxy, selected = NULL)
     })
 
     ##  Uploading sample dataset
@@ -245,10 +245,11 @@ server <- function(input, output, session) {
             }
             sapply(c(choices), function(i) {
                 output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
-                    sessions_to_plot <- if (is.null(input$sports))
-                                            data$summary$session
-                                        else
-                                            data$summary$session[get_sport(data$object) %in% input$sports]
+                    sessions_to_plot <- data$summary$session[get_sport(data$object) %in% input$sports]
+                        ## if (is.null(input$sports))
+                        ##                     data$summary$session
+                        ##                 else
+                        ##                     data$summary$session[get_sport(data$object) %in% input$sports]
 
                     trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                                what = i,

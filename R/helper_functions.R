@@ -568,7 +568,7 @@ update_sport_selection <- function(data, session) {
     session = session,
     inputId = "sports",
     choices = as.vector(data$identified_sports),
-    selected =as.vector(data$identified_sports),
+    selected = as.vector(data$identified_sports),
     status = "info",
     checkIcon = list(yes = icon("ok", lib = "glyphicon"),
                      no = icon("remove", lib = "glyphicon"))
