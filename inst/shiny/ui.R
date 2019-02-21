@@ -10,17 +10,23 @@ ui <- shinydashboard::dashboardPage(
   shinydashboard::dashboardSidebar(
     tags$head(tags$style(trackeRapp:::appCSS)),
     shinydashboard::sidebarMenu(
-      hr(),
+      br(),
       fileInput("processedDataPath", "Choose processed file",
                 multiple = FALSE,
                 accept = c(".rds")),
       fileInput("rawDataDirectory", "Choose raw data files",
                 multiple = TRUE,
                 accept = c(".gpx", ".tcx", ".db3", ".json")),
-      actionButton("uploadButton", "Load", icon("upload"),
-                   ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3",
-                   style = "width: 50%"),
-      actionButton("resetButton", "Reset", icon("eraser"), style = "width: 50%"),
+      div(class = "form-group shiny-input-container",
+          splitLayout(
+              actionButton("uploadButton", "Load", icon("upload"),
+                           style = "width: 100%; margin: 0px 0px 0px 0px"),
+              ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"),
+              actionButton("resetButton", "Reset", icon("eraser"),
+                           style = "width: 100%; margin: 0px 0px 0px 0px"),
+              cellWidths = c("50%", "50%")
+          )),
+
       ## style = "color: #fff; background-color: #ED90A4; border-color: #E16A86",
       ## hr(),
       ## actionButton("createDashboard", "Create Dashboard",
@@ -28,8 +34,9 @@ ui <- shinydashboard::dashboardPage(
       ##              style = "color: #fff; background-color: #4FBF85; border-color: #00AB66",
       ##              width = "auto"
       ## ),
+      br(),
       div(class = "form-group shiny-input-container", tags$label("Download processed data"),
-          downloadButton("download_data", "Download", style = "width: 58%")),
+          downloadButton("download_data", "Download", style = "width: 100%")),
       hr(),
       ## div(style = "display: inline-block;vertical-align:top; width: 100px;",
       div(class = "form-group shiny-input-container",
