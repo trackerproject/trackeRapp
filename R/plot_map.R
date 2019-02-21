@@ -6,11 +6,9 @@
 #' @param all_sessions A vector of sessions being plotted.
 #' @param colour_sessions A vector of sessions to be colour to orange.
 plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_sessions) {
-    ## if (is.null(session)) session <- seq_along(x)
-    ## all_sessions <- unique(df$SessionID)
-    if (all(all_sessions %in% colour_sessions)) {
-        colour_sessions <-  NULL
-    }
+    ## if (all(all_sessions %in% colour_sessions)) {
+    ##     colour_sessions <-  NULL
+    ## }
   ## prepare popups
   units <- collect_units(get_units(sumX), unit_reference_sport = 'cycling')
   popupText <- function(session, start = TRUE, speed) {
@@ -35,7 +33,7 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
       sep = "\n"
     )
   }
-  p <- plot_mapbox()
+    p <- plot_mapbox()
   for (i in all_sessions) {
     plot_df <- df[which(df$SessionID == i), ]
     df_markers <- plot_df[round(seq(1, nrow(plot_df), length.out = 10)), ] #seq(1, nrow(plot_df), round(nrow(plot_df) / 10, 0)), ]
@@ -47,22 +45,14 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
       size = I(0.1), key = ~ true_session_id
     )
     colour <- ifelse(i %in% colour_sessions, "darkorange3", "deepskyblue3")
-    if (colour == 'deepskyblue3') {
     p <- add_paths(
-      p,
-      data = plot_df, x = ~ longitude, y = ~ latitude,
-      size = I(2), color = I(colour),
-      opacity = 0.3,
-      text = ~ popupText(session = SessionID, speed = speed))
-      } else {
-        p <- add_paths(
-          p,
-          data = plot_df, x = ~ longitude, y = ~ latitude,
-          size = I(4), color = I(colour),
-          opacity = 0.8,
-          text = ~ popupText(session = SessionID, speed = speed))
-    }
+        p,
+        data = plot_df, x = ~ longitude, y = ~ latitude,
+        size = I(2), color = I(colour),
+        opacity = 0.3,
+        text = ~ popupText(session = SessionID, speed = speed))
   }
+
   # ## add trace + markers + popups
   # if (!(identical(all_sessions, session))) {
   #   for (i in session) {

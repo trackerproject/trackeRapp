@@ -399,49 +399,33 @@ cursor: default;
 
 # Update map based on current selection
 update_map <- function(session, data, longitude, latitude) {
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "restyle",
-    list(line.color = "rgba(238, 118, 0, 1)"), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
-  )
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "restyle",
-    list(line.fillcolor = "rgba(238, 118, 0, 1)"), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
-  )
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "restyle",
-    list(line.width = 4), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
-  )
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "restyle",
-    list(opacity = 0.8), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
-  )
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "restyle",
-    list(hovertextsrc = 'ble'), as.list(which(data$sessions_map %in% data$selectedSessions) - 1)
-  )
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "restyle",
-    list(line.color = "rgba(0, 154, 205, 1)"), as.list(which(!(data$sessions_map %in% data$selectedSessions)) - 1)
-  )
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "restyle",
-    list(line.fillcolor = "rgba(0, 154, 205, 1)"), as.list(which(!(data$sessions_map %in% data$selectedSessions)) - 1)
-  )
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "restyle",
-    list(opacity = 0.2), as.list(which(!(data$sessions_map %in% data$selectedSessions)) - 1)
-  )
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "relayout",
-    list(mapbox.zoom = 9)
-  )
-  plotlyProxy("map", session) %>% plotlyProxyInvoke(
-    "relayout",
-    list(mapbox.center = list(
-      lat = median(latitude),
-      lon = median(longitude)
-    ))
-  )
+    to_be_coloured <- data$sessions_map %in% data$selectedSessions
+    ## Blues
+    plotlyProxy("map", session) %>%
+        plotlyProxyInvoke(
+            "restyle",
+            list(line.color = "rgba(0, 154, 205, 1)", line.fillcolor = "rgba(0, 154, 205, 1)"))
+    ## Oranges
+    if (!all(!to_be_coloured)) {
+        plotlyProxy("map", session) %>%
+            plotlyProxyInvoke(
+                "restyle",
+                list(line.color = "rgba(238, 118, 0, 1)", line.fillcolor = "rgba(238, 118, 0, 1)"),
+                as.list(which(to_be_coloured) - 1))
+        plotlyProxy("map", session) %>%
+            plotlyProxyInvoke(
+                "restyle",
+            list(hovertextsrc = 'ble'),
+            as.list(which(to_be_coloured) - 1))
+    }
+    plotlyProxy("map", session) %>%
+        plotlyProxyInvoke(
+            "relayout",
+            list(mapbox.zoom = 9))
+    plotlyProxy("map", session) %>%
+        plotlyProxyInvoke(
+            "relayout",
+            list(mapbox.center = list(lat = median(latitude), lon = median(longitude))))
 }
 
 ## ## Calculate plot height for work capacity

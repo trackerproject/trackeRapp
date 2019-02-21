@@ -99,7 +99,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
       line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE)
     )
   if (shiny) {
-    if (length(unique(sessions)) != nsessions) {
+    ## if (length(unique(sessions)) != nsessions) {
       m <- as.data.frame(dat[dat$session %in% unique(sessions), ])
       # FIX for some reason cant plot when only 2 sessions selected
       if (nrow(m) == 2) {
@@ -113,7 +113,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
       )
       # add_paths(data = m, color = I("darkorange3"))
     }
-  }
+  ## }
 
   ra <- c(min(dat$xaxis), max(dat$xaxis))
   if(nsessions > 1) {
