@@ -2,33 +2,66 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+# The trackeRapp
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-```
+The goal of the
+[**trackeRapp**](https://trackerapp.com) is to
+provide an integrated workflow and a web interface for the analysis of sports
+data from GPS-enabled tracking devices. The **trackeRapp** is a platform with flexible and extensive
+visualisation and analysis tools. It has a user friendly, intuitive and
+adjustable interface and it was developed open-source on top of the
+[**trackeR**](https://github.com/trackerproject/trackeR) package. The
+interface was fully built using the **shiny** package.
 
-# trackeRapp
-
-The goal of trackeRapp is to ...
 
 ## Installation
 
-You can install trackeRapp from github with:
+You can install the **trackeRapp** from CRAN by typing
 
-```{r gh-installation, eval = FALSE}
+```{r eval = FALSE}
+install.packages("trackeRapp")
+```
+
+You can also install the development version of **trackeRapp** from github by doing
+
+```{r eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("trackerproject/trackeRapp")
 ```
 
-## Example
+## Getting started
 
-This is a basic example which shows you how to solve a common problem:
+Please see the [**tour de trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn about the **trackeRapp** and all its capabilities, including many tutorial videos and visualisations. The following are a few screenshots from the **trackeRapp** web interface
 
-```{r example}
-## basic example code
+```{r out.width='95%', fig.align='center', fig.cap='Session summaries', echo=FALSE}
+knitr::include_graphics('README_files/evening_sessions.png')
+```
+
+<br>
+
+```{r out.width='95%', fig.align='center', echo=FALSE}
+knitr::include_graphics('README_files/map.png')
+```
+
+<br>
+
+```{r out.width='95%', fig.align='center', echo=FALSE}
+knitr::include_graphics('README_files/session_summaries.png')
+```
+
+<br>
+
+```{r out.width='95%', fig.align='center', echo=FALSE}
+knitr::include_graphics('README_files/zones_multiple_sessions.png')
+```
+
+## Launching the user-interface
+
+A user can access the web interface remotely at <https://www.trackerapp.com> or on their local machine by running the following commands:
+
+```{r example, eval=FALSE}
+# Load the package
+library("trackeRapp")
+# Open the interface in the browser
+trackeR_app()
 ```

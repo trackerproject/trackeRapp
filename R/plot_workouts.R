@@ -9,10 +9,10 @@
 #' @param shiny Logical. Whether plots are in a shiny environment.
 #' @param sessions A vector. Selected sessions by session number.
 #' @param sports A vector of sports of the sessions to be plotted.
+#' @param dat A dataframe for plotting.
 #' @param ... Currently not used.
 #' @seealso \code{\link{summary.trackeRdata}}
-
-plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
+plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
                           group = c("total"), lines = TRUE, sports) {
   if (what %in% c('distance', 'duration', 'wrRatio')) {
     group <- c('total')
@@ -38,14 +38,16 @@ plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
   units <- get_units(sumX)
 
   ## subsets on variables and type
-  dat <- fortify_trackeRdataSummary(sumX, melt = TRUE)
-  dat$sport <- sports
+
+
   if (!is.null(what)) {
     dat <- subset(dat, variable %in% what)
   }
   if (!is.null(group)) {
     dat <- subset(dat, type %in% group)
   }
+  dat <- subset(dat, session %in% sumX$session)
+  dat$sport <- sports
 
   ## remove empty factor levels
   dat$variable <- factor(dat$variable)
@@ -75,25 +77,24 @@ plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
   ##  ............................................................................
   ##  Unique trackeR dashboard code                                           ####
 
-  # d <- if(shiny) plotly::event_data("plotly_selected") else NULL
+  # d <- if(shiny) event_data("plotly_selected") else NULL
 
   # print(d)
-  p <- plotly::plot_ly(
+  p <- plot_ly(
     dat,
     x = ~ xaxis, y = ~ value, hoverinfo = "text",
     text = ~ paste(
-      "Session:", session, "\n",
+      " Session:", session, "\n",
       "Date:", format(sessionStart, format = "%Y-%m-%d"),
       "\n", convert_to_name(what), ":", round(value, 2), units_text, "\n",
       "Sport:", sport
-    ), showlegend = FALSE
-  ) %>%
-    plotly::add_markers(
+      ), showlegend = FALSE) %>%
+    add_markers(
       key = dat$session, color = I("deepskyblue3"), symbol = ~ sport,
-      symbols = c("circle", "x", "square"), size = I(6), legendgroup = ~ sport,
-      showlegend = TRUE
-    ) %>%
-    plotly::add_lines(
+      symbols = c("circle", "x", "square"), legendgroup = ~ sport,
+      showlegend = TRUE #, size = I(6)
+      ) %>%
+    add_lines(
       color = I("deepskyblue3"), connectgaps = TRUE, legendgroup = ~ sport,
       line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE)
     )
@@ -104,13 +105,13 @@ plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
       if (nrow(m) == 2) {
         m <- rbind(m, m)
       }
-      p <- plotly::add_markers(p,
+      p <- add_markers(p,
         data = m, color = I("darkorange3"),
-        size = I(9), symbol = ~ sport,
+        symbol = ~ sport,
         symbols = c("circle", "x", "square"),
-        showlegend = FALSE
+        showlegend = FALSE, #size = I(9)
       )
-      # plotly::add_paths(data = m, color = I("darkorange3"))
+      # add_paths(data = m, color = I("darkorange3"))
     }
   }
 
@@ -119,10 +120,21 @@ plot_workouts <- function(sumX, what, sessions, shiny = TRUE, date = TRUE,
     ra[2] <- ra[2] + 0.01 * diff(ra)
     ra[1] <- ra[1] - 0.01 * diff(ra)
   }
-  y <- list(title = feature, range = c(0, max(dat$value, na.rm = TRUE) * 2))
+  features <- c('avgSpeed', 'avgPace', 'avgCadenceCycling', 'avgCadenceRunning')
+  lower_range_y <- function(feature, dat) {
+    if (feature == 'avgHeartRate') {
+      80
+      } else if (feature %in% features){
+        min(dat$value, na.rm = TRUE) * 0.6
+        } else {
+          0
+        }
+    }
+  y <- list(title = feature, range = c(lower_range_y(what, dat),
+                                       max(dat$value, na.rm = TRUE) * 1.5))
   x <- list(title = "Date",  range = ra)
 
-  plotly::layout(p,
+  layout(p,
     dragmode = "select", showlegend = TRUE, yaxis = y, legend = list(y = 1.1, orientation = "h"),
     xaxis = x, margin = list(l = 80, b = 50, pad = 0)
   )

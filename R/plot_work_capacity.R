@@ -36,13 +36,13 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
 
   ## transform W' to match power/speed scale
   if (scaled) {
-    sdMov <- stats::sd(unlist(lapply(x, function(z) z$movement)), na.rm = TRUE)
+    sdMov <- sd(unlist(lapply(x, function(z) z$movement)), na.rm = TRUE)
     mMov <- mean(unlist(lapply(x, function(z) z$movement)), na.rm = TRUE)
 
     x <- lapply(x, function(z) {
         if (!all(z$wprime == 0 | is.na(z$wprime))) {
-            wdat <- zoo::coredata(z$wprime)
-            w <- (wdat - mean(wdat, na.rm = TRUE)) / stats::sd(wdat, na.rm = TRUE)
+            wdat <- coredata(z$wprime)
+            w <- (wdat - mean(wdat, na.rm = TRUE)) / sd(wdat, na.rm = TRUE)
         w <- w * sdMov
         z$wprime <- w + mMov
       }
@@ -127,34 +127,34 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
     # title = tagList(tags$img(src='swimming.png', height='20.56px', width='18px'), "Map"),
     axis_list <- list(zeroline = FALSE)
     if (has_values) {
-      a <- plotly::plot_ly(
+      a <- plot_ly(
         na.omit(df_subset),
         x = ~ Index, y = ~ Value,
         hoverinfo = "none",
         color = I("gray"), legendgroup = ~ Series,
         name = mylabels[1], showlegend = show_legend
       ) %>%
-        plotly::add_lines(alpha = 0.4) %>%
-        plotly::add_lines(
+        add_lines(alpha = 0.4) %>%
+        add_lines(
           data = na.omit(df_wprime),
           x = ~ Index, y = ~ Value, hoverinfo = "text",
           text = ~ paste(round(Value, 2), "W'"),
           color = I("deepskyblue3"), legendgroup = ~ Series, name = mylabels[2],
           showlegend = show_legend
         ) %>%
-        plotly::layout(
+        layout(
           annotations = annotations_list,
           xaxis = axis_list, yaxis = c(axis_list, list(range = maximal_range * 1.02))
         )
     } else {
       df_subset$Value <- if (na_ranges) 0 else mean(maximal_range)
-      a <- plotly::plot_ly(
+      a <- plot_ly(
         df_subset,
         x = ~ Index, y = ~ Value,
         hoverinfo = "none", type = "scatter", mode = "none",
         showlegend = show_legend
       ) %>%
-        plotly::layout(
+        layout(
           annotations = annotations_list,
           xaxis = axis_list, yaxis = c(axis_list, list(
             range = maximal_range * 1.02,
@@ -185,9 +185,9 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
   y <- list(title = "", fixedrange = TRUE, range = y_axis_range, list(showticklabels = FALSE))
   x <- list(title = "Time", fixedrange = TRUE)
 
-  return(plotly::subplot(plot_stored, nrows = 1, shareY = TRUE, shareX = FALSE, margin = 0.002) %>%
-    plotly::config(displayModeBar = F) %>%
-    plotly::layout(
+  return(subplot(plot_stored, nrows = 1, shareY = TRUE, shareX = FALSE, margin = 0.002) %>%
+    config(displayModeBar = F) %>%
+    layout(
       yaxis = y, xaxis = x, images = images, hovermode = "x",
       legend = list(y = 1, orientation = "h")
     ))

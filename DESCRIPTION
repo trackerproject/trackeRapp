@@ -8,32 +8,26 @@ Authors@R: c(person(given = "Robin", family = "Hornak",
 		    comment = c(ORCID = "0000-0003-1556-0302")))
 Description: Provides an integrated user interface and workflow for
              the analysis of running and cycling data from GPS-enabled
-             tracking devices through the 'trackeR' R package.
+             tracking devices through the 'trackeR' <https://CRAN.R-project.org/package=trackeR> R package.
 Depends:
     R (>= 3.5.0),
     trackeR (>= 1.0.5)
 Imports:
     zoo,
     foreach,
-    leaflet,
     mgcv,
     plotly,
     DT,
+    changepoint,
     shiny,
     shinyjs,
     shinycssloaders,
     shinydashboard,
-    class,
-    changepoint,
-    shinyWidgets
-Suggests:
-    testthat,
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr
+    shinyWidgets,
+    shinyalert
 License: GPL-3
 URL: https://github.com/trackerproject/trackeRapp
 BugReports: https://github.com/trackerproject/trackeRapp/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Encoding: UTF-8
 LazyData: true

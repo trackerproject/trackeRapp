@@ -60,17 +60,16 @@ read_directory_shiny <- function(directory,
                 out
             }
 
-            foreach_object <- eval(as.call(c(list(quote(foreach::foreach), j = seq.int(lall)))))
+            foreach_object <- eval(as.call(c(list(quote(foreach), j = seq.int(lall)))))
             if (parallel) {
                 setup_parallel()
-                allData <- foreach::`%dopar%`(foreach_object, read_fun(j))
+                allData <- `%dopar%`(foreach_object, read_fun(j))
             }
             else {
-                allData <- foreach::`%do%`(foreach_object, read_fun(j))
+                allData <- `%do%`(foreach_object, read_fun(j))
             }
 
             allData <- do.call("c", allData[!sapply(allData, inherits, what = "try-error")])
-
         })
         withProgress(expr = in_expression, message = 'Loading data', value = 0, quoted = TRUE)
         if (verbose) {

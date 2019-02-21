@@ -4,45 +4,67 @@
 \name{trackeRapp}
 \alias{trackeRapp}
 \alias{trackeRapp-package}
-\alias{trackeRapp}
 \alias{trackeR_app}
 \title{trackeRapp: Interface for the analysis of running and cycling data
 from GPS-enabled tracking devices.}
 \usage{
-trackeRapp(quiet = FALSE)
+trackeRapp(quiet = TRUE)
 
-trackeR_app(quiet = FALSE)
+trackeR_app(quiet = TRUE)
 }
 \arguments{
-\item{quiet}{Should Shiny status messages be shown? Defaults to FALSE.}
+\item{quiet}{If \code{TRUE} (default), then warnings and errors while using the interface are printed. If \code{FALSE}, then all warnings and errors are suppressed.}
 }
 \description{
-'trackeRapp' provides an integrated dashboard and workflow for the
+\code{trackeRapp} provides an integrated dashboard and workflow for the
 analysis of running and cycling data from GPS-enabled tracking
-devices through the 'trackeR' R package.
+devices through the \code{trackeR} R package.
 
-Launch the trackeR dashboard
+\code{trackerRapp} or \code{trackeR_app} launches the interface.
 }
 \note{
-'trackeRapp' has been designed and developed by Robin Hornak and
-Ioannis Kosmidis, while Robin Hornak was completing his
+\code{trackeRapp} has been designed and developed by Robin Hornak
+and Ioannis Kosmidis, while Robin Hornak was completing his
 undergraduate research project in the Department of Statistical
 Science, University College London under the supervision of Ioannis
 Kosmidis. Ioannis Kosmidis has been supported by the Alan Turing
 Institute under the EPSRC grant EP/N510129/1 (Turing award number
 TU/B/000082) and Univeristy of Warwick. Robin Hornak and Ioannis
 Kosmidis have also been supported by University of Warwick through
-a Warwick Impact Fund Award that runs from May 2018 to May
+a Warwick Impact Fund Award that runs from May 2018 to December
 2019. The support of the aforementioned organisations is greatly
 acknowledged.
 }
-\section{Launching the app}{
+\section{Launching the \code{trackeRapp} interface}{
 
 
 The interface can be launched by typing \code{\link{trackeR_app}}
 or \code{\link{trackeRapp}}.
 }
 
+\section{Features}{
+
+
+The \code{trackeRapp} interface provides an integrated workflow for
+the analysis of running, cycling and swimming activity data. In
+particular, it allows users to:
+
+\itemize{
+\item input raw activity data files (in the form of \code{tcx}, \code{gpx}, \code{json} or \code{db3}
+\item
+}
+}
+
+\examples{
+
+\dontrun{
+trackeRapp(quiet = TRUE)
+}
+\dontrun{
+trackeR_app(quiet = FALSE)
+}
+
+}
 \references{
 Frick, H., Kosmidis, I. (2017). trackeR: Infrastructure for Running
 and Cycling Data from GPS-Enabled Tracking Devices in

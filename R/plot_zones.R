@@ -4,8 +4,12 @@
 #' @param session A vector of selected sessions.
 #' @param what A vector of variable names to be plotted.
 #' @param n_zones A numeric. The number of zones to split the dataset into.
-plot_zones <- function(x, session, what = c("heart_rate"), n_zones) {
-  x <- zones(x, session = session, what = what, auto_breaks = TRUE, n_zones = n_zones)
+#' @param parallel A logical. Whether use parallel computing.
+#' @param breaks A named list of computed breaks for zones from \code{compute_breaks()}.
+plot_zones <- function(x, session, what = c("heart_rate"),
+                       n_zones, parallel = TRUE, breaks) {
+  x <- zones(x, session = session, what = what, breaks = breaks,
+             n_zones = n_zones, parallel = parallel)
 
   dat <- do.call("rbind", x)
   dat$zoneF <- factor(
@@ -23,32 +27,28 @@ plot_zones <- function(x, session, what = c("heart_rate"), n_zones) {
   dat$timeN <- as.numeric(dat$time)
   ## facets
   units <- getUnits(x)
-  lab_data <- function(series) {
-    thisunit <- units$unit[units$variable == series]
-    prettyUnit <- prettifyUnits(thisunit)
-    paste0(series, " [", prettyUnit, "]")
-  }
-  pal <- leaflet::colorFactor(c("deepskyblue", "dodgerblue4"), dat$Session)
+
+  pal <- colorRampPalette(c("deepskyblue", "dodgerblue4"))(max(dat$session))
 
   individual_plots <- list()
   legend_status <- TRUE
   for (feature in what) {
     y <- list(title = "% of time")
-    x <- list(title = paste0("Zones (", lab_data(feature), ")"))
+    x <- list(title = lab_data(feature, units))
     feature_zones <- dat[dat$variable == feature, ]
-    p <- plotly::plot_ly(
+    p <- plot_ly(
       feature_zones,
       x = ~ zoneF, y = ~ percent,
-      color = ~ Session, colors = pal(feature_zones$Session), legendgroup = ~ Session, hoverinfo = "text",
-      text = ~ paste0(round(percent, 1), "%")
+      color = ~ Session, colors = pal[feature_zones$session], legendgroup = ~ Session, hoverinfo = "text",
+      text = ~ paste0("Proportion of a session: ", round(percent, 1), "%", "\n", Session)
     ) %>%
-      plotly::add_bars() %>%
-      plotly::layout(xaxis = x, yaxis = y, hovermode = "closest")
-    individual_plots[[feature]] <- plotly::style(p, showlegend = legend_status)
+      add_bars() %>%
+      layout(xaxis = x, yaxis = y, hovermode = "closest")
+    individual_plots[[feature]] <- style(p, showlegend = legend_status)
     legend_status <- FALSE
   }
 
-  plots <- do.call(plotly::subplot, c(
+  plots <- do.call(subplot, c(
     individual_plots,
     nrows = length(what),
     margin = 0.05, shareY = FALSE, titleX = TRUE, titleY = TRUE
