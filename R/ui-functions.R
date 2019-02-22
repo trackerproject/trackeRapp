@@ -42,28 +42,38 @@ create_summary_boxes <- function() {
 
 ## Create workout plots
 ## @param feature A character. The metric that is plotted, selected from \code{\link{choices}}.
-create_workout_plots <- function(feature) {
-    fname <- switch(as.character(feature),
-    "distance" = "Distance",
-    "duration" = "Duration",
-    "avgSpeed" = "Average Speed",
-    "avgPace" = "Average Pace",
-    "avgCadenceRunning" = "Average Cadence Running",
-    "avgCadenceCycling" = "Average Cadence Cycling",
-    "avgPower" = "Average Power",
-    "avgHeartRate" = "Average Heart Rate",
-    "wrRatio" = "Work-to-rest Ratio")
+create_workout_plots <- function(feature, summ) {
+    fname <- renderText({switch(as.character(feature),
+                   "distance" = lab_sum("distance", summ),
+                   "duration" = lab_sum("duration", summ),
+                   "avgSpeed" = lab_sum("avgSpeed", summ),
+                   "avgPace" = lab_sum("avgPace", summ),
+                   "avgCadenceRunning" = lab_sum("avgCadenceRunning", summ),
+                   "avgCadenceCycling" = lab_sum("avgCadenceCycling", summ),
+                   "avgPower" = lab_sum("avgPower", summ),
+                   "avgHeartRate" = lab_sum("avgheartRate", summ),
+                   "wrRatio" = lab_sum("wrRatio", summ))})
+    ## "distance" = "Distance",
+    ## "duration" = "Duration",
+    ## "avgSpeed" = "Average Speed",
+    ## "avgPace" = "Average Pace",
+    ## "avgCadenceRunning" = "Average Cadence Running",
+    ## "avgCadenceCycling" = "Average Cadence Cycling",
+    ## "avgPower" = "Average Power",
+    ## "avgHeartRate" = "Average Heart Rate",
+    ## "wrRatio" = "Work-to-rest Ratio"
   insertUI(
     selector = ".content",
     where = "beforeEnd",
     ui = conditionalPanel(
       condition = paste0("output.", feature, " == false"),
-      div(class = "main_plots", id = paste0("box", feature), fluidRow(
+      div(class = "main_plots", id = paste0("box", feature),
+          fluidRow(
         box(
           status = "primary",
           width = 12,
           collapsible = TRUE,
-          title = tagList(icon(create_icon(feature)), fname),
+          title = tagList(icon(create_icon(feature)), fname()),
           plotlyOutput(paste0(feature, "_plot"),
             width = "auto",
             height = "180px"

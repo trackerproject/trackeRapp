@@ -39,6 +39,7 @@ server <- function(input, output, session) {
         summary = NULL, object = NULL,
         selectedSessions = NULL, hasData = NULL
     )
+
     ## Store the pervious value to let user upload new data constantly
     previous_file_paths <- reactiveValues(processed = 'NULL')
 
@@ -195,7 +196,6 @@ server <- function(input, output, session) {
                                                                        "Average heart rate", data)
             output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
                                                                   "Average pace", data)
-
             ## Map
             ## Check if there is internet connection
             has_internet_connection <- curl::has_internet()
@@ -242,7 +242,7 @@ server <- function(input, output, session) {
             })
             ## Generate conditional plot for each metric irrespective of whether data available
             for (metric in c(choices)) {
-                trackeRapp:::create_workout_plots(metric)
+                trackeRapp:::create_workout_plots(metric, data$summary)
             }
 
             sapply(c(choices), function(i) {
