@@ -353,64 +353,49 @@ create_option_box <- function(sport_options, metrics_available) {
     immediate = TRUE,
     selector = ".content",
     where = "afterBegin",
-    ui = div(class = "option_boxes", fluidRow(
-      # box(
-      #   status = "primary",
-      #   width = 3,
-      #   collapsible = TRUE,
-      #   title = tagList("Options"),
-      column(
-        12,
-        fluidRow(
-          column(2,
-        conditionalPanel(
-          condition = "output.cond == false",
-          actionButton(
-            inputId = "return_to_main_page",
-            label = "Summary view",
-            icon = icon("search-minus"),
-            ## style = "pill",
-            ## color = "success"
-          )
-        ),
-        conditionalPanel(
-          condition = "output.cond == true",
-          actionButton(
-            inputId = "plotSelectedWorkouts",
-            label = "Workouts view",
-            icon = icon("search-plus"),
-            ## style = "pill",
-            ## color = "success"
-          )
-        )),
-        column(4,
-               actionButton(
-                   inputId = "resetSelection",
-                   label = "Clear selection",
-                   icon = icon("times-circle")
-                   ## style = "unite",
-                   ## color = "danger"
-               ))),
-        style='padding-bottom:2%;')
-    ), fluidRow(
-      # ),
-      box(height = '112px',
-        status = "primary",
-        width = 2,
-        collapsible = TRUE,
-        title = tagList("Other tools"),
-        actionButton(inputId = "showModalUnits",
-                     label = "Change units",
-                     icon = icon("balance-scale"),
-                     style = 'unite',
-                     color = 'primary',
-                     size = 'sm')
-      ),
+    ui = div(class = "option_boxes",
+             fluidRow(
+                 box(
+                     status = "primary",
+                     width = 12,
+                     collapsible = TRUE,
+                     title = "Toolbar",
+                     column(4,
+                     conditionalPanel(
+                         condition = "output.cond == false",
+                         actionButton(
+                             inputId = "return_to_main_page",
+                             label = "Summary view",
+                             icon = icon("search-minus"),
+                             style = "width: 100%; margin: 0px 0px 0px 0px"),
+                         style = "align: left;"),
+                     conditionalPanel(
+                         condition = "output.cond == true",
+                         actionButton(
+                             inputId = "plotSelectedWorkouts",
+                             label = "Workout view",
+                             icon = icon("search-plus"),
+                             style = "width: 100%; margin: 0px 0px 0px 0px"))),
+                     column(4,
+                     actionButton(
+                         inputId = "showModalUnits",
+                         label = "Change units",
+                         icon = icon("balance-scale"),
+                         style = "width: 100%; margin: 0px 0px 0px 0px")),
+                     column(4,
+                     actionButton(
+                         inputId = "resetSelection",
+                         label = "Clear selection",
+                         icon = icon("times-circle"),
+                         style = "width: 100%; margin: 0px 0px 0px 0px"))
+                 )
+             ),
+      fluidRow(
       box(
         status = "primary",
-        width = 4,
+        width = 6,
         collapsible = TRUE,
-        title = tagList("Select variables to display"),
+        title = tagList("Features to display"),
         pickerInput(
           inputId = "metricsSelected",
           # label = "Select metrics",
@@ -422,7 +407,7 @@ create_option_box <- function(sport_options, metrics_available) {
         status = "primary",
         width = 6,
         collapsible = TRUE,
-        title = tagList("Identified sports"),
+        title = tagList("Sports"),
         checkboxGroupButtons(
             inputId = "sports",
             choices = sport_options, selected = sport_options,
@@ -447,12 +432,9 @@ create_summary_timeline_boxes <- function() {
         id = "summary_box",
         status = "primary",
         width = 6,
-        title = tagList(
-          icon("reorder"),
-          "Summary of workouts"
-        ),
-        DTOutput("summary", height = "auto"),
-        collapsible = FALSE
+        collapsible = TRUE,
+        title = tagList(icon("reorder"), "Workout summary"),
+        DTOutput("summary", height = "auto")
       ),
       box(
         id = "workout_timeline_box",
@@ -460,7 +442,7 @@ create_summary_timeline_boxes <- function() {
         width = 6,
         collapsible = TRUE,
         collapsed = FALSE,
-        title = tagList(icon("calendar", lib = "glyphicon"), "Workout Timeline"),
+        title = tagList(icon("calendar"), "Workout timeline"),
         plotlyOutput("timeline_plot", height = "365px")
       )
     ))
