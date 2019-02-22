@@ -96,13 +96,13 @@ server <- function(input, output, session) {
     ## Sessions selected by sport using radio buttons
     observeEvent(input$sports, {
         ## shinyjs::js$resetSelection()
-        ## shinyjs::delay(1000,
+        ## shinyjs::delay(100,
         trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE)
         ## )
-        ## shinyjs::delay(1000,
-        DT::selectRows(proxy = proxy, selected = data$selectedSessions)
-        ## )
-        ## Update metrics available based on sport selected
+        shinyjs::delay(100,
+                       DT::selectRows(proxy = proxy, selected = data$selectedSessions)
+        )
+        ## update metrics available based on sport selected
         has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% input$sports)],
                                  function(session_summaries) {
                                      !all(is.na(session_summaries) | session_summaries == 0)
@@ -114,7 +114,7 @@ server <- function(input, output, session) {
             has_data_sport[[x]]
         )])
         })
-        shinyjs::delay(1000,
+        shinyjs::delay(100,
                        shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
                                                        selected = selected_metrics,
                                                        choices = metrics_available_sport()))
@@ -124,7 +124,7 @@ server <- function(input, output, session) {
     observeEvent(input$summary_rows_selected,  {
         if (!isTRUE(setequal(input$summary_rows_selected, data$selectedSessions))) {
             shinyjs::js$resetSelection()
-            ## shinyjs::delay(1000,
+            ## shinyjs::delay(100,
             trackeRapp:::generate_selected_sessions_object(data, input,
                                                            table_selection = TRUE)
             ## )
