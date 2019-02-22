@@ -71,7 +71,7 @@ render_summary_table <- function(data, input) {
       "Date" =
         format(
           data$summary[["sessionStart"]],
-          format = "%A, %B %d, %Y"
+          format = "%a, %d %b %Y"
         ),
       "Start" =
         format(
