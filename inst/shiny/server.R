@@ -499,15 +499,15 @@ server <- function(input, output, session) {
     observeEvent(input$plotSelectedWorkouts, {
         nsessions <- length(data$selectedSessions)
         if (nsessions > 60) {
-            show_warning_too_many_sessions(nsessions)
+            trackeRapp:::show_warning_too_many_sessions(nsessions)
         }
         else {
-            click("proceed")
+            shinyjs::click("proceed")
         }
     }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
     observeEvent(input$proceed_modal, {
-        click("proceed")
+        shinyjs::click("proceed")
     })
 
 }
