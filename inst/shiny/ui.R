@@ -6,7 +6,7 @@ shinydashboard::dashboardPage(
   shinydashboard::dashboardHeader(
     title = span(tagList(icon("dashboard"), "trackeRapp"))),
   shinydashboard::dashboardSidebar(
-    tags$head(tags$style(trackeRapp:::appCSS)),
+    ## tags$head(tags$style(trackeRapp:::appCSS)),
     shinydashboard::sidebarMenu(
       br(),
       fileInput("processedDataPath", "Choose processed file",

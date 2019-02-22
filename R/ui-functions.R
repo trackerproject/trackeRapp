@@ -102,21 +102,14 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
             )
           ),
           dropdownButton(
-            circle = TRUE, status = "info", up = TRUE,
-            icon = icon("wrench"), width = "300px",
-
-            tooltip = tooltipOptions(title = "Click to see inputs !"),
-            div(
-              class = "form-group shiny-input-container", id = "processed_path",
-              tags$label("Press button to detect changepoints:"),
-              div(class = "input-group", actionButton(paste0("detect_changepoints", id),
-                label = "Detect changepoints", style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
-              ))
-            )
-            ,
+              circle = TRUE,
+              ## status = "info",
+              up = TRUE,
+              icon = icon("wrench"), width = "300px",
+              tooltip = tooltipOptions(title = "Click to see inputs !"),
             selectizeInput(
               inputId = paste0("n_changepoints", id),
-              label = "Maximum # of changepoints:",
+              label = "Number of changepoints",
               multiple = FALSE,
               choices = c(
                 "1" = 1,
@@ -133,7 +126,17 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                 "12" = 12
               ),
               selected = "2"
-            )
+            ),
+            div(
+                class = "form-group shiny-input-container",
+                id = "processed_path",
+                ## tags$label("Press button to detect changepoints:"),
+                div(class = "input-group",
+                    actionButton(paste0("detect_changepoints", id),
+                                 label = "Detect changepoints"
+                                 ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
+                                 ))
+              )
           ),
           hr(),
           div(
@@ -178,12 +181,12 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                 2,
                 # Wrap the button in the function `withBusyIndicatorUI()`
                 div(
-                  tags$label("Press button to update:"),
+                  ## tags$label("Press button to update:"),
                   div(withBusyIndicatorUI(actionButton(
                     "cycling_update_power",
-                    "Update critical power",
-                    class = "btn-primary",
-                    style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
+                    "Update critical power"
+                    #class = "btn-primary"#,
+                    ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
                   )))
                 )
               ),
@@ -208,12 +211,12 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                 2,
                 # Wrap the button in the function `withBusyIndicatorUI()`
                 div(
-                  tags$label("Press button to update:"),
+                  ## tags$label("Press button to update:"),
                   div(withBusyIndicatorUI(actionButton(
                     "running_update_power",
-                    "Update critical speed",
-                    class = "btn-primary",
-                    style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
+                    "Update critical speed"
+                    #class = "btn-primary"#,
+                    ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
                   )))
                 )
               ),
@@ -261,19 +264,13 @@ create_profiles_box <- function(inputId, plotId, choices, collapsed = FALSE) {
           fluidRow(
             column(
               2,
-              # selectizeInput(
-              #   inputId = inputId,
-              #   label = "Select profile metrics to plot:",
-              #   multiple = TRUE,
-              #   choices = choices,
-              #   selected = "speed"
-              # )
               pickerInput(
                 inputId = inputId,
-                label = "Select profile metrics to plot:",
+                label = "Features",
                 choices = choices,
-                options = list(`actions-box` = TRUE, `style` = "btn-info"),
-                multiple = TRUE, selected = c("speed")
+                options = list(`actions-box` = TRUE),#, `style` = "btn-info"),
+                multiple = TRUE,
+                selected = c("speed")
               )
             )
           ),
@@ -314,10 +311,11 @@ create_zones_box <- function(inputId, plotId, choices) {
             # ),
             pickerInput(
               inputId = inputId,
-              label ="Select zone metrics to plot:",
+              label ="Features",
               choices = choices,
-              options = list(`actions-box` = TRUE, `style` = "btn-info"),
-              multiple = TRUE, selected = c("speed")
+              options = list(`actions-box` = TRUE),#, `style` = "btn-info"),
+              multiple = TRUE,
+              selected = c("speed")
             )
             ),
             column(2, pickerInput(
@@ -334,7 +332,7 @@ create_zones_box <- function(inputId, plotId, choices) {
                 "8" = 8,
                 "9" = 9
               ),
-              options = list(`actions-box` = TRUE, `style` = "btn-info"),
+              options = list(`actions-box` = TRUE),#, `style` = "btn-info"),
               selected = "6"
             ))
           ),
@@ -395,11 +393,11 @@ create_option_box <- function(sport_options, metrics_available) {
         status = "primary",
         width = 6,
         collapsible = TRUE,
-        title = tagList("Features to display"),
+        title = tagList("Features"),
         pickerInput(
           inputId = "metricsSelected",
           # label = "Select metrics",
-          choices = metrics_available, options = list(`actions-box` = TRUE, `style` = "btn-info"),
+          choices = metrics_available, options = list(`actions-box` = TRUE), #, `style` = "btn-info"),
           multiple = TRUE, selected = c("distance", "duration", 'avgPace')
         )
       ),
@@ -410,9 +408,12 @@ create_option_box <- function(sport_options, metrics_available) {
         title = tagList("Sports"),
         checkboxGroupButtons(
             inputId = "sports",
-            choices = sport_options, selected = sport_options,
-            justified = TRUE, status = "info",
-            checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon"))
+            choices = sport_options,
+            selected = sport_options,
+            justified = TRUE,
+            ## status = "info",
+            checkIcon = list(yes = icon("ok", lib = "glyphicon"),
+                             no = icon("remove", lib = "glyphicon"))
         )
       )
     ))
