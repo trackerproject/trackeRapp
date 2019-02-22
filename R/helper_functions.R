@@ -145,10 +145,9 @@ change_object_units <- function(data, input, object) {
   return(data_updated)
 }
 
-## Generate choices for plots
-choices <- function() {
-  c(
-    "Distance" = "distance",
+## Generate summary names for plots
+summary_view_features <- function() {
+  c("Distance" = "distance",
     "Duration" = "duration",
     "Average speed" = "avgSpeed",
     "Average pace" = "avgPace",
@@ -156,26 +155,23 @@ choices <- function() {
     "Average cadence cycling" = "avgCadenceCycling",
     "Average power" = "avgPower",
     "Average heart rate" = "avgHeartRate",
-    "Work to rest ratio" = "wrRatio"
-  )
+    "Work to rest ratio" = "wrRatio")
 }
 
 ## Generate metrics to test if they have data
-metrics <- function() {
-  c(
-    "Speed" = "speed",
+workout_view_features <- function() {
+  c("Speed" = "speed",
     "Pace" = "pace",
     "Heart Rate" = "heart_rate",
     "Cadence running" = "cadence_running",
     "Cadence cycling" = "cadence_cycling",
     "Power" = "power",
-    "Altitude" = "altitude"
-  )
+    "Altitude" = "altitude")
 }
 
 ## Update panel with metrics to plot
 ## @param session \code{shiny} object.
-## @param choices vector of features to plot, see \code{\link{choices}}.
+## @param choices vector of features to plot, see \code{\link{summary_view_features}}.
 ## @param has_data vector with boolean expressions representing which features have data.
 update_metrics_to_plot_workouts <- function(session, choices, has_data) {
   updatePickerInput(
@@ -191,7 +187,7 @@ update_metrics_to_plot_workouts <- function(session, choices, has_data) {
 ## Update metrics to plot for Work capacity and time in zones
 ## @param id character string; the ID of the input.
 ## @param session \code{shiny} object.
-## @param metrics vector of features to plot, see \code{\link{metrics}}.
+## @param metrics vector of features to plot, see \code{\link{workout_view_features}}.
 ## @param has_data vector with boolean expressions representing which features have data.
 update_metrics_to_plot_selected_workouts <- function(id, session, metrics, has_data) {
   updateSelectizeInput(
@@ -291,8 +287,9 @@ process_dataset <- function(data) {
     variable = "duration",
     unit = "h"
   )
-  # Test if data in each element of trackeRdataSummary object
-  data$hasData <- lapply(data$summary, function(session_summaries) {
+
+  ## Test if there is data in each feature in a trackeRdataSummary object
+  data$has_data <- lapply(data$summary, function(session_summaries) {
     !all(is.na(session_summaries) | session_summaries == 0)
   })
 }
@@ -400,7 +397,7 @@ cursor: default;
 
 # Update map based on current selection
 update_map <- function(session, data, longitude, latitude) {
-    to_be_coloured <- data$sessions_map %in% data$selectedSessions
+    to_be_coloured <- data$sessions_map %in% data$selected_sessions
     ## Blues
     plotlyProxy("map", session) %>%
         plotlyProxyInvoke(
@@ -434,7 +431,7 @@ update_map <- function(session, data, longitude, latitude) {
 ##   if (name != 'work_capacity') {
 ##     "250px"
 ##   } else {
-##     sports <- unique(sport(data$object[data$selectedSessions]))
+##     sports <- unique(sport(data$object[data$selected_sessions]))
 ##     # Work capacity only for running and cycling
 ##     sports <- intersect(c('running', 'cycling'), sports)
 ##     paste0(250 * length(sports), "px")
@@ -511,16 +508,16 @@ show_warning_too_many_sessions <- function(nsessions) {
 ## @param data object of class \code{reactivevalues}.
 ## @param output \code{shiny} object.
 ## @param session \code{shiny} object.
-## @param choices vector. See \code{\link{choices}}.
+## @param choices vector. See \code{\link{summary_view_features}}.
 generate_objects <- function(data, output, session, choices) {
   process_dataset(data)
   output$download_data <- download_handler(data)
   disable(selector = "#processedDataPath")
-  data$selectedSessions <- data$summary$session
+  data$selected_sessions <- data$summary$session
 
   click("createDashboard")
   # TODO incorporate update
-  # update_metrics_to_plot_workouts(session, choices, data$hasData)
+  # update_metrics_to_plot_workouts(session, choices, data$has_data)
   sports_options <- c("Running" = "running",
                       "Cycling" = "cycling",
                       "Swimming" = "swimming")
@@ -541,8 +538,8 @@ generate_objects <- function(data, output, session, choices) {
 ## Test whether we can plot work capacity for at least one of cycling or running.
 ## @param data An object of class \code{reactivevalues}.
 test_work_capacity <- function(data) {
-  selected_sports <- unique(get_sport(data$object[data$selectedSessions]))
-  is_data_power <- !all(sapply(data$object[data$selectedSessions], function(x) {
+  selected_sports <- unique(get_sport(data$object[data$selected_sessions]))
+  is_data_power <- !all(sapply(data$object[data$selected_sessions], function(x) {
     all((is.na(x[, "power"])) | (x[, "power"] == 0))
   }))
 

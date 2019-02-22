@@ -36,15 +36,17 @@ server <- function(input, output, session) {
 
     ## Main object where most data is stored
     data <- reactiveValues(
-        summary = NULL, object = NULL,
-        selectedSessions = NULL, hasData = NULL
+        summary = NULL,
+        object = NULL,
+        selected_sessions = NULL,
+        has_data = NULL
     )
-    ## Store the pervious value to let user upload new data constantly
+    ## Store the previous value to let user upload new data constantly
     previous_file_paths <- reactiveValues(processed = 'NULL')
 
     ## Load named vectors
-    choices <- trackeRapp:::choices()
-    metrics <- trackeRapp:::metrics()
+    choices <- trackeRapp:::summary_view_features()
+    metrics <- trackeRapp:::workout_view_features()
 
     ##  Upload data
     observeEvent(input$uploadButton, {
@@ -57,7 +59,7 @@ server <- function(input, output, session) {
             processed_data <- raw_data <- NULL
             if (!no_processed_file_selected) {
                 if (input$processedDataPath$datapath != previous_file_paths$processed) {
-                                        # Load processed data
+                    ## Load processed data
                     processed_data <- readRDS(input$processedDataPath$datapath)
                 }
             }
@@ -90,7 +92,7 @@ server <- function(input, output, session) {
     observeEvent(plotly::event_data("plotly_selected"), {
         trackeRapp:::generate_selected_sessions_object(data, input,
                                                        plot_selection = TRUE)
-        DT::selectRows(proxy = proxy, selected = data$selectedSessions)
+        DT::selectRows(proxy = proxy, selected = data$selected_sessions)
     })
 
     ## Sessions selected by sport using radio buttons
@@ -100,7 +102,7 @@ server <- function(input, output, session) {
         trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE)
         ## )
         shinyjs::delay(100,
-                       DT::selectRows(proxy = proxy, selected = data$selectedSessions)
+                       DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         )
         ## update metrics available based on sport selected
         has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% input$sports)],
@@ -122,7 +124,7 @@ server <- function(input, output, session) {
 
     ## Sessions selected through summary table
     observeEvent(input$summary_rows_selected,  {
-        if (!isTRUE(setequal(input$summary_rows_selected, data$selectedSessions))) {
+        if (!isTRUE(setequal(input$summary_rows_selected, data$selected_sessions))) {
             shinyjs::js$resetSelection()
             ## shinyjs::delay(100,
             trackeRapp:::generate_selected_sessions_object(data, input,
@@ -170,12 +172,12 @@ server <- function(input, output, session) {
         else {
             output$timeline_plot <- plotly::renderPlotly({
                 if (!is.null(data$summary))
-                    trackeRapp:::plot_timeline(data$summary, session = data$selectedSessions)
+                    trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
             })
             ## Re-render all plots
             metrics_available <- reactive({c(choices[sapply(choices, function(x)
-                data$hasData[[x]]
-            )])
+                data$has_data[[x]]
+                )])
             })
             trackeRapp:::create_option_box(sport_options = data$identified_sports,
                                            metrics_available = metrics_available())
@@ -213,14 +215,14 @@ server <- function(input, output, session) {
                     trackeRapp:::plot_map(df = preped_route_map()$route,
                                           all_sessions = preped_route_map()$sessions,
                                           sumX = data$summary,
-                                          colour_sessions = isolate(data$selectedSessions))
+                                          colour_sessions = isolate(data$selected_sessions))
                 })
                 ## Update map based on current selection
-                observeEvent(c(data$selectedSessions, input$is_collapse_box1) , {
+                observeEvent(c(data$selected_sessions, input$is_collapse_box1) , {
                     try(
                         if (!is.null(input$is_collapse_box1)) {
                             if (input$is_collapse_box1 != 'block') {
-                                sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selectedSessions)
+                                sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selected_sessions)
                                 plot_df <- preped_route_map()$route[sessions_rows, ]
                                 if (nrow(plot_df) != 0)
                                     trackeRapp:::update_map(session,
@@ -251,7 +253,7 @@ server <- function(input, output, session) {
                     trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                                what = i,
                                                dat =  plot_dataframe(),
-                                               sessions = data$selectedSessions,
+                                               sessions = data$selected_sessions,
                                                sports = trackeR::get_sport(data$object)[sessions_to_plot])
                 })
             })
@@ -274,7 +276,7 @@ server <- function(input, output, session) {
     ## Test which metrics have data
     have_data_metrics_selected <- reactive({
         !sapply(metrics, function(metric) {
-            all(sapply(data$object[data$selectedSessions], {
+            all(sapply(data$object[data$selected_sessions], {
                 function(x) all((is.na(x[, metric])) | (x[, metric] == 0))
             }))
         })
@@ -305,12 +307,12 @@ server <- function(input, output, session) {
         })
         ## Render actual plot
         output$zones_plot <- plotly::renderPlotly({
-            trackeRapp:::plot_zones(x = data$object, session = data$selectedSessions,
+            trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
                                     what = input$zonesMetricsPlot, breaks = breaks(),
                                     n_zones = as.numeric(input$n_zones))
         })
         ## Update metrics available each time different sessions selected
-        observeEvent(data$selectedSessions, {
+        observeEvent(data$selected_sessions, {
             shinyWidgets::updatePickerInput(session = session, inputId = "zonesMetricsPlot",
                                             choices =  metrics[have_data_metrics_selected()],
                                             selected = 'speed')
@@ -328,8 +330,8 @@ server <- function(input, output, session) {
 
         sapply(metrics, function(i) {
             plot_width <- reactive({
-                ifelse(length(data$selectedSessions) > 3,
-                       paste0(toString(500 * length(as.vector(data$selectedSessions))), "px"),
+                ifelse(length(data$selected_sessions) > 3,
+                       paste0(toString(500 * length(as.vector(data$selected_sessions))), "px"),
                        "auto")
             })
             output[[paste0(i, "_plot")]] <- renderUI({
@@ -346,7 +348,7 @@ server <- function(input, output, session) {
                     fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
                 }
                 trackeRapp:::plot_selected_workouts(
-                                 x = data$object, session = data$selectedSessions, what = i,
+                                 x = data$object, session = data$selected_sessions, what = i,
                                  sumX = data$summary, changepoints = fit_changepoint,
                                  threshold = FALSE, smooth = TRUE,
                                  n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
@@ -382,13 +384,13 @@ server <- function(input, output, session) {
         output$conc_profiles_plots <- plotly::renderPlotly({
             trackeRapp:::plot_concentration_profiles(
                              x = data$object,
-                             session = data$selectedSessions,
+                             session = data$selected_sessions,
                              what = input$profileMetricsPlot,
                              profiles_calculated = concentration_profiles())
         })
 
         ## Update metrics available each time different sessions selected
-        observeEvent(data$selectedSessions, {
+        observeEvent(data$selected_sessions, {
             shinyWidgets::updatePickerInput(session = session, inputId = "profileMetricsPlot",
                                             choices =  metrics[have_data_metrics_selected()],
                                             selected = 'speed')
@@ -404,7 +406,7 @@ server <- function(input, output, session) {
 
         sapply(c('cycling', 'running'), function(sport_id) {
             output[[paste0(sport_id, "_work_capacity_plot")]] <- renderUI({
-                n_sessions <- sum(trackeR::get_sport(data$summary[data$selectedSessions]) %in% sport_id)
+                n_sessions <- sum(trackeR::get_sport(data$summary[data$selected_sessions]) %in% sport_id)
                 plot_width <- ifelse(n_sessions > 3,
                                      paste0(toString(500 * n_sessions), "px"),
                                      "auto")
@@ -417,10 +419,10 @@ server <- function(input, output, session) {
             output[[paste0(sport_id, "Plot")]] <- plotly::renderPlotly({
                 ## If button to change units is pressed re-render plot with new units
                 change_power[[sport_id]]
-                work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selectedSessions] %in% sport_id
+                work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] %in% sport_id
                 trackeRapp:::plot_work_capacity(
                                  x = data$object,
-                                 session = data$selectedSessions[work_capacity_sessions],
+                                 session = data$selected_sessions[work_capacity_sessions],
                                  cp = isolate(as.numeric(input[[paste0('critical_power_', sport_id)]])))
             })
         })
@@ -497,7 +499,7 @@ server <- function(input, output, session) {
 
     ## Warning message too many sessions selected
     observeEvent(input$plotSelectedWorkouts, {
-        nsessions <- length(data$selectedSessions)
+        nsessions <- length(data$selected_sessions)
         if (nsessions > 60) {
             trackeRapp:::show_warning_too_many_sessions(nsessions)
         }

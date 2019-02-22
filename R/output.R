@@ -5,7 +5,7 @@
 render_summary_box <- function(short_name, long_name, data) {
   box_text <- function(what, subtitle, icon, data) {
     value <- reactive({
-      value <- data$summary[data$selectedSessions][[what]]
+      value <- data$summary[data$selected_sessions][[what]]
       value <- round(mean(value[is.finite(value)], na.rm = TRUE), 1)
       if (is.na(value)) {
         "not available"
@@ -41,23 +41,23 @@ generate_selected_sessions_object <- function(data, input,
                                               no_selection = FALSE) {
   data$hover <- event_data("plotly_selected")
   if (sport_selection) {
-    data$selectedSessions <- data$summary$session[get_sport(data$object) %in% input$sports]
+    data$selected_sessions <- data$summary$session[get_sport(data$object) %in% input$sports]
   }
   if (plot_selection) {
     sessions <- data$hover$key
     sessions[sapply(sessions, is.null)] <- NULL
-    data$selectedSessions <- unique(na.omit(as.numeric(sessions)))
+    data$selected_sessions <- unique(na.omit(as.numeric(sessions)))
   }
   if (table_selection) {
-    data$selectedSessions <- input$summary_rows_selected
+    data$selected_sessions <- input$summary_rows_selected
   }
   if (no_selection) {
-      data$selectedSessions <- NULL #data$summary$session
+      data$selected_sessions <- NULL #data$summary$session
   }
-  ## if (length(data$selectedSessions) == 0) {
-  ##   data$selectedSessions <- data$summary$session
+  ## if (length(data$selected_sessions) == 0) {
+  ##   data$selected_sessions <- data$summary$session
   ## }
-  data$selectedSessions <- sort(data$selectedSessions)
+  data$selected_sessions <- sort(data$selected_sessions)
 }
 
 ## Render summary table

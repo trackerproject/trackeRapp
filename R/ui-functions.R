@@ -41,7 +41,7 @@ create_summary_boxes <- function() {
 }
 
 ## Create workout plots
-## @param feature A character. The metric that is plotted, selected from \code{\link{choices}}.
+## @param feature A character. The metric that is plotted, selected from \code{\link{summary_view_features}}.
 create_workout_plots <- function(feature) {
     fname <- switch(as.character(feature),
     "distance" = "Distance",
@@ -241,7 +241,7 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
 ## Create concentration profile plot UI.
 ## @param inputId A character. The ID of the user input for the metrics that should be plotted
 ## @param plotId A character. The ID of the plot.
-## @param choices A vector of the metrics a user can select to be plotted, selected from \code{\link{metrics}}.
+## @param choices A vector of the metrics a user can select to be plotted, selected from \code{\link{workout_view_features}}.
 ## @param collapsed A logical. Whether or not the UI box should be collapsed.
 create_profiles_box <- function(inputId, plotId, choices, collapsed = FALSE) {
   ## Other metrics - Work capacity, Distribution profile, Concentration profile
@@ -287,7 +287,7 @@ create_profiles_box <- function(inputId, plotId, choices, collapsed = FALSE) {
 ## Create time in zones plot UI.
 ## @param inputId A character. The ID of the user input for the metrics that should be plotted.
 ## @param plotId A character. The ID of the plot.
-## @param choices A vector of the metrics a user can select to be plotted, selected from \code{\link{metrics}}.
+## @param choices A vector of the metrics a user can select to be plotted, selected from \code{\link{workout_view_features}}.
 create_zones_box <- function(inputId, plotId, choices) {
   ## Other metrics - Work capacity, Distribution profile, Concentration profile
   insertUI(
