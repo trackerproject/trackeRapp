@@ -363,37 +363,6 @@ errorFunc <- function(err, buttonId) {
   show(selector = errEl, anim = TRUE, animType = "fade")
 }
 
-appCSS <- ""
-## appCSS <- "
-## .btn-loading-container {
-## margin-left: 10px;
-## font-size: 1.2em;
-## }
-## .btn-done-indicator {
-## color: green;
-## }
-## .btn-err {
-## margin-top: 10px;
-## color: red;
-## }
-## .warningMessage {
-##    font-size: 20px;
-## }
-## hr {
-## border-top: 1px solid;
-## }
-## a#download_data {
-## color: #333;
-## }
-
-## .main_plots rect.legendtoggle {
-## display: none;
-## }
-
-## .main_plots rect.legendtoggle {
-## cursor: default;
-## }
-## "
 
 # Update map based on current selection
 update_map <- function(session, data, longitude, latitude) {

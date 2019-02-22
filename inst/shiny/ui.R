@@ -1,12 +1,16 @@
+## Get options
+opts <- trackeRapp:::trops()
+
 ##   Interface when trackeRapp is first loaded
 ui <-
 shinydashboard::dashboardPage(
   title = "trackeRapp",
-  skin = "black",
+  skin = opts$skin,
   shinydashboard::dashboardHeader(
     title = span(tagList(icon("dashboard"), "trackeRapp"))),
   shinydashboard::dashboardSidebar(
-    ## tags$head(tags$style(trackeRapp:::appCSS)),
+                      tags$head(tags$style(opts$custom_css)),
+                      ## tags$head(tags$style(trackeRapp:::trackerapp_opts()$DT_selected_color)),
     shinydashboard::sidebarMenu(
       br(),
       fileInput("processedDataPath", "Choose processed file",
@@ -51,7 +55,7 @@ shinydashboard::dashboardPage(
       )
     ),
   shinydashboard::dashboardBody(
-    shinyjs::useShinyjs(),
-    shinyjs::extendShinyjs(text = trackeRapp:::get_javascript())
+    shinyjs::useShinyjs()
+    ## shinyjs::extendShinyjs(text = trackeRapp:::get_javascript())
     )
   )

@@ -14,7 +14,9 @@ render_summary_box <- function(short_name, long_name, data) {
         paste0(value, " ", unique(lab_sum(what, data$summary, FALSE)))
       }
     })
-    color <- if (value() == "not available") "olive" else "light-blue"
+    color <- ifelse(value() == "not available",
+                    trops()$colour_summary_box_na,
+                    trops()$colour_summary_box_ok)
     valueBox(value(), subtitle, icon, color = color)
   }
 
