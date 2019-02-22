@@ -43,7 +43,7 @@ create_summary_boxes <- function() {
 ## Create workout plots
 ## @param feature A character. The metric that is plotted, selected from \code{\link{choices}}.
 create_workout_plots <- function(feature) {
-  name <- switch(as.character(feature),
+    fname <- switch(as.character(feature),
     "distance" = "Distance",
     "duration" = "Duration",
     "avgSpeed" = "Average Speed",
@@ -52,8 +52,7 @@ create_workout_plots <- function(feature) {
     "avgCadenceCycling" = "Average Cadence Cycling",
     "avgPower" = "Average Power",
     "avgHeartRate" = "Average Heart Rate",
-    "wrRatio" = "Work-to-rest Ratio"
-  )
+    "wrRatio" = "Work-to-rest Ratio")
   insertUI(
     selector = ".content",
     where = "beforeEnd",
@@ -64,14 +63,13 @@ create_workout_plots <- function(feature) {
           status = "primary",
           width = 12,
           collapsible = TRUE,
-          # height = "250px",
-          title = tagList(icon(create_icon(feature)), name),
+          title = tagList(icon(create_icon(feature)), fname),
           plotlyOutput(paste0(feature, "_plot"),
             width = "auto",
             height = "180px"
-          )
+            )
         )
-      ))
+        ))
     )
   )
 }

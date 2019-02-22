@@ -162,6 +162,7 @@ server <- function(input, output, session) {
         removeModal()
     })
 
+
     ## Session summaries page
     observeEvent(input$createDashboard, {
         if (is.null(data$object))
@@ -243,14 +244,10 @@ server <- function(input, output, session) {
             for (metric in c(choices)) {
                 trackeRapp:::create_workout_plots(metric)
             }
+
             sapply(c(choices), function(i) {
                 output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
                     sessions_to_plot <- data$summary$session[get_sport(data$object) %in% input$sports]
-                        ## if (is.null(input$sports))
-                        ##                     data$summary$session
-                        ##                 else
-                        ##                     data$summary$session[get_sport(data$object) %in% input$sports]
-
                     trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                                what = i,
                                                dat =  plot_dataframe(),
@@ -270,7 +267,6 @@ server <- function(input, output, session) {
                 })
                 outputOptions(output, choice, suspendWhenHidden = FALSE)
             })
-
         }
     }, once = TRUE)
 

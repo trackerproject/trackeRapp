@@ -12,6 +12,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
     "distance" = "distance", "duration" = "duration",
     "avgPower" = "power", "avgCadenceRunning" = "cadence_running",
     "avgHeartRate" = "heart_rate", "avgCadenceCycling" = "cadence_cycling",
+    "wrRatio" = "work-to-rest \n ratio"
     )
   }
   else {
