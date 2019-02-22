@@ -6,7 +6,6 @@ create_map <- function() {
     ui = conditionalPanel(
       condition = "output.cond == true",
       div(class = "main_plots", fluidRow(box(
-        status = "primary",
         id = "box1",
         width = 12,
         collapsible = TRUE,
@@ -60,7 +59,6 @@ create_workout_plots <- function(feature) {
       condition = paste0("output.", feature, " == false"),
       div(class = "main_plots", id = paste0("box", feature), fluidRow(
         box(
-          status = "primary",
           width = 12,
           collapsible = TRUE,
           title = tagList(icon(create_icon(feature)), fname),
@@ -85,9 +83,7 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
       condition = paste0("output.", id, " == false"),
       div(class = "plots", id = id, fluidRow(
         box(
-          status = "primary",
           width = 12,
-          # height = "350px",
           collapsible = TRUE,
           collapsed = collapsed,
           title = tagList(
@@ -103,7 +99,6 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
           ),
           dropdownButton(
               circle = TRUE,
-              ## status = "info",
               up = TRUE,
               icon = icon("wrench"), width = "300px",
               tooltip = tooltipOptions(title = "Click to see inputs !"),
@@ -160,7 +155,6 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
       condition = "output.work_capacity == false",
       div(class = "plots", id = id, fluidRow(
         box(
-          status = "primary",
           width = 12,
           # height = "350px",
           collapsible = TRUE,
@@ -256,7 +250,6 @@ create_profiles_box <- function(inputId, plotId, choices, collapsed = FALSE) {
       div(
         class = "plots",
         fluidRow(box(
-          status = "primary",
           width = 12,
           collapsible = TRUE,
           collapsed = collapsed,
@@ -295,7 +288,6 @@ create_zones_box <- function(inputId, plotId, choices) {
       div(
         class = "plots",
         fluidRow(box(
-          status = "primary",
           width = 12,
           collapsible = TRUE,
           collapsed = FALSE,
@@ -354,7 +346,6 @@ create_option_box <- function(sport_options, metrics_available) {
     ui = div(class = "option_boxes",
              fluidRow(
                  box(
-                     status = "primary",
                      width = 12,
                      collapsible = TRUE,
                      title = "Toolbar",
@@ -390,7 +381,6 @@ create_option_box <- function(sport_options, metrics_available) {
              ),
       fluidRow(
       box(
-        status = "primary",
         width = 6,
         collapsible = TRUE,
         title = tagList("Features"),
@@ -402,7 +392,6 @@ create_option_box <- function(sport_options, metrics_available) {
         )
       ),
       box(
-        status = "primary",
         width = 6,
         collapsible = TRUE,
         title = tagList("Sports"),
@@ -411,7 +400,6 @@ create_option_box <- function(sport_options, metrics_available) {
             choices = sport_options,
             selected = sport_options,
             justified = TRUE,
-            ## status = "info",
             checkIcon = list(yes = icon("ok", lib = "glyphicon"),
                              no = icon("remove", lib = "glyphicon"))
         )
@@ -431,7 +419,6 @@ create_summary_timeline_boxes <- function() {
     ui = div(class = "main_plots", fluidRow(
       box(
         id = "summary_box",
-        status = "primary",
         width = 6,
         collapsible = TRUE,
         title = tagList(icon("reorder"), "Workout summary"),
@@ -439,7 +426,6 @@ create_summary_timeline_boxes <- function() {
       ),
       box(
         id = "workout_timeline_box",
-        status = "primary",
         width = 6,
         collapsible = TRUE,
         collapsed = FALSE,

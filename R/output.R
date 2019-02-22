@@ -9,7 +9,8 @@ render_summary_box <- function(short_name, long_name, data) {
       value <- round(mean(value[is.finite(value)], na.rm = TRUE), 1)
       if (is.na(value)) {
         "not available"
-      } else {
+      }
+      else {
         paste0(value, " ", unique(lab_sum(what, data$summary, FALSE)))
       }
     })
