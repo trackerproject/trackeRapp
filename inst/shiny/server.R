@@ -446,27 +446,21 @@ server <- function(input, output, session) {
         ## Update power for work capacity plot
         change_power <- reactiveValues(cycling = 0, running = 0)
         observeEvent(input$cycling_update_power, {
-            trackeRapp:::withBusyIndicatorServer("cycling_update_power", {
-                Sys.sleep(1)
                 if (!is.numeric(input$critical_power_cycling) | input$critical_power_cycling <= 0) {
                     stop("Invalid input. Input has to be a positive numeric value.")
                 }
                 else {
                     change_power$cycling <- change_power$cycling + 1
                 }
-            })
         })
 
         observeEvent(input$running_update_power, {
-            trackeRapp:::withBusyIndicatorServer("running_update_power", {
-                Sys.sleep(1)
                 if (!is.numeric(input$critical_power_running) | input$critical_power_running <= 0) {
                     stop("Invalid input. Input has to be a positive numeric value.")
                 }
                 else {
                     change_power$running <- change_power$running + 1
                 }
-            })
         })
     }, once = TRUE)
 

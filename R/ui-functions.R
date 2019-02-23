@@ -173,24 +173,17 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
             fluidRow(
               column(
                 2,
-                # Wrap the button in the function `withBusyIndicatorUI()`
-                div(
-                  ## tags$label("Press button to update:"),
-                  div(withBusyIndicatorUI(actionButton(
-                    "cycling_update_power",
-                    "Update critical power"
-                    #class = "btn-primary"#,
-                    ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
-                  )))
-                )
-              ),
-              column(
-                2,
                 numericInput(
                   min = 2, max = 10, step = 0.1,
                   inputId = "critical_power_cycling",
                   label = "Critical power [W]", value = 4
                 )
+              ),
+              column(
+                  2,
+                  actionButton(
+                      "cycling_update_power",
+                      "Update critical power")
               )
             ),
             div(
@@ -203,25 +196,20 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
             fluidRow(
               column(
                 2,
-                # Wrap the button in the function `withBusyIndicatorUI()`
-                div(
-                  ## tags$label("Press button to update:"),
-                  div(withBusyIndicatorUI(actionButton(
-                    "running_update_power",
-                    "Update critical speed"
-                    #class = "btn-primary"#,
-                    ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
-                  )))
-                )
-              ),
-              column(
-                2,
                 numericInput(
                   min = 0.01, max = 6.5, step = 0.1,
                   inputId = "critical_power_running",
                   label = "Critical speed [m/s]", value = 4
                 )
-              )
+              ),
+              column(
+                2,
+                  actionButton(
+                    "running_update_power",
+                    "Update critical speed"
+                    #class = "btn-primary"#,
+                    ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
+              ))
             ),
             div(
               style = "overflow-x:scroll;",#overflow-y:hidden",
@@ -517,3 +505,6 @@ show_change_unit_window <- function(data) {
     )
   ))
 }
+
+
+
