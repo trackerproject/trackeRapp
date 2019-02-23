@@ -330,18 +330,23 @@ errorFunc <- function(err, buttonId) {
 
 # Update map based on current selection
 update_map <- function(session, data, longitude, latitude) {
+    opts <- trops()
     to_be_coloured <- data$sessions_map %in% data$selected_sessions
     ## Blues
     plotlyProxy("map", session) %>%
         plotlyProxyInvoke(
             "restyle",
-            list(line.color = "rgba(0, 154, 205, 1)", line.fillcolor = "rgba(0, 154, 205, 1)"))
+            ## list(line.color = "rgba(0, 154, 205, 1)", line.fillcolor = "rgba(0, 154, 205, 1)"))
+            list(line.color = opts$summary_plots_deselected_colour,
+                 line.fillcolor = opts$summary_plots_deselected_colour))
     ## Oranges
     if (!all(!to_be_coloured)) {
         plotlyProxy("map", session) %>%
             plotlyProxyInvoke(
                 "restyle",
-                list(line.color = "rgba(238, 118, 0, 1)", line.fillcolor = "rgba(238, 118, 0, 1)"),
+                ## list(line.color = "rgba(238, 118, 0, 1)", line.fillcolor = "rgba(238, 118, 0, 1)"),
+            list(line.color = opts$summary_plots_selected_colour,
+                 line.fillcolor = opts$summary_plots_selected_colour),
                 as.list(which(to_be_coloured) - 1))
         plotlyProxy("map", session) %>%
             plotlyProxyInvoke(

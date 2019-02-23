@@ -14,6 +14,7 @@
 #' @seealso \code{\link{summary.trackeRdata}}
 plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
                           group = c("total"), lines = TRUE, sports) {
+    opts <- trops()
   if (what %in% c('distance', 'duration', 'wrRatio')) {
     group <- c('total')
   } else {
@@ -68,33 +69,25 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
   if (date) {
     dat$xaxis <- dat$sessionStart
     xlab <- "Date"
-  } else {
+  }
+  else {
     dat$xaxis <- dat$session
     xlab <- "Session"
   }
-
   ##  ............................................................................
-  ##  Unique trackeR dashboard code                                           ####
 
-
-  p <- plot_ly(
-    dat,
-    x = ~ xaxis, y = ~ value, hoverinfo = "text",
-    text = ~ paste(
-      " Session:", session, "\n",
-      "Date:", format(sessionStart, format = "%Y-%m-%d"),
-      "\n", convert_to_name(what), ":", round(value, 2), units_text, "\n",
-      "Sport:", sport
-      ), showlegend = FALSE) %>%
-    add_markers(
-      key = dat$session, color = I("deepskyblue3"), symbol = ~ sport,
-      symbols = c("circle", "x", "square"), legendgroup = ~ sport,
-      showlegend = TRUE #, size = I(6)
-      ) %>%
-    add_lines(
-      color = I("deepskyblue3"), connectgaps = TRUE, legendgroup = ~ sport,
-      line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE)
-    )
+  p <- plot_ly(dat,
+               x = ~ xaxis, y = ~ value, hoverinfo = "text",
+               text = ~ paste(" Session:", session, "\n",
+                              "Date:", format(sessionStart, format = "%Y-%m-%d"),
+                              "\n", convert_to_name(what), ":", round(value, 2), units_text, "\n",
+                              "Sport:", sport), showlegend = FALSE) %>%
+      add_markers(key = dat$session, color = I(opts$summary_plots_deselected_colour),
+                  symbol = ~ sport,
+                  symbols = c("circle", "x", "square"), legendgroup = ~ sport,
+                  showlegend = TRUE) %>%
+      add_lines(color = I(opts$summary_plots_deselected_colour), connectgaps = TRUE, legendgroup = ~ sport,
+                line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE))
   if (shiny) {
       m <- as.data.frame(dat[dat$session %in% unique(sessions), ])
       # FIX for some reason cant plot when only 2 sessions selected
@@ -102,12 +95,11 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
         m <- rbind(m, m)
       }
       p <- add_markers(p,
-        data = m, color = I("darkorange3"),
-        symbol = ~ sport,
-        symbols = c("circle", "x", "square"),
-        showlegend = FALSE, #size = I(9)
-      )
-    }
+                       data = m, color = I(opts$summary_plots_selected_colour),
+                       symbol = ~ sport,
+                       symbols = c("circle", "x", "square"),
+                       showlegend = FALSE)
+  }
 
   ra <- c(min(dat$xaxis), max(dat$xaxis))
   if(nsessions > 1) {

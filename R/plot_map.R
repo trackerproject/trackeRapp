@@ -9,7 +9,8 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
     ## if (all(all_sessions %in% colour_sessions)) {
     ##     colour_sessions <-  NULL
     ## }
-  ## prepare popups
+    ## prepare popups
+    opts <- trops()
   units <- collect_units(get_units(sumX), unit_reference_sport = 'cycling')
   popupText <- function(session, start = TRUE, speed) {
     session <- unique(session)
@@ -44,7 +45,9 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
       data = df_markers, x = ~ longitude, y = ~ latitude, alpha = 0,
       size = I(0.1), key = ~ true_session_id
     )
-    colour <- ifelse(i %in% colour_sessions, "darkorange3", "deepskyblue3")
+    colour <- ifelse(i %in% colour_sessions,
+                     opts$summary_plots_selected_colour,
+                     opts$summary_plots_deselected_colour)
     p <- add_paths(
         p,
         data = plot_df, x = ~ longitude, y = ~ latitude,

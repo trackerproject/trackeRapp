@@ -56,14 +56,11 @@ trops <- function() {
 
         ## red, yellow, aqua, blue, light-blue, green, navy, teal, olive,
         ## lime, orange, fuchsia, purple, maroon, black.
-        colour_summary_box_na = "olive", ## same as #3d9970
-        colour_summary_box_ok = "orange", ## same as #ff851b
-
         custom_css = custom_css,
-
         custom_js = custom_js,
-
-        plotly_selected_color = "#ff851b", ## same as colour_summary_box_ok,
-        plotly_deselected_color = "#3d9970" ## same as colour_summary_box_na,
+        summary_box_na_colour = "olive", ## same as #3d9970
+        summary_box_ok_colour = "orange", ## same as #ff851b
+        summary_plots_selected_colour = "#ff851b", ## same as colour_summary_box_ok,
+        summary_plots_deselected_colour = "#3d9970" ## same as colour_summary_box_na,
     )
 }

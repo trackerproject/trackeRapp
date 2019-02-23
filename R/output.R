@@ -3,6 +3,7 @@
 ## @param long_name A character. The title of the box.
 ## @param data An object of class \code{reactivevalues}.
 render_summary_box <- function(short_name, long_name, data) {
+    opts <- trops()
   box_text <- function(what, subtitle, icon, data) {
     value <- reactive({
       value <- data$summary[data$selected_sessions][[what]]
@@ -15,8 +16,8 @@ render_summary_box <- function(short_name, long_name, data) {
       }
     })
     color <- ifelse(value() == "not available",
-                    trops()$colour_summary_box_na,
-                    trops()$colour_summary_box_ok)
+                    opts$summary_box_na_colour,
+                    opts$summary_box_ok_colour)
     valueBox(value(), subtitle, icon, color = color)
   }
 

@@ -5,6 +5,7 @@
 #' @param shiny Logical. Whether plots are in a shiny environment.
 #' @param session A vector. Selected session numbers.
 plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
+    opts <- trops()
   if (plotly) {
     d <- if (shiny) event_data("plotly_selected") else NULL
     startdates <- as.Date(sumX$sessionStart)
@@ -29,7 +30,8 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
     p <- add_segments(
       p,
       data = df, x = ~ start, xend = ~ end, y = ~ sday, yend = ~ eday,
-      color = I("deepskyblue3"), hoverinfo = "text",
+      color = I(opts$summary_plots_deselected_colour),
+      hoverinfo = "text",
       text = sprintf(
         "Session: %s<br>Start: %s <br>End: %s",
         df$session, sumX$sessionStart, sumX$sessionEnd
@@ -42,7 +44,7 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
         p,
         data = df[which(df$session %in% session), ], x = ~ start,
         xend = ~ end, y = ~ sday, yend = ~ eday,
-        color = I("darkorange3"), hoverinfo = "text",
+        color = I(opts$summary_plots_selected_colour), hoverinfo = "text",
         text = ~ sprintf(
           "Session: %s<br>Start: %s <br>End: %s",
           df$session[which(df$session %in% session)],
