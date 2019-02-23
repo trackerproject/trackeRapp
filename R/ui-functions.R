@@ -135,7 +135,7 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
           ),
           hr(),
           div(
-            style = "overflow-x:scroll;overflow-y:hidden",
+            style = "overflow-x:scroll", #overflow-y:hidden
             uiOutput(paste0(id, "_plot"))
           )
         )
@@ -194,7 +194,7 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
               )
             ),
             div(
-              style = "overflow-x:scroll;overflow-y:hidden",
+              style = "overflow-x:scroll",#;overflow-y:hidden",
               uiOutput(paste0("cycling_work_capacity", "_plot"))
             )
           ),
@@ -224,7 +224,7 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
               )
             ),
             div(
-              style = "overflow-x:scroll;overflow-y:hidden",
+              style = "overflow-x:scroll;",#overflow-y:hidden",
               uiOutput(paste0("running_work_capacity", "_plot"))
             )
           )

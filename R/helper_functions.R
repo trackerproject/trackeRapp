@@ -231,34 +231,6 @@ calculate_plot_height <- function(metrics) {
   paste0(250 * length(metrics), "px")
 }
 
-## Get Javascript code for reseting page and collapsing boxes
-get_javascript <- function() {
-  "
-    shinyjs.collapse = function(boxid) {
-    $('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
-    };
-    // shinyjs.resetClick = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }
-    shinyjs.reset_page = function() { location.reload(); };
-    shinyjs.resetSelection = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); };
-    shinyjs.initialize_map_collapse = function() {
-      Shiny.onInputChange('is_collapse_box1', 'none')
-    };
-    shinyjs.check_map_collapse = function() {
-      $('#box1').css('display')
-    };
-    shinyjs.is_map_collapse = function() {
-
-        $('#box1').parent().find('button').click(function(){
-          // alert($('#box1').css('display'));
-          Shiny.onInputChange('is_collapse_box1', $('#box1').css('display'))
-        })
-    };
-  "
- }
-# $('#box1').closest('.box').on('hidden.bs.collapse', function () {});
-# $('#box1').closest('.box').on('shown.bs.collapse', function () {})
-
-
 ## Process \code{trackeRdata} object by setting thresholds to remove wrong values, change units, set a moving threshold and test which variables contain data
 ## @param data object of class \code{reactivevalues}.
 process_dataset <- function(data) {
@@ -273,15 +245,7 @@ process_dataset <- function(data) {
     )
   )
 
-  # data$object <- threshold(data$object)
-  # data$object <- threshold(data$object,
-  #                          variable = rep("distance", 3),
-  #                          lower = rep(0, 3),
-  #                          upper = rep(500000, 3),
-  #                          sport = c("cycling", "running", "swimming")
-  #                          )
-
-  # Create trackeRdataSummary object
+  ## Create trackeRdataSummary object
   data$summary <- summary(data$object, movingThreshold = 0.4)
   data$summary <- change_units(data$summary,
     variable = "duration",
@@ -295,9 +259,9 @@ process_dataset <- function(data) {
 }
 
 
-# Set up a button to have an animated loading indicator and a checkmark
-# for better user experience
-# Need to use with the corresponding `withBusyIndicator` server function
+## Set up a button to have an animated loading indicator and a checkmark
+## for better user experience
+## Need to use with the corresponding `withBusyIndicator` server function
 withBusyIndicatorUI <- function(button) {
   id <- button[["attribs"]][["id"]]
   div(
@@ -395,18 +359,6 @@ update_map <- function(session, data, longitude, latitude) {
             list(mapbox.center = list(lat = median(latitude), lon = median(longitude))))
 }
 
-## ## Calculate plot height for work capacity
-## calculate_plot_height_work_capacity <- function(name, data) {
-##   if (name != 'work_capacity') {
-##     "250px"
-##   } else {
-##     sports <- unique(sport(data$object[data$selected_sessions]))
-##     # Work capacity only for running and cycling
-##     sports <- intersect(c('running', 'cycling'), sports)
-##     paste0(250 * length(sports), "px")
-##   }
-## }
-
 ## Plot work capacities for each sport
 ## @param x object of class \code{\link{trackeRdata}}.
 ## @param session numeric vector of the sessions to be used, defaults to all sessions.
@@ -470,7 +422,6 @@ show_warning_too_many_sessions <- function(nsessions) {
   ))
 }
 
-
 ## Classify sessions by sport, process dataset, generate download handler,
 ## generate selected sessions object, update what metrics are available
 ## to plot and other minor actions.
@@ -515,13 +466,15 @@ test_work_capacity <- function(data) {
   # Test for power if cycling
   if (("cycling" %in% selected_sports) & (is_data_power)) {
     cycling <- "cycling"
-  } else {
+  }
+  else {
     cycling <- NULL
   }
   # Test if running selected
   if ("running" %in% selected_sports) {
     running <- "running"
-  } else {
+  }
+  else {
     running <- NULL
   }
   return(c(cycling, running))
