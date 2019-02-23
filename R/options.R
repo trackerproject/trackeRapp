@@ -1,47 +1,33 @@
 trops <- function() {
     custom_css <-
     "
-    /* tidy up fileInput margins and padding
+    /* tidy up fileInput margins and padding */
     section.sidebar .shiny-input-container {
        margin-bottom: 0px;
        margin-top: 0px;
        padding-top: 0px;
     }
+
     #file1_progress {
      margin-bottom: 0px;
-     margin-top: 0px;
+     margin-top: 100px;
      padding: 0px;
     }
+
+    #uploadButton, #resetButton {
+     width: 100%;
+     margin: 0px 0px 0px 0px;
+    }
+
+    #download_data {
+     width: 100%;
+     color: #333; /* from .btn-default in css */
+    }
+
+    #summary tr.selected td, #summary td.selected {
+     background-color: #ff851b !important;
+    }
     "
-    ## custom_css <-
-    ## "
-    ##  .btn-loading-container {
-    ##  margin-left: 10px;
-    ##  font-size: 1.2em;
-    ##  }
-    ##  .btn-done-indicator {
-    ##  color: green;
-    ##  }
-    ##  .btn-err {
-    ##  margin-top: 10px;
-    ##  color: red;
-    ##  }
-    ##  .warningMessage {
-    ##     font-size: 20px;
-    ##  }
-    ##  hr {
-    ##  border-top: 1px solid;
-    ##  }
-    ##  a#download_data {
-    ##  color: #333;
-    ##  }
-    ##  .main_plots rect.legendtoggle {
-    ##  display: none;
-    ##  }
-    ##  .main_plots rect.legendtoggle {
-    ##  cursor: default;
-    ##  }
-    ## "
     custom_js <-
     "
      shinyjs.collapse = function(boxid) {
@@ -63,15 +49,21 @@ trops <- function() {
      })
      };
     "
+
     list(
+        ## blue, black, purple, green, red, yellow
+        skin = "black",
+
         ## red, yellow, aqua, blue, light-blue, green, navy, teal, olive,
         ## lime, orange, fuchsia, purple, maroon, black.
-        colour_summary_box_na = "olive",
-        colour_summary_box_ok = "light-blue",
-        DT_selected_colour = 'background-color: orange !important;',
-        # blue, black, purple, green, red, yellow
-        skin = "black",
+        colour_summary_box_na = "olive", ## same as #3d9970
+        colour_summary_box_ok = "orange", ## same as #ff851b
+
         custom_css = custom_css,
-        custom_js = custom_js
+
+        custom_js = custom_js,
+
+        plotly_selected_color = "#ff851b", ## same as colour_summary_box_ok,
+        plotly_deselected_color = "#3d9970" ## same as colour_summary_box_na,
     )
 }

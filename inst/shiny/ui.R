@@ -9,8 +9,7 @@ shinydashboard::dashboardPage(
   shinydashboard::dashboardHeader(
     title = span(tagList(icon("dashboard"), "trackeRapp"))),
   shinydashboard::dashboardSidebar(
-                      tags$head(tags$style(opts$custom_css)),
-                      ## tags$head(tags$style(trackeRapp:::trackerapp_opts()$DT_selected_color)),
+    tags$style(HTML(opts$custom_css)),
     shinydashboard::sidebarMenu(
       br(),
       fileInput("processedDataPath", "Choose processed file",
@@ -21,15 +20,13 @@ shinydashboard::dashboardPage(
                 accept = c(".gpx", ".tcx", ".db3", ".json")),
       div(class = "form-group shiny-input-container",
           splitLayout(
-              actionButton("uploadButton", "Load", icon("upload"),
-                           style = "width: 100%; margin: 0px 0px 0px 0px"),
-              actionButton("resetButton", "Reset", icon("eraser"),
-                           style = "width: 100%; margin: 0px 0px 0px 0px"),
+              actionButton("uploadButton", "Load", icon("upload")),
+              actionButton("resetButton", "Reset", icon("eraser")),
               cellWidths = c("50%", "50%"))),
       br(),
       div(class = "form-group shiny-input-container",
           tags$label("Download processed data"),
-          downloadButton("download_data", "Download", style = "width: 100%; color: #333")),
+          downloadButton("download_data", "Download")),
       hr(),
       div(class = "form-group shiny-input-container",
           p("Design and original development",
