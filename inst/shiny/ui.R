@@ -47,11 +47,7 @@ shinydashboard::dashboardPage(
               target="_blank"))),
       ## A hack to cause event in generate_objects after Load data button is clicked
       hidden(actionLink("createDashboard", "")),
-      hidden(actionLink("proceed", "")),
-      # Some css to tidy up fileInput margins and padding
-      shinyjs::inlineCSS(list(
-        "section.sidebar .shiny-input-container" = "margin-bottom: 0px; margin-top: 0px; padding-top: 0px;",
-        "#file1_progress" = "margin-bottom: 0px; margin-top: 0px; padding: 0px;"))
+      hidden(actionLink("proceed", ""))
       )
     ),
   shinydashboard::dashboardBody(

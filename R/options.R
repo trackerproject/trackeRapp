@@ -1,5 +1,18 @@
 trops <- function() {
-    custom_css <- ""
+    custom_css <-
+    "
+    /* tidy up fileInput margins and padding
+    section.sidebar .shiny-input-container {
+       margin-bottom: 0px;
+       margin-top: 0px;
+       padding-top: 0px;
+    }
+    #file1_progress {
+     margin-bottom: 0px;
+     margin-top: 0px;
+     padding: 0px;
+    }
+    "
     ## custom_css <-
     ## "
     ##  .btn-loading-container {
