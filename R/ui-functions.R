@@ -147,7 +147,7 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
 ## Create work capacity plot
 ## @param id A character. The ID of the plot.
 ## @param collapsed A logical. Whether or not the UI box should be collapsed.
-create_work_capacity_plot <- function(id, collapsed = TRUE) {
+create_work_capacity_plot0 <- function(id, collapsed = TRUE) {
   insertUI(
     selector = ".content",
     where = "beforeEnd",
@@ -221,6 +221,78 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
     )
   )
 }
+
+
+## Create work capacity plot
+## @param id A character. The ID of the plot.
+## @param collapsed A logical. Whether or not the UI box should be collapsed.
+create_work_capacity_plot <- function(id, collapsed = TRUE) {
+    insertUI(
+        selector = ".content",
+        where = "beforeEnd",
+        ui = conditionalPanel(
+            condition = "output.work_capacity == false",
+            div(class = "plots", id = id,
+                fluidRow(
+                    box(
+                        width = 12,
+                        collapsible = TRUE,
+                        collapsed = collapsed,
+                        title = tagList(
+                            icon("gear"),
+                            switch(id, "pace" = paste0("Pace"),
+                                   "heart.rate" = paste0("Heart Rate"),
+                                   "altitude" = paste0("Altitude"),
+                                   "work_capacity" = paste0("Work Capacity"),
+                                   "speed" = paste0("Speed"))),
+                        conditionalPanel(
+                            condition = "output.work_capacity_cycling == false",
+                            dropdownButton(
+                                circle = TRUE,
+                                up = TRUE,
+                                icon = icon("wrench"), width = "300px",
+                                tooltip = tooltipOptions(title = "Click to see inputs !"),
+                                numericInput(
+                                        min = 2, max = 10, step = 0.1,
+                                        inputId = "critical_power_cycling",
+                                        label = "Critical power [W]", value = 4
+                                ),
+                                actionButton(
+                                    "cycling_update_power",
+                                    "Update W' expended")
+                            ),
+                            div(
+                                style = "overflow-x:scroll",#;overflow-y:hidden",
+                                uiOutput(paste0("cycling_work_capacity", "_plot"))
+                            )
+                        ),
+                        conditionalPanel(
+                            condition = "output.work_capacity_running == false",
+                            dropdownButton(
+                                circle = TRUE,
+                                up = TRUE,
+                                icon = icon("wrench"), width = "300px",
+                                tooltip = tooltipOptions(title = "Click to see inputs !"),
+                                numericInput(
+                                        min = 0.01, max = 6.5, step = 0.1,
+                                        inputId = "critical_power_running",
+                                        label = "Critical speed [m/s]", value = 4
+                                ),
+                                actionButton(
+                                    "running_update_power",
+                                    "Update W' expended")
+                            ),
+                            div(
+                                style = "overflow-x:scroll;",#overflow-y:hidden",
+                                uiOutput(paste0("running_work_capacity", "_plot"))
+                            )
+                        )
+                    )
+                ))
+        )
+    )
+}
+
 
 
 ## Create concentration profile plot UI.
@@ -505,6 +577,3 @@ show_change_unit_window <- function(data) {
     )
   ))
 }
-
-
-
