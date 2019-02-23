@@ -61,6 +61,11 @@ trops <- function() {
         summary_box_na_colour = "olive", ## same as #3d9970
         summary_box_ok_colour = "orange", ## same as #ff851b
         summary_plots_selected_colour = "#ff851b", ## same as colour_summary_box_ok,
-        summary_plots_deselected_colour = "#3d9970" ## same as colour_summary_box_na,
+        summary_plots_deselected_colour = "#3d9970", ## same as colour_summary_box_na,
+        zones_colours = c("#994700", "#ffad66"), ## https://www.hexcolortool.com/#ff851a
+        ## zones_colours = c("#276248", "#69c39b"), ## https://www.hexcolortool.com/#3d9970
+        workouts_background_colour = "black",
+        workouts_changepoint_colour = "grey",
+        workouts_smoother_colour = "#ff851b"
     )
 }

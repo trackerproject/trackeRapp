@@ -33,7 +33,7 @@ plot_zones <- function(x, session, what = c("heart_rate"),
   ## facets
   units <- getUnits(x)
 
-  pal <- colorRampPalette(c("deepskyblue", "dodgerblue4"))(max(dat$session))
+  pal <- colorRampPalette(trops()$zones_colours)(max(dat$session))
 
   individual_plots <- list()
   legend_status <- TRUE

@@ -27,7 +27,7 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
 
 
   df$series <- paste("Session", sprintf(paste0("%0", nchar(max(df$Series)), "d"), df$Series))
-    pal <- colorRampPalette(c("deepskyblue", "dodgerblue4"))(max(df$Series))
+    pal <- colorRampPalette(trops()$zones_colours)(max(df$Series))
 
   individual_plots <- list()
   legend_status <- TRUE

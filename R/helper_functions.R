@@ -374,7 +374,8 @@ plot_work_capacities <- function(x, session, cp) {
   sports <- intersect(c("running", "cycling"), sports)
   if (length(sports) == 1) {
     return(plot_work_capacity(x = x, session = session, cp = cp))
-  } else {
+  }
+  else {
     cycling_sessions <- session[get_sport(x[session]) == "cycling"]
     plot_cycling <- plot_work_capacity(
       x = x, session = c(cycling_sessions, -1),

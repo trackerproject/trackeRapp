@@ -7,7 +7,7 @@
 #'     which is then plotted in the background?
 #' @param cp A numeric. Critical power/speed, i.e., the power/speed which can be maintained for longer period of time.
 plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) {
-
+    opts <- trops()
     if (is.null(session)) {
         return(plotly_empty())
     }
@@ -137,7 +137,7 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
         na.omit(df_subset),
         x = ~ Index, y = ~ Value,
         hoverinfo = "none",
-        color = I("gray"), legendgroup = ~ Series,
+        color = I(opts$workouts_changepoint_colour), legendgroup = ~ Series,
         name = mylabels[1], showlegend = show_legend
       ) %>%
         add_lines(alpha = 0.4) %>%
@@ -145,7 +145,7 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
           data = na.omit(df_wprime),
           x = ~ Index, y = ~ Value, hoverinfo = "text",
           text = ~ paste(round(Value, 2), "W'"),
-          color = I("deepskyblue3"), legendgroup = ~ Series, name = mylabels[2],
+          color = I(opts$workouts_smoother_colour), legendgroup = ~ Series, name = mylabels[2],
           showlegend = show_legend
         ) %>%
         layout(

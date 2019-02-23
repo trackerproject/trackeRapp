@@ -20,6 +20,7 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
                                   n_changepoints = 6, print_changepoints = FALSE,
                                   unit_reference_sport = NULL, moving_threshold = NULL,
                                   desampling = 1, y_axis_range = NULL) {
+    opts <- trops()
     if (is.null(session)) {
         return(plotly_empty())
     }
@@ -165,13 +166,13 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
         # initiate a line shape object
         line <- list(
           type = "line",
-          line = list(color = "grey", dash = "dot"),
+          line = list(color = opts$workouts_changepoint_colour, dash = "dot"),
           xref = paste0("x", n_plot),
           yref = paste0("y", n_plot)
         )
         line_v <- list(
           type = "line",
-          line = list(color = "grey", dash = "dot"),
+          line = list(color = opts$workouts_changepoint_colour, dash = "dot"),
           xref = paste0("x", n_plot),
           yref = paste0("y", n_plot)
         )
@@ -201,7 +202,7 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
         df_subset[sampled_rows, ],
         x = ~ Index, y = ~ Value, hoverinfo = "none",
         type = "scatter", mode = "lines",
-        showlegend = FALSE, alpha = 0.1, color = I("black")
+        showlegend = FALSE, alpha = 0.1, color = I(opts$workouts_background_colour)
       )
 
       if (smooth) {
@@ -213,7 +214,7 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
           data = df_subset,
           x = ~ Index, y = smoothed_data, hoverinfo = "text",
           text = paste(round(smoothed_data, 2), var_units),
-          color = I("deepskyblue3"),
+          color = I(opts$workouts_smoother_colour),
           showlegend = FALSE, alpha = 1
         )
       }
