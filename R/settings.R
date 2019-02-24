@@ -14,7 +14,7 @@ trops <- function() {
      padding: 0px;
     }
 
-    #uploadButton, #resetButton {
+    #uploadButton, #resetButton, #return_to_main_page, #plotSelectedWorkouts, #showModalUnits, #resetSelection {
      width: 100%;
      margin: 0px 0px 0px 0px;
     }
@@ -26,6 +26,11 @@ trops <- function() {
 
     #summary tr.selected td, #summary td.selected {
      background-color: #ff851b !important;
+    }
+
+    #workout_view_plot {
+     overflow-x:scroll;
+     overflow-y:hidden;
     }
     "
     custom_js <-
@@ -58,10 +63,11 @@ trops <- function() {
         ## lime, orange, fuchsia, purple, maroon, black.
         custom_css = custom_css,
         custom_js = custom_js,
-        summary_box_na_colour = "olive", ## same as #3d9970
+        ## summary_box_na_colour = "olive", ## same as #3d9970x
+        summary_box_na_colour = "light-blue", ## same as #3c8dbc
         summary_box_ok_colour = "orange", ## same as #ff851b
-        summary_plots_selected_colour = "#ff851b", ## same as colour_summary_box_ok,
-        summary_plots_deselected_colour = "#3d9970", ## same as colour_summary_box_na,
+        summary_plots_selected_colour = "#ff851b", ## same as summary_box_ok_colour,
+        summary_plots_deselected_colour = "#3c8dbc", ## same as summary_box_na_colour,
         zones_colours = c("#994700", "#ffad66"), ## https://www.hexcolortool.com/#ff851a
         ## zones_colours = c("#276248", "#69c39b"), ## https://www.hexcolortool.com/#3d9970
         workouts_background_colour = "black",

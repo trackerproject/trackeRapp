@@ -129,14 +129,12 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                 div(class = "input-group",
                     actionButton(paste0("detect_changepoints", id),
                                  label = "Detect changepoints"
-                                 ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
                                  ))
               )
           ),
           hr(),
-          div(
-            style = "overflow-x:scroll", #overflow-y:hidden
-            uiOutput(paste0(id, "_plot"))
+          div(id = "workout_view_plot",
+              uiOutput(paste0(id, "_plot"))
           )
         )
       ))
@@ -186,8 +184,7 @@ create_work_capacity_plot0 <- function(id, collapsed = TRUE) {
                       "Update critical power")
               )
             ),
-            div(
-              style = "overflow-x:scroll",#;overflow-y:hidden",
+            div(id = "workout_view_plot",
               uiOutput(paste0("cycling_work_capacity", "_plot"))
             )
           ),
@@ -207,13 +204,10 @@ create_work_capacity_plot0 <- function(id, collapsed = TRUE) {
                   actionButton(
                     "running_update_power",
                     "Update critical speed"
-                    #class = "btn-primary"#,
-                    ## style = "color: #fff; background-color: #6FB1E7; border-color: #5093E3"
               ))
             ),
-            div(
-              style = "overflow-x:scroll;",#overflow-y:hidden",
-              uiOutput(paste0("running_work_capacity", "_plot"))
+            div(id = "workout_view_plot",
+                uiOutput(paste0("running_work_capacity", "_plot"))
             )
           )
         )
@@ -261,8 +255,7 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                                     "cycling_update_power",
                                     "Update W' expended")
                             ),
-                            div(
-                                style = "overflow-x:scroll",#;overflow-y:hidden",
+                            div(id = "workout_view_plot",
                                 uiOutput(paste0("cycling_work_capacity", "_plot"))
                             )
                         ),
@@ -282,8 +275,7 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                                     "running_update_power",
                                     "Update W' expended")
                             ),
-                            div(
-                                style = "overflow-x:scroll;",#overflow-y:hidden",
+                            div(id = "workout_view_plot",
                                 uiOutput(paste0("running_work_capacity", "_plot"))
                             )
                         )
@@ -321,7 +313,7 @@ create_profiles_box <- function(inputId, plotId, choices, collapsed = FALSE) {
                 inputId = inputId,
                 label = "Features",
                 choices = choices,
-                options = list(`actions-box` = TRUE),#, `style` = "btn-info"),
+                options = list(`actions-box` = TRUE),
                 multiple = TRUE,
                 selected = c("speed")
               )
@@ -365,7 +357,7 @@ create_zones_box <- function(inputId, plotId, choices) {
               inputId = inputId,
               label ="Features",
               choices = choices,
-              options = list(`actions-box` = TRUE),#, `style` = "btn-info"),
+              options = list(`actions-box` = TRUE),
               multiple = TRUE,
               selected = c("speed")
             )
@@ -384,7 +376,7 @@ create_zones_box <- function(inputId, plotId, choices) {
                 "8" = 8,
                 "9" = 9
               ),
-              options = list(`actions-box` = TRUE),#, `style` = "btn-info"),
+              options = list(`actions-box` = TRUE),
               selected = "6"
             ))
           ),
@@ -415,28 +407,23 @@ create_option_box <- function(sport_options, metrics_available) {
                          actionButton(
                              inputId = "return_to_main_page",
                              label = "Summary view",
-                             icon = icon("search-minus"),
-                             style = "width: 100%; margin: 0px 0px 0px 0px"),
-                         style = "align: left;"),
+                             icon = icon("search-minus"))),
                      conditionalPanel(
                          condition = "output.cond == true",
                          actionButton(
                              inputId = "plotSelectedWorkouts",
                              label = "Workout view",
-                             icon = icon("search-plus"),
-                             style = "width: 100%; margin: 0px 0px 0px 0px"))),
+                             icon = icon("search-plus")))),
                      column(4,
                      actionButton(
                          inputId = "showModalUnits",
                          label = "Change units",
-                         icon = icon("balance-scale"),
-                         style = "width: 100%; margin: 0px 0px 0px 0px")),
+                         icon = icon("balance-scale"))),
                      column(4,
                      actionButton(
                          inputId = "resetSelection",
                          label = "Clear selection",
-                         icon = icon("times-circle"),
-                         style = "width: 100%; margin: 0px 0px 0px 0px"))
+                         icon = icon("times-circle")))
                  )
              ),
       fluidRow(
@@ -447,7 +434,7 @@ create_option_box <- function(sport_options, metrics_available) {
         pickerInput(
           inputId = "metricsSelected",
           # label = "Select metrics",
-          choices = metrics_available, options = list(`actions-box` = TRUE), #, `style` = "btn-info"),
+          choices = metrics_available, options = list(`actions-box` = TRUE),
           multiple = TRUE, selected = c("distance", "duration", 'avgPace')
         )
       ),
