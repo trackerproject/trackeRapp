@@ -65,7 +65,8 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
     df$SessionID <- format(session[df$SessionID])
     df$SessionID <- gsub(" ", "0", df$SessionID)
     df$SessionID <- paste(df$SessionID, format(df$Index, "%Y-%m-%d"), sep = ": ")
-  } else {
+  }
+  else {
     df$SessionID <- factor(df$SessionID, levels = seq_along(session), labels = session)
   }
   df$Series <- factor(df$Series)
@@ -100,7 +101,8 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
   }
   if (na_ranges <- all(is.na(ranges))) {
     maximal_range <- c(-1, 1)
-  } else {
+  }
+  else {
     maximal_range <- c(min(ranges[, 1], na.rm = TRUE), max(ranges[, 2], na.rm = TRUE))
   }
 
@@ -151,7 +153,8 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
           annotations = annotations_list,
           xaxis = axis_list, yaxis = c(axis_list, list(range = maximal_range * 1.02))
         )
-    } else {
+    }
+    else {
       df_subset$Value <- if (na_ranges) 0 else mean(maximal_range)
       a <- plot_ly(
         df_subset,

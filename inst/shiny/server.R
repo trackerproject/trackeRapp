@@ -301,8 +301,7 @@ server <- function(input, output, session) {
             shinycssloaders::withSpinner(plotly::plotlyOutput(
                                                      "zones_plot",
                                                      width = "100%",
-                                                     height = paste0(opts$workout_view_rel_height, "vh")),
-                                                     size = 2)
+                                                     height = paste0(opts$workout_view_rel_height, "vh")))
         })
         breaks <- reactive({
             compute_breaks(object = data$object, limits = data$limits,
@@ -339,8 +338,7 @@ server <- function(input, output, session) {
             output[[paste0(i, "_plot")]] <- renderUI({
                 shinycssloaders::withSpinner(plotly::plotlyOutput(paste0(i, "Plot"),
                                                                   width = plot_width(),
-                                                                  height = paste0(opts$workout_view_rel_height, "vh")
-                                                                  ), size = 2)
+                                                                  height = paste0(opts$workout_view_rel_height, "vh")))
             })
 
             ## Render individual sessions plots (except work capacity)
@@ -375,8 +373,7 @@ server <- function(input, output, session) {
             shinycssloaders::withSpinner(plotly::plotlyOutput(
                                                      "conc_profiles_plots",
                                                      width = "100%",
-                                                     height = paste0(opts$workout_view_rel_height, "vh")),
-                                         size = 2)
+                                                     height = paste0(opts$workout_view_rel_height, "vh")))
         })
         concentration_profiles <- reactive({
             trackeR::concentration_profile(data$object,
@@ -414,8 +411,7 @@ server <- function(input, output, session) {
                 shinycssloaders::withSpinner(plotly::plotlyOutput(paste0(sport_id, "Plot"),
                                                                   width = plot_width,
                                                                   height = paste0(opts$workout_view_rel_height, "vh")
-                                                                  ),
-                                             size = 2)
+                                                                  ))
             })
 
             ## Render work capacity

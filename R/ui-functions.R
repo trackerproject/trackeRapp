@@ -14,8 +14,7 @@ create_map <- function() {
         withSpinner(plotlyOutput("map",
           width = "auto",
           height = "700px"
-        ),
-        size = 2
+        )
         )
       )))
     )
