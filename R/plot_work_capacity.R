@@ -106,7 +106,7 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
 
   plot_stored <- vector("list", N)
   images <- vector("list", N)
-  show_legend <- TRUE
+  show_legend <- FALSE
 
   y_axis_range <- c(
     min(na.omit(df[df$Series == "wprime", "Value"])) * 0.6,
@@ -130,8 +130,7 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
       showarrow = FALSE
     )
 
-    # title = tagList(tags$img(src='swimming.png', height='20.56px', width='18px'), "Map"),
-    axis_list <- list(zeroline = FALSE)
+    axis_list <- list(zeroline = FALSE, tickangle = 0)
     if (has_values) {
       a <- plot_ly(
         na.omit(df_subset),

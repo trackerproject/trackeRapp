@@ -33,8 +33,8 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
   legend_status <- TRUE
 
   for (feature in what) {
-    y <- list(title = "dtime")
-    x <- list(title = lab_data(feature, units))
+    y <- list(title = "dtime", tickangle = 0)
+    x <- list(title = lab_data(feature, units), tickangle = 0)
     var_units <- lab_sum(
       feature = feature, data = tracker_object,
       whole_text = FALSE, transform_feature = FALSE

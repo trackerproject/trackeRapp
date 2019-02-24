@@ -143,7 +143,7 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
       showarrow = FALSE
     )
     # tick_step_size <- signif(abs(y_axis_range[2] - y_axis_range[1]) / 5, 2)
-    axis_list <- list(zeroline = FALSE, fixedrange = TRUE)
+    axis_list <- list(zeroline = FALSE, fixedrange = TRUE, tickangle = 0)
     if (has_values) {
       if (changepoints) {
 

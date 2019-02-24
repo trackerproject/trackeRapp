@@ -162,7 +162,7 @@ create_work_capacity_plot0 <- function(id, collapsed = TRUE) {
             switch(id, "pace" = paste0("Pace"),
             "heart.rate" = paste0("Heart Rate"),
             "altitude" = paste0("Altitude"),
-            "work_capacity" = paste0("Work Capacity"),
+            "work_capacity" = paste0("Work Capacity (W' expended)"),
             "speed" = paste0("Speed")
             )
           ),

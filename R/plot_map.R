@@ -43,19 +43,12 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
                          median(df$latitude[df$SessionID %in% colour_sessions]))
     center_lon <- ifelse(is.null(colour_sessions), median(df$longitude),
                          median(df$longitude[df$SessionID %in% colour_sessions]))
-    ## map style buttons
-    basic <- list(method = "relayout",
-                  args = list(list(mapbox.style = "basic")),
-                  label = "Basic")
-    dark <- list(method = "relayout",
-                 args = list(list(mapbox.style = "dark")),
-                 label = "Dark")
 
-  button <- function(map_type, label) {
-    list(method = "relayout",
-         args = list(list(mapbox.style = map_type)),
-         label = label)
-  }
+    button <- function(map_type, label) {
+        list(method = "relayout",
+             args = list(list(mapbox.style = map_type)),
+             label = label)
+    }
 
     updatemenus <- list(list(type = "buttons",
                              direction = "right",
@@ -63,14 +56,17 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
                              pad = list("r" = 10, "t" = 10, "b" = 10),
                              x = 1,
                              y = 0,
-                             buttons = list(button("basic", "Basic"), button("streets", "Streets"),
-                                            button("outdoors", "Outdoors"), button("light", "Light"),
-                                            button("dark", "Dark"), button("satellite", "Satellite"),
+                             buttons = list(button("basic", "Basic"),
+                                            button("streets", "Streets"),
+                                            button("outdoors", "Outdoors"),
+                                            button("light", "Light"),
+                                            button("dark", "Dark"),
+                                            button("satellite", "Satellite"),
                                             button("satellite-streets", "Satellite streets"))))
   diff_lon <- abs(max(df$longitude) - min(df$longitude))
   p <- layout(p, mapbox = list(zoom = 9,
                                center = list(lat = center_lat, lon = center_lon),
-                               style = "light"),
+                               style = trops()$mapbox_default_style),
               dragmode = "pan", showlegend = FALSE, updatemenus = updatemenus,
               margin = list(l = 0, r = 0, t = 0, b = 0))
   return(p)

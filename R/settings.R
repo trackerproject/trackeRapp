@@ -72,6 +72,9 @@ trops <- function() {
         ## zones_colours = c("#276248", "#69c39b"), ## https://www.hexcolortool.com/#3d9970
         workouts_background_colour = "black",
         workouts_changepoint_colour = "grey",
-        workouts_smoother_colour = "#ff851b"
+        workouts_smoother_colour = "#ff851b",
+        mapbox_default_style = "light",
+        workout_view_rel_width = 40,
+        workout_view_rel_height = 20
     )
 }

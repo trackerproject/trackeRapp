@@ -19,6 +19,9 @@ if (isTRUE(live_version)) {
     library("DT")
 }
 
+## tops
+opts <- trackeRapp:::trops()
+
 ## Set token for Mapbox
 Sys.setenv("MAPBOX_TOKEN" = "pk.eyJ1IjoicnVnZWVyIiwiYSI6ImNqOTduN2phMTBmYXkyd29yNjR1amU2cjUifQ.IhNRZRmy1mlbLloz-p6vbw")
 ## Set the maximum file size to upload
@@ -298,7 +301,8 @@ server <- function(input, output, session) {
             shinycssloaders::withSpinner(plotly::plotlyOutput(
                                                      "zones_plot",
                                                      width = "100%",
-                                                     height = trackeRapp:::calculate_plot_height(input$zonesMetricsPlot)), size = 2)
+                                                     height = paste0(opts$workout_view_rel_height, "vh")),
+                                                     size = 2)
         })
         breaks <- reactive({
             compute_breaks(object = data$object, limits = data$limits,
@@ -330,14 +334,12 @@ server <- function(input, output, session) {
 
         sapply(metrics, function(i) {
             plot_width <- reactive({
-                ifelse(length(data$selected_sessions) > 3,
-                       paste0(toString(500 * length(as.vector(data$selected_sessions))), "px"),
-                       "auto")
+                paste0(opts$workout_view_rel_width * length(as.vector(data$selected_sessions)), "vw")
             })
             output[[paste0(i, "_plot")]] <- renderUI({
                 shinycssloaders::withSpinner(plotly::plotlyOutput(paste0(i, "Plot"),
                                                                   width = plot_width(),
-                                                                  height = "250px"
+                                                                  height = paste0(opts$workout_view_rel_height, "vh")
                                                                   ), size = 2)
             })
 
@@ -372,8 +374,9 @@ server <- function(input, output, session) {
             shiny::req(input$profileMetricsPlot)
             shinycssloaders::withSpinner(plotly::plotlyOutput(
                                                      "conc_profiles_plots",
-                                                     width = "auto",
-                                                     height = trackeRapp:::calculate_plot_height(input$profileMetricsPlot)), size = 2)
+                                                     width = "100%",
+                                                     height = paste0(opts$workout_view_rel_height, "vh")),
+                                         size = 2)
         })
         concentration_profiles <- reactive({
             trackeR::concentration_profile(data$object,
@@ -407,12 +410,12 @@ server <- function(input, output, session) {
         sapply(c('cycling', 'running'), function(sport_id) {
             output[[paste0(sport_id, "_work_capacity_plot")]] <- renderUI({
                 n_sessions <- sum(trackeR::get_sport(data$summary[data$selected_sessions]) %in% sport_id)
-                plot_width <- ifelse(n_sessions > 3,
-                                     paste0(toString(500 * n_sessions), "px"),
-                                     "auto")
+                plot_width <- paste0(opts$workout_view_rel_width * n_sessions, "vw")
                 shinycssloaders::withSpinner(plotly::plotlyOutput(paste0(sport_id, "Plot"),
                                                                   width = plot_width,
-                                                                  height = "250px" ), size = 2)
+                                                                  height = paste0(opts$workout_view_rel_height, "vh")
+                                                                  ),
+                                             size = 2)
             })
 
             ## Render work capacity
