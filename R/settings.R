@@ -25,7 +25,7 @@ trops <- function() {
     }
 
     #summary tr.selected td, #summary td.selected {
-     background-color: #ff851b !important;
+     background-color: #ff851b !important; /* #FFE9D0 */
     }
 
     #workout_view_plot {
