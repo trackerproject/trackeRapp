@@ -27,6 +27,7 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
     p <- plot_mapbox()
     for (i in all_sessions) {
         plot_df <- df[which(df$SessionID == i), ]
+
         df_markers <- plot_df[round(seq(1, nrow(plot_df), length.out = 10)), ]
         df_markers$true_session_id <- i
         p <- add_markers(p, data = df_markers, x = ~ longitude, y = ~ latitude,
@@ -35,8 +36,10 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
         colour <- ifelse(i %in% colour_sessions,
                          opts$summary_plots_selected_colour,
                          opts$summary_plots_deselected_colour)
-    p <- add_paths(p, data = plot_df, x = ~ longitude, y = ~ latitude,
-                   size = I(2), color = I(colour), opacity = 0.3,
+        p <- add_paths(p,
+                       data = plot_df,
+                       x = ~ longitude, y = ~ latitude,
+                   size = I(2), color = I(colour), opacity = 0.5,
                    text = ~ popupText(session = SessionID, speed = speed))
     }
     center_lat <- ifelse(is.null(colour_sessions), median(df$latitude),

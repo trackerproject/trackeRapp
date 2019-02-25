@@ -152,10 +152,7 @@ server <- function(input, output, session) {
 
     ##  Change units
     observeEvent(input$showModalUnits, {
-        if (!is.null(data$object))
-            trackeRapp:::show_change_unit_window(data)
-        else
-            trackeRapp:::show_warning_window()
+        trackeRapp:::show_change_unit_window(data)
     })
     observeEvent(input$updateUnits, {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
@@ -167,122 +164,118 @@ server <- function(input, output, session) {
 
     ## Session summaries page
     observeEvent(input$createDashboard, {
-        if (is.null(data$object))
-            trackeRapp:::show_warning_window()
-        else {
-            output$timeline_plot <- plotly::renderPlotly({
-                shiny::withProgress(message = 'Timeline', value = 0, {
-                    shiny::incProgress(1/1, detail = "Plotting")
-                    if (!is.null(data$summary))
-                        trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
+        output$timeline_plot <- plotly::renderPlotly({
+            shiny::withProgress(message = 'Timeline', value = 0, {
+                shiny::incProgress(1/1, detail = "Plotting")
+                if (!is.null(data$summary))
+                    trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
+            })
+        })
+        ## Re-render all plots
+        metrics_available <- reactive({c(choices[sapply(choices, function(x)
+            data$has_data[[x]]
+            )])
+        })
+        trackeRapp:::create_option_box(sport_options = data$identified_sports,
+                                       metrics_available = metrics_available())
+
+        ## Summary table
+        trackeRapp:::create_summary_timeline_boxes()
+        shinyjs::addClass(selector = "body", class = "sidebar-collapse")
+        output$summary <- trackeRapp:::render_summary_table(data, input)
+
+        ## Summary boxes
+        trackeRapp:::create_summary_boxes()
+        output$avgDistance_box <- trackeRapp:::render_summary_box("distance",
+                                                                  "Average distance", data)
+        output$avgDuration_box <- trackeRapp:::render_summary_box("duration",
+                                                                  "Average duration", data)
+        output$avgHeartRate_box <- trackeRapp:::render_summary_box("avgHeartRate",
+                                                                   "Average heart rate", data)
+        output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
+                                                              "Average pace", data)
+
+        ## Map
+        ## Check if there is internet connection
+        has_internet_connection <- curl::has_internet()
+        ## do not generate map if no location data for any of the sessions
+        if ((any(data$is_location_data)) & (has_internet_connection)) {
+            trackeRapp:::create_map()
+            preped_route_map <- reactive({
+                sessions <- seq_along(data$object)[data$is_location_data]
+                route <- trackeR:::prepare_route(data$object,
+                                                 session = sessions, threshold = FALSE)
+                route$SessionID <- sessions[route$SessionID]
+                list(route = route, sessions = sessions)
+            })
+            output$map <- plotly::renderPlotly({
+                shiny::withProgress(message = 'Map', value = 0, {
+                    shiny::incProgress(1/2, detail = "Preparing routes")
+                    pr <- preped_route_map()$sessions
+                    shiny::incProgress(1/1, detail = "Mapping")
+                    trackeRapp:::plot_map(df = preped_route_map()$route,
+                                          all_sessions = pr,
+                                          sumX = data$summary,
+                                          colour_sessions = isolate(data$selected_sessions))
                 })
             })
-            ## Re-render all plots
-            metrics_available <- reactive({c(choices[sapply(choices, function(x)
-                data$has_data[[x]]
-                )])
-            })
-            trackeRapp:::create_option_box(sport_options = data$identified_sports,
-                                           metrics_available = metrics_available())
-
-            ## Summary table
-            trackeRapp:::create_summary_timeline_boxes()
-            shinyjs::addClass(selector = "body", class = "sidebar-collapse")
-            output$summary <- trackeRapp:::render_summary_table(data, input)
-
-            ## Summary boxes
-            trackeRapp:::create_summary_boxes()
-            output$avgDistance_box <- trackeRapp:::render_summary_box("distance",
-                                                                      "Average distance", data)
-            output$avgDuration_box <- trackeRapp:::render_summary_box("duration",
-                                                                      "Average duration", data)
-            output$avgHeartRate_box <- trackeRapp:::render_summary_box("avgHeartRate",
-                                                                       "Average heart rate", data)
-            output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
-                                                                  "Average pace", data)
-
-            ## Map
-            ## Check if there is internet connection
-            has_internet_connection <- curl::has_internet()
-            ## do not generate map if no location data for any of the sessions
-            if ((any(data$is_location_data)) & (has_internet_connection)) {
-                trackeRapp:::create_map()
-                preped_route_map <- reactive({
-                    sessions <- seq_along(data$object)[data$is_location_data]
-                    route <- trackeR:::prepare_route(data$object,
-                                                     session = sessions, threshold = FALSE)
-                    route$SessionID <- sessions[route$SessionID]
-                    list(route = route, sessions = sessions)
-                })
-                output$map <- plotly::renderPlotly({
-                    shiny::withProgress(message = 'Map', value = 0, {
-                        shiny::incProgress(1/2, detail = "Preparing routes")
-                        pr <- preped_route_map()$sessions
-                        shiny::incProgress(1/1, detail = "Mapping")
-                        trackeRapp:::plot_map(df = preped_route_map()$route,
-                                              all_sessions = pr,
-                                              sumX = data$summary,
-                                              colour_sessions = isolate(data$selected_sessions))
-                    })
-                })
-                ## Update map based on current selection
-                observeEvent(c(data$selected_sessions, input$is_collapse_box1) , {
-                    try(
-                        if (!is.null(input$is_collapse_box1)) {
-                            if (input$is_collapse_box1 != 'block') {
-                                sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selected_sessions)
-                                plot_df <- preped_route_map()$route[sessions_rows, ]
-                                if (nrow(plot_df) != 0)
-                                    trackeRapp:::update_map(session,
-                                                            data, longitude = plot_df$longitude,
-                                                            latitude = plot_df$latitude)
-                                else
-                                    trackeRapp:::update_map(session, data,
-                                                            longitude = preped_route_map()$route$longitude,
-                                                            latitude = preped_route_map()$route$latitude)
-                            }
-                        }, silent = FALSE)
-                }, ignoreInit = TRUE, priority = -1)
-                shinyjs::js$is_map_collapse()
-            }
-
-            ## Sessions summaries plots
-            plot_dataframe <- reactive({
-                trackeR:::fortify_trackeRdataSummary(data$summary, melt = TRUE)
-            })
-            ## Generate conditional plot for each metric irrespective of whether data available
-            for (metric in c(choices)) {
-                trackeRapp:::create_workout_plots(metric)
-            }
-
-            sapply(c(choices), function(i) {
-                output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
-                    shiny::withProgress(message = paste(i, "plots"), value = 0, {
-                        shiny::incProgress(1/1, detail = "Subsetting")
-                        cdat <- plot_dataframe()
-                        shiny::incProgress(1/1, detail = "Plotting")
-                        sessions_to_plot <- data$summary$session[get_sport(data$object) %in% input$sports]
-                        trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
-                                                   what = i,
-                                                   dat =  cdat,
-                                                   sessions = data$selected_sessions,
-                                                   sports = trackeR::get_sport(data$object)[sessions_to_plot])
-                    })
-                })
-            })
-            ## Set to TRUE such that all plots are visible
-            output$cond <- reactive({
-                TRUE
-            })
-            outputOptions(output, "cond", suspendWhenHidden = FALSE)
-            data$show_summary_plots <- TRUE
-            sapply(c(choices), function(choice) {
-                output[[choice]] <- reactive({
-                    !isTRUE((choice %in% input$metricsSelected) & (data$show_summary_plots))
-                })
-                outputOptions(output, choice, suspendWhenHidden = FALSE)
-            })
+            ## Update map based on current selection
+            observeEvent(c(data$selected_sessions, input$is_collapse_box1) , {
+                try(
+                    if (!is.null(input$is_collapse_box1)) {
+                        if (input$is_collapse_box1 != 'block') {
+                            sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selected_sessions)
+                            plot_df <- preped_route_map()$route[sessions_rows, ]
+                            if (nrow(plot_df) != 0)
+                                trackeRapp:::update_map(session,
+                                                        data, longitude = plot_df$longitude,
+                                                        latitude = plot_df$latitude)
+                            else
+                                trackeRapp:::update_map(session, data,
+                                                        longitude = preped_route_map()$route$longitude,
+                                                        latitude = preped_route_map()$route$latitude)
+                        }
+                    }, silent = FALSE)
+            }, ignoreInit = TRUE, priority = -1)
+            shinyjs::js$is_map_collapse()
         }
+
+        ## Sessions summaries plots
+        plot_dataframe <- reactive({
+            trackeR:::fortify_trackeRdataSummary(data$summary, melt = TRUE)
+        })
+        ## Generate conditional plot for each metric irrespective of whether data available
+        for (metric in c(choices)) {
+            trackeRapp:::create_workout_plots(metric)
+        }
+
+        sapply(c(choices), function(i) {
+            output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
+                shiny::withProgress(message = paste(i, "plots"), value = 0, {
+                    shiny::incProgress(1/1, detail = "Subsetting")
+                    cdat <- plot_dataframe()
+                    shiny::incProgress(1/1, detail = "Plotting")
+                    sessions_to_plot <- data$summary$session[get_sport(data$object) %in% input$sports]
+                    trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
+                                               what = i,
+                                               dat =  cdat,
+                                               sessions = data$selected_sessions,
+                                               sports = trackeR::get_sport(data$object)[sessions_to_plot])
+                })
+            })
+        })
+        ## Set to TRUE such that all plots are visible
+        output$cond <- reactive({
+            TRUE
+        })
+        outputOptions(output, "cond", suspendWhenHidden = FALSE)
+        data$show_summary_plots <- TRUE
+        sapply(c(choices), function(choice) {
+            output[[choice]] <- reactive({
+                !isTRUE((choice %in% input$metricsSelected) & (data$show_summary_plots))
+            })
+            outputOptions(output, choice, suspendWhenHidden = FALSE)
+        })
     }, once = TRUE)
 
 
@@ -353,7 +346,8 @@ server <- function(input, output, session) {
 
         sapply(metrics, function(i) {
             plot_width <- reactive({
-                paste0(opts$workout_view_rel_width * length(as.vector(data$selected_sessions)), "vw")
+                n_sessions <- length(as.vector(data$selected_sessions))
+                paste0(opts$workout_view_rel_width * n_sessions, "vw")
             })
             output[[paste0(i, "_plot")]] <- renderUI({
                 plotly::plotlyOutput(paste0(i, "Plot"),
