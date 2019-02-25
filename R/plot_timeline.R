@@ -1,9 +1,9 @@
-#' A timeline plot for workouts.
-#'
-#' @param sumX An object of class \code{trackeRdataSummary}.
-#' @param plotly Logical. Return plotly plots or standard trackeR plots
-#' @param shiny Logical. Whether plots are in a shiny environment.
-#' @param session A vector. Selected session numbers.
+## #' A timeline plot for workouts.
+## #'
+## #' @param sumX An object of class \code{trackeRdataSummary}.
+## #' @param plotly Logical. Return plotly plots or standard trackeR plots
+## #' @param shiny Logical. Whether plots are in a shiny environment.
+## #' @param session A vector. Selected session numbers.
 plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
     opts <- trops()
     if (plotly) {

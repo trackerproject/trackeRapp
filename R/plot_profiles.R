@@ -1,9 +1,9 @@
-#' Plot concentration profiles for given variables.
-#'
-#' @param x An object of class \code{trackeRdata}.
-#' @param session A vector of selected sessions.
-#' @param what A vector of variable names to be plotted.
-#' @param profiles_calculated Pre-calculated concentration profiles for all sessions.
+## #' Plot concentration profiles for given variables.
+## #'
+## #' @param x An object of class \code{trackeRdata}.
+## #' @param session A vector of selected sessions.
+## #' @param what A vector of variable names to be plotted.
+## #' @param profiles_calculated Pre-calculated concentration profiles for all sessions.
 plot_concentration_profiles <- function(x, session, profiles_calculated,
                                         what = c("speed")) {
 

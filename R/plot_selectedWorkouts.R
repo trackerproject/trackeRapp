@@ -1,20 +1,20 @@
-#' Plot the profile for each selected session for a given variable (heart rate, altitude, pace).
-#'
-#' @param x An object of class \code{\link{trackeRdata}}.
-#' @param session A numeric vector of the sessions to be plotted, defaults to all sessions.
-#' @param sumX An object of class \code{trackeRdataSummary}.
-#' @param what Which variables should be plotted?
-#' @param threshold Logical. Should thresholds be applied?
-#' @param smooth Logical. Should the data be smoothed?
-#' @param trend Logical. Should a smooth trend be plotted?
-#' @param dates Logical. Should the date of the session be used in the panel header?
-#' @param changepoints Logical. Whether changepoints should be identified and plotted.
-#' @param print_changepoints Logical. Whether or not to print changepoint values (when changepoints = TRUE).
-#' @param n_changepoints A numeric. The threshold for the maximum number of changepoints to search for.
-#' @param unit_reference_sport A character. The sport to be used as reference for units.
-#' @param moving_threshold A numeric for the threshold.
-#' @param desampling A numeric proportion between (0-1] for the proportion of raw data to be plotted.
-#' @param y_axis_range A vector with an upper and a lower limit for the given variable.
+## #' Plot the profile for each selected session for a given variable (heart rate, altitude, pace).
+## #'
+## #' @param x An object of class \code{\link{trackeRdata}}.
+## #' @param session A numeric vector of the sessions to be plotted, defaults to all sessions.
+## #' @param sumX An object of class \code{trackeRdataSummary}.
+## #' @param what Which variables should be plotted?
+## #' @param threshold Logical. Should thresholds be applied?
+## #' @param smooth Logical. Should the data be smoothed?
+## #' @param trend Logical. Should a smooth trend be plotted?
+## #' @param dates Logical. Should the date of the session be used in the panel header?
+## #' @param changepoints Logical. Whether changepoints should be identified and plotted.
+## #' @param print_changepoints Logical. Whether or not to print changepoint values (when changepoints = TRUE).
+## #' @param n_changepoints A numeric. The threshold for the maximum number of changepoints to search for.
+## #' @param unit_reference_sport A character. The sport to be used as reference for units.
+## #' @param moving_threshold A numeric for the threshold.
+## #' @param desampling A numeric proportion between (0-1] for the proportion of raw data to be plotted.
+## #' @param y_axis_range A vector with an upper and a lower limit for the given variable.
 plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smooth = FALSE,
                                    trend = TRUE, dates = TRUE, changepoints = FALSE,
                                    n_changepoints = 6, print_changepoints = FALSE,
@@ -198,7 +198,8 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
         start <- start + step_size
     }
 
-    y <- list(title = var_name_units, fixedrange = TRUE)
+    ## y <- list(title = var_name_units, fixedrange = TRUE)
+    y <- list(title = var_units, fixedrange = TRUE)
     x <- list(title = "Time", fixedrange = TRUE)
 
     return(subplot(plot_stored, nrows = 1,  titleY = FALSE, margin = 0.003) %>%

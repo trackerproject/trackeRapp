@@ -1,17 +1,17 @@
-#' Plot an object of class trackeRdataSummary.
-#'
-#' @param sumX An object of class \code{trackeRdataSummary}.
-#' @param what Name of variables which should be plotted. Default is all.
-#' @param date Should the date or the session number be used on the abscissa?
-#' @param group Which group of variables should be plotted? This can either be
-#'     \code{total} or \code{moving}. Default is both.
-#' @param lines Should interpolating lines be plotted?
-#' @param shiny Logical. Whether plots are in a shiny environment.
-#' @param sessions A vector. Selected sessions by session number.
-#' @param sports A vector of sports of the sessions to be plotted.
-#' @param dat A dataframe for plotting.
-#' @param ... Currently not used.
-#' @seealso \code{\link{summary.trackeRdata}}
+## #' Plot an object of class trackeRdataSummary.
+## #'
+## #' @param sumX An object of class \code{trackeRdataSummary}.
+## #' @param what Name of variables which should be plotted. Default is all.
+## #' @param date Should the date or the session number be used on the abscissa?
+## #' @param group Which group of variables should be plotted? This can either be
+## #'     \code{total} or \code{moving}. Default is both.
+## #' @param lines Should interpolating lines be plotted?
+## #' @param shiny Logical. Whether plots are in a shiny environment.
+## #' @param sessions A vector. Selected sessions by session number.
+## #' @param sports A vector of sports of the sessions to be plotted.
+## #' @param dat A dataframe for plotting.
+## #' @param ... Currently not used.
+## #' @seealso \code{\link{summary.trackeRdata}}
 plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
                           group = c("total"), lines = TRUE, sports) {
     opts <- trops()

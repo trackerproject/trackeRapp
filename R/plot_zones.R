@@ -1,11 +1,11 @@
-#' Plot training zones.
-#'
-#' @param x An object of class \code{trackeRdata}.
-#' @param session A vector of selected sessions.
-#' @param what A vector of variable names to be plotted.
-#' @param n_zones A numeric. The number of zones to split the dataset into.
-#' @param parallel A logical. Whether use parallel computing.
-#' @param breaks A named list of computed breaks for zones from \code{compute_breaks()}.
+## #' Plot training zones.
+## #'
+## #' @param x An object of class \code{trackeRdata}.
+## #' @param session A vector of selected sessions.
+## #' @param what A vector of variable names to be plotted.
+## #' @param n_zones A numeric. The number of zones to split the dataset into.
+## #' @param parallel A logical. Whether use parallel computing.
+## #' @param breaks A named list of computed breaks for zones from \code{compute_breaks()}.
 plot_zones <- function(x, session, what = c("heart_rate"),
                        n_zones, parallel = TRUE, breaks) {
     if (is.null(session)) {

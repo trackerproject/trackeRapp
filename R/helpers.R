@@ -290,10 +290,15 @@ convert_to_name <- function(what) {
 ## Get units of a measurement in a nice format for a given variable.
 ## @param feature character string; the variable for which to generate units.
 ## @param units vector of units generated from \code{trackeR} package \code{getUnits()}.
-lab_data <- function(feature, units) {
+lab_data <- function(feature, units, onlyunit = TRUE) {
     thisunit <- units$unit[units$variable == feature]
     prettyUnit <- prettifyUnits(thisunit)
-    paste0(feature, " [", prettyUnit, "]")
+    if (onlyunit) {
+        paste0("[", prettyUnit, "]")
+    }
+    else {
+        paste0(feature, " [", prettyUnit, "]")
+    }
 }
 
 

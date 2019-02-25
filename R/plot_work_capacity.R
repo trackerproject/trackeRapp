@@ -1,11 +1,11 @@
-#' Plot the work capacity W' (w prime).
-#'
-#' @param x An object of class \code{\link{trackeRdata}}.
-#' @param session A numeric vector of the sessions to be used, defaults to all sessions.
-#' @param dates Logical. Should the date of the session be used in the panel header?
-#' @param scaled Logical. Should the W' be scaled to the movement variable (power or speed)
-#'     which is then plotted in the background?
-#' @param cp A numeric. Critical power/speed, i.e., the power/speed which can be maintained for longer period of time.
+## #' Plot the work capacity W' (w prime).
+## #'
+## #' @param x An object of class \code{\link{trackeRdata}}.
+## #' @param session A numeric vector of the sessions to be used, defaults to all sessions.
+## #' @param dates Logical. Should the date of the session be used in the panel header?
+## #' @param scaled Logical. Should the W' be scaled to the movement variable (power or speed)
+## #'     which is then plotted in the background?
+## #' @param cp A numeric. Critical power/speed, i.e., the power/speed which can be maintained for longer period of time.
 plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) {
     opts <- trops()
     if (!length(session)) {
@@ -27,7 +27,6 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
 
     mylabels <- c(paste0(ifelse(cycling, "Power ", "Speed "), Wunit),
                   paste("W'", quantity, "[scaled]"))
-
     ## select sessions
     if (is.null(session)) session <- seq_along(x)
 
