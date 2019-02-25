@@ -171,8 +171,11 @@ server <- function(input, output, session) {
             trackeRapp:::show_warning_window()
         else {
             output$timeline_plot <- plotly::renderPlotly({
-                if (!is.null(data$summary))
-                    trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
+                shiny::withProgress(message = 'Timeline', value = 0, {
+                    shiny::incProgress(1/1, detail = "Plotting")
+                    if (!is.null(data$summary))
+                        trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
+                })
             })
             ## Re-render all plots
             metrics_available <- reactive({c(choices[sapply(choices, function(x)
@@ -212,10 +215,15 @@ server <- function(input, output, session) {
                     list(route = route, sessions = sessions)
                 })
                 output$map <- plotly::renderPlotly({
-                    trackeRapp:::plot_map(df = preped_route_map()$route,
-                                          all_sessions = preped_route_map()$sessions,
-                                          sumX = data$summary,
-                                          colour_sessions = isolate(data$selected_sessions))
+                    shiny::withProgress(message = 'Map', value = 0, {
+                        shiny::incProgress(1/2, detail = "Preparing routes")
+                        pr <- preped_route_map()$sessions
+                        shiny::incProgress(1/1, detail = "Mapping")
+                        trackeRapp:::plot_map(df = preped_route_map()$route,
+                                              all_sessions = pr,
+                                              sumX = data$summary,
+                                              colour_sessions = isolate(data$selected_sessions))
+                    })
                 })
                 ## Update map based on current selection
                 observeEvent(c(data$selected_sessions, input$is_collapse_box1) , {
@@ -249,12 +257,17 @@ server <- function(input, output, session) {
 
             sapply(c(choices), function(i) {
                 output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
-                    sessions_to_plot <- data$summary$session[get_sport(data$object) %in% input$sports]
-                    trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
-                                               what = i,
-                                               dat =  plot_dataframe(),
-                                               sessions = data$selected_sessions,
-                                               sports = trackeR::get_sport(data$object)[sessions_to_plot])
+                    shiny::withProgress(message = paste(i, "plots"), value = 0, {
+                        shiny::incProgress(1/1, detail = "Subsetting")
+                        cdat <- plot_dataframe()
+                        shiny::incProgress(1/1, detail = "Plotting")
+                        sessions_to_plot <- data$summary$session[get_sport(data$object) %in% input$sports]
+                        trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
+                                                   what = i,
+                                                   dat =  cdat,
+                                                   sessions = data$selected_sessions,
+                                                   sports = trackeR::get_sport(data$object)[sessions_to_plot])
+                    })
                 })
             })
             ## Set to TRUE such that all plots are visible
@@ -303,14 +316,15 @@ server <- function(input, output, session) {
 
         ## Render actual plot
 
+        breaks <- reactive({
+            trackeR::compute_breaks(object = data$object, limits = data$limits,
+                                    n_breaks = as.numeric(input$n_zones),
+                                    what = input$zonesMetricsPlot)
+        })
+
         output$zones_plot <- plotly::renderPlotly({
             shiny::withProgress(message = 'Zones plots', value = 0, {
-                breaks <- reactive({
-                    shiny::incProgress(1/2, detail = "Computing breaks")
-                    trackeR::compute_breaks(object = data$object, limits = data$limits,
-                                            n_breaks = as.numeric(input$n_zones),
-                                            what = input$zonesMetricsPlot)
-                })
+                shiny::incProgress(1/2, detail = "Computing breaks")
                 br <- breaks()
                 shiny::incProgress(2/2, detail = "Plotting")
                 trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
@@ -383,15 +397,18 @@ server <- function(input, output, session) {
             width = "100%",
             height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
+
+        concentration_profiles <- reactive({
+            trackeR::concentration_profile(data$object,
+                                           what = metrics[have_data_metrics_selected()],
+                                           limits = data$limits)
+        })
+
+
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
             shiny::withProgress(message = 'Concentration profiles', value = 0, {
-                concentration_profiles <- reactive({
-                    shiny::incProgress(1/2, detail = "Computng profiles")
-                    trackeR::concentration_profile(data$object,
-                                                   what = metrics[have_data_metrics_selected()],
-                                                   limits = data$limits)
-                })
+                shiny::incProgress(1/2, detail = "Computng profiles")
                 cps <- concentration_profiles()
                 shiny::incProgress(1/1, detail = "Plotting")
                 trackeRapp:::plot_concentration_profiles(
