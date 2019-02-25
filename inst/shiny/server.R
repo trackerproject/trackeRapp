@@ -300,21 +300,22 @@ server <- function(input, output, session) {
                         width = "100%",
                         height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vh"))
         })
-        withProgress(message = 'Making zones plots', value = 0, {
-        incProgress(1/2, detail = "Computing breaks")
+
         breaks <- reactive({
-            compute_breaks(object = data$object, limits = data$limits,
-                           n_breaks = as.numeric(input$n_zones),
-                           what = input$zonesMetricsPlot)
+                compute_breaks(object = data$object, limits = data$limits,
+                               n_breaks = as.numeric(input$n_zones),
+                               what = input$zonesMetricsPlot)
         })
         ## Render actual plot
-        incProgress(1, detail = "Rendering zones plot")
+
         output$zones_plot <- plotly::renderPlotly({
-            trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
-                                    what = input$zonesMetricsPlot, breaks = breaks(),
-                                    n_zones = as.numeric(input$n_zones))
-        })
-        })
+                shiny::incProgress(2/2, detail = "Rendering zones plots")
+
+                trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
+                                        what = input$zonesMetricsPlot, breaks = breaks(),
+                                        n_zones = as.numeric(input$n_zones))
+            })
+
 
         ## Update metrics available each time different sessions selected
         observeEvent(data$selected_sessions, {
@@ -338,9 +339,9 @@ server <- function(input, output, session) {
                 paste0(opts$workout_view_rel_width * length(as.vector(data$selected_sessions)), "vw")
             })
             output[[paste0(i, "_plot")]] <- renderUI({
-                shinycssloaders::withSpinner(plotly::plotlyOutput(paste0(i, "Plot"),
-                                                                  width = plot_width(),
-                                                                  height = paste0(opts$workout_view_rel_height, "vh")))
+                plotly::plotlyOutput(paste0(i, "Plot"),
+                                     width = plot_width(),
+                                     height = paste0(opts$workout_view_rel_height, "vh"))
             })
 
             ## Render individual sessions plots (except work capacity)
@@ -372,10 +373,9 @@ server <- function(input, output, session) {
         ## Render UI for concentration profiles
         output$concentration_profiles <- renderUI({
             shiny::req(input$profileMetricsPlot)
-            shinycssloaders::withSpinner(plotly::plotlyOutput(
-                                                     "conc_profiles_plots",
-                                                     width = "100%",
-                                                     height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh")))
+            plotly::plotlyOutput("conc_profiles_plots",
+            width = "100%",
+            height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
         concentration_profiles <- reactive({
             trackeR::concentration_profile(data$object,
@@ -410,10 +410,10 @@ server <- function(input, output, session) {
             output[[paste0(sport_id, "_work_capacity_plot")]] <- renderUI({
                 n_sessions <- sum(trackeR::get_sport(data$summary[data$selected_sessions]) %in% sport_id)
                 plot_width <- paste0(opts$workout_view_rel_width * n_sessions, "vw")
-                shinycssloaders::withSpinner(plotly::plotlyOutput(paste0(sport_id, "Plot"),
-                                                                  width = plot_width,
-                                                                  height = paste0(opts$workout_view_rel_height, "vh")
-                                                                  ))
+                plotly::plotlyOutput(paste0(sport_id, "Plot"),
+                                     width = plot_width,
+                                     height = paste0(opts$workout_view_rel_height, "vh")
+                                     )
             })
 
             ## Render work capacity

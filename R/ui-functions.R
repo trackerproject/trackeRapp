@@ -11,10 +11,9 @@ create_map <- function() {
         collapsible = TRUE,
         collapsed = TRUE,
         title = tagList(icon("map"), "Map"),
-        withSpinner(plotlyOutput("map",
+        plotlyOutput("map",
           width = "auto",
           height = "700px"
-        )
         )
       )))
     )
