@@ -182,7 +182,7 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                                         switch(id, "pace" = paste0("Pace"),
                                                "heart.rate" = paste0("Heart Rate"),
                                                "altitude" = paste0("Altitude"),
-                                               "work_capacity" = paste("Work Capacity", "(W' expended)"),
+                                               "work_capacity" = paste("W' expended (scaled)"),
                                                "speed" = paste0("Speed"))),
                         conditionalPanel(
                             condition = "output.work_capacity_cycling == false",

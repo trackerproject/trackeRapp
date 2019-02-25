@@ -19,7 +19,7 @@ if (isTRUE(live_version)) {
     library("DT")
 }
 
-## tops
+## trops
 opts <- trackeRapp:::trops()
 
 ## Set token for Mapbox
@@ -33,14 +33,12 @@ server <- function(input, output, session) {
     ## dissapear by a click in the window.
     shinyjs::runjs('$(document).on("click", ".dropdown-menu", function (e) {
                      e.stopPropagation();
-                     });')
+                    });')
     ## Main object where most data is stored
-    data <- reactiveValues(
-        summary = NULL,
-        object = NULL,
-        selected_sessions = NULL,
-        has_data = NULL
-    )
+    data <- reactiveValues(summary = NULL,
+                           object = NULL,
+                           selected_sessions = NULL,
+                           has_data = NULL)
     ## Store the previous value to let user upload new data constantly
     previous_file_paths <- reactiveValues(processed = 'NULL')
 
@@ -97,13 +95,8 @@ server <- function(input, output, session) {
 
     ## Sessions selected by sport using radio buttons
     observeEvent(input$sports, {
-        ## shinyjs::js$resetSelection()
-        ## shinyjs::delay(100,
         trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE)
-        ## )
-        shinyjs::delay(100,
-                       DT::selectRows(proxy = proxy, selected = data$selected_sessions)
-        )
+        shinyjs::delay(100, DT::selectRows(proxy = proxy, selected = data$selected_sessions))
         ## update metrics available based on sport selected
         has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% input$sports)],
                                  function(session_summaries) {
@@ -111,25 +104,22 @@ server <- function(input, output, session) {
                                  })
         selected_metrics <- c(input$metricsSelected[sapply(input$metricsSelected, function(x)
             has_data_sport[[x]]
-        )])
+            )])
         metrics_available_sport <- reactive({c(choices[sapply(choices, function(x)
             has_data_sport[[x]]
-        )])
+            )])
         })
-        shinyjs::delay(100,
-                       shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
-                                                       selected = selected_metrics,
-                                                       choices = metrics_available_sport()))
+        shinyjs::delay(100, shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
+                                                            selected = selected_metrics,
+                                                            choices = metrics_available_sport()))
     }, ignoreNULL = FALSE, ignoreInit = TRUE)
 
     ## Sessions selected through summary table
     observeEvent(input$summary_rows_selected,  {
         if (!isTRUE(setequal(input$summary_rows_selected, data$selected_sessions))) {
             shinyjs::js$resetSelection()
-            ## shinyjs::delay(100,
             trackeRapp:::generate_selected_sessions_object(data, input,
                                                            table_selection = TRUE)
-            ## )
         }
     }, ignoreNULL = TRUE)
 
@@ -154,6 +144,7 @@ server <- function(input, output, session) {
     observeEvent(input$showModalUnits, {
         trackeRapp:::show_change_unit_window(data)
     })
+
     observeEvent(input$updateUnits, {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
@@ -161,12 +152,11 @@ server <- function(input, output, session) {
         removeModal()
     })
 
-
     ## Session summaries page
     observeEvent(input$createDashboard, {
         output$timeline_plot <- plotly::renderPlotly({
-            shiny::withProgress(message = 'Timeline', value = 0, {
-                shiny::incProgress(1/1, detail = "Plotting")
+            withProgress(message = 'Timeline', value = 0, {
+                incProgress(1/1, detail = "Plotting")
                 if (!is.null(data$summary))
                     trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
             })
@@ -209,20 +199,20 @@ server <- function(input, output, session) {
                 list(route = route, sessions = sessions)
             })
             output$map <- plotly::renderPlotly({
-                shiny::withProgress(message = 'Map', value = 0, {
-                    shiny::incProgress(1/2, detail = "Preparing routes")
+                withProgress(message = 'Map', value = 0, {
+                    incProgress(1/2, detail = "Preparing routes")
                     pr <- preped_route_map()$sessions
-                    shiny::incProgress(1/1, detail = "Mapping")
+                    incProgress(1/1, detail = "Mapping")
                     trackeRapp:::plot_map(df = preped_route_map()$route,
                                           all_sessions = pr,
                                           sumX = data$summary,
                                           colour_sessions = isolate(data$selected_sessions))
                 })
             })
+
             ## Update map based on current selection
             observeEvent(c(data$selected_sessions, input$is_collapse_box1) , {
-                try(
-                    if (!is.null(input$is_collapse_box1)) {
+                try(if (!is.null(input$is_collapse_box1)) {
                         if (input$is_collapse_box1 != 'block') {
                             sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selected_sessions)
                             plot_df <- preped_route_map()$route[sessions_rows, ]
@@ -251,10 +241,10 @@ server <- function(input, output, session) {
 
         sapply(c(choices), function(i) {
             output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
-                shiny::withProgress(message = paste(i, "plots"), value = 0, {
-                    shiny::incProgress(1/1, detail = "Subsetting")
+                withProgress(message = paste(i, "plots"), value = 0, {
+                    incProgress(1/1, detail = "Subsetting")
                     cdat <- plot_dataframe()
-                    shiny::incProgress(1/1, detail = "Plotting")
+                    incProgress(1/1, detail = "Plotting")
                     sessions_to_plot <- data$summary$session[get_sport(data$object) %in% input$sports]
                     trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                                what = i,
@@ -278,7 +268,6 @@ server <- function(input, output, session) {
         })
     }, once = TRUE)
 
-
     ## Test which metrics have data
     have_data_metrics_selected <- reactive({
         !sapply(metrics, function(metric) {
@@ -293,18 +282,15 @@ server <- function(input, output, session) {
         removeModal()
         shinyjs::addClass(selector = "body", class = "sidebar-collapse")
         ##  Time in zones
-        trackeRapp:::create_zones_box(
-                         inputId = "zonesMetricsPlot",
-                         plotId = "zonesPlotUi",
-                         choices = metrics[have_data_metrics_selected()]
-                     )
+        trackeRapp:::create_zones_box(inputId = "zonesMetricsPlot",
+                                      plotId = "zonesPlotUi",
+                                      choices = metrics[have_data_metrics_selected()])
         ## Render UI for time in zones plot
         output$zonesPlotUi <- renderUI({
-            shiny::req(input$zonesMetricsPlot)
-            plotly::plotlyOutput(
-                        "zones_plot",
-                        width = "100%",
-                        height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vh"))
+            req(input$zonesMetricsPlot)
+            plotly::plotlyOutput("zones_plot",
+                                 width = "100%",
+                                 height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vh"))
         })
 
         ## Render actual plot
@@ -316,10 +302,10 @@ server <- function(input, output, session) {
         })
 
         output$zones_plot <- plotly::renderPlotly({
-            shiny::withProgress(message = 'Zones plots', value = 0, {
-                shiny::incProgress(1/2, detail = "Computing breaks")
+            withProgress(message = 'Zones plots', value = 0, {
+                incProgress(1/2, detail = "Computing breaks")
                 br <- breaks()
-                shiny::incProgress(2/2, detail = "Plotting")
+                incProgress(2/2, detail = "Plotting")
                 trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
                                         what = input$zonesMetricsPlot, breaks = br,
                                         n_zones = as.numeric(input$n_zones))
@@ -357,12 +343,12 @@ server <- function(input, output, session) {
 
             ## Render individual sessions plots (except work capacity)
             output[[paste0(i, "Plot")]] <- plotly::renderPlotly({
-                shiny::withProgress(message = paste(i, 'plots'), value = 0, {
+                withProgress(message = paste(i, 'plots'), value = 0, {
                     ## Whether to detect changepoints
                     if (!is.null(input[[paste0("detect_changepoints", i)]])) {
                         fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
                     }
-                    shiny::incProgress(1/1, detail = "Plotting")
+                    incProgress(1/1, detail = "Plotting")
                     trackeRapp:::plot_selected_workouts(
                                      x = data$object, session = data$selected_sessions, what = i,
                                      sumX = data$summary, changepoints = fit_changepoint,
@@ -371,7 +357,6 @@ server <- function(input, output, session) {
                                      desampling = 1, y_axis_range = data$limits[[i]])
                 })
             })
-
             output[[i]] <- reactive({
                 !isTRUE((i %in% metrics[have_data_metrics_selected()]) & data$show_individual_sessions)
             })
@@ -386,10 +371,10 @@ server <- function(input, output, session) {
                          collapsed = TRUE)
         ## Render UI for concentration profiles
         output$concentration_profiles <- renderUI({
-            shiny::req(input$profileMetricsPlot)
+            req(input$profileMetricsPlot)
             plotly::plotlyOutput("conc_profiles_plots",
-            width = "100%",
-            height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
+                                 width = "100%",
+                                 height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
 
         concentration_profiles <- reactive({
@@ -398,13 +383,12 @@ server <- function(input, output, session) {
                                            limits = data$limits)
         })
 
-
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
-            shiny::withProgress(message = 'Concentration profiles', value = 0, {
-                shiny::incProgress(1/2, detail = "Computng profiles")
+            withProgress(message = 'Concentration profiles', value = 0, {
+                incProgress(1/2, detail = "Computng profiles")
                 cps <- concentration_profiles()
-                shiny::incProgress(1/1, detail = "Plotting")
+                incProgress(1/1, detail = "Plotting")
                 trackeRapp:::plot_concentration_profiles(
                                  x = data$object,
                                  session = data$selected_sessions,
@@ -434,21 +418,19 @@ server <- function(input, output, session) {
                 plot_width <- paste0(opts$workout_view_rel_width * n_sessions, "vw")
                 plotly::plotlyOutput(paste0(sport_id, "Plot"),
                                      width = plot_width,
-                                     height = paste0(opts$workout_view_rel_height, "vh")
-                                     )
+                                     height = paste0(opts$workout_view_rel_height, "vh"))
             })
 
             ## Render work capacity
             output[[paste0(sport_id, "Plot")]] <- plotly::renderPlotly({
-                shiny::withProgress(message = 'Work capacity plots', value = 0, {
-                ## If button to change units is pressed re-render plot with new units
-                change_power[[sport_id]]
-                work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] %in% sport_id
-                shiny::incProgress(1/1, detail = "Plotting")
-                trackeRapp:::plot_work_capacity(
-                                 x = data$object,
-                                 session = data$selected_sessions[work_capacity_sessions],
-                                 cp = isolate(as.numeric(input[[paste0('critical_power_', sport_id)]])))
+                withProgress(message = 'Work capacity plots', value = 0, {
+                    ## If button to change units is pressed re-render plot with new units
+                    change_power[[sport_id]]
+                    work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] %in% sport_id
+                    incProgress(1/1, detail = "Plotting")
+                    trackeRapp:::plot_work_capacity(x = data$object,
+                                                    session = data$selected_sessions[work_capacity_sessions],
+                                                    cp = isolate(as.numeric(input[[paste0('critical_power_', sport_id)]])))
                 })
             })
         })
@@ -465,6 +447,7 @@ server <- function(input, output, session) {
         output[['work_capacity']] <- reactive({
             !isTRUE((length(work_capacity_ids()) != 0) & data$show_work_capacity)
         })
+
         outputOptions(output, 'work_capacity_cycling', suspendWhenHidden = FALSE)
         outputOptions(output, 'work_capacity_running', suspendWhenHidden = FALSE)
         outputOptions(output, 'work_capacity', suspendWhenHidden = FALSE)
@@ -472,21 +455,21 @@ server <- function(input, output, session) {
         ## Update power for work capacity plot
         change_power <- reactiveValues(cycling = 0, running = 0)
         observeEvent(input$cycling_update_power, {
-                if (!is.numeric(input$critical_power_cycling) | input$critical_power_cycling <= 0) {
-                    stop("Invalid input. Input has to be a positive numeric value.")
-                }
-                else {
-                    change_power$cycling <- change_power$cycling + 1
-                }
+            if (!is.numeric(input$critical_power_cycling) | input$critical_power_cycling <= 0) {
+                stop("Invalid input. Input has to be a positive numeric value.")
+            }
+            else {
+                change_power$cycling <- change_power$cycling + 1
+            }
         })
 
         observeEvent(input$running_update_power, {
-                if (!is.numeric(input$critical_power_running) | input$critical_power_running <= 0) {
-                    stop("Invalid input. Input has to be a positive numeric value.")
-                }
-                else {
-                    change_power$running <- change_power$running + 1
-                }
+            if (!is.numeric(input$critical_power_running) | input$critical_power_running <= 0) {
+                stop("Invalid input. Input has to be a positive numeric value.")
+            }
+            else {
+                change_power$running <- change_power$running + 1
+            }
         })
     }, once = TRUE)
 
