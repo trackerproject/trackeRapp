@@ -22,7 +22,7 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
                                    desampling = 1, y_axis_range = NULL) {
     opts <- trops()
     if (is.null(session)) {
-        return(plotly_empty())
+        return(plotly_empty(type = "scatter", mode= "markers"))
     }
     ## altitude a lot less noisy, therefore need to ensure all data shown on graph
     if(what == 'altitude'){

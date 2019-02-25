@@ -69,8 +69,8 @@ trops <- function() {
         workouts_changepoint_colour = "#3c8dbc", ## "grey"
         workouts_smoother_colour = "#3c8dbc",
         mapbox_default_style = "light",
-        workout_view_rel_width = 40,
-        workout_view_rel_height = 20
+        workout_view_rel_width = 60,
+        workout_view_rel_height = 30
     )
 }
 

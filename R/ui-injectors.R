@@ -104,102 +104,82 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                                             "10" = 10,
                                             "11" = 11,
                                             "12" = 12),
-                                selected = "2"),
-                            div(class = "form-group shiny-input-container",
-                                id = "processed_path",
-                                div(class = "input-group",
-                                    actionButton(paste0("detect_changepoints", id),
-                                                 label = "Detect changepoints")))),
-                        hr(),
+                                selected = "3"),
+                            ## div(class = "form-group shiny-input-container",
+                            ##     id = "processed_path",
+                            ##     div(class = "input-group",
+                            actionButton(paste0("detect_changepoints", id),
+                                         label = "Detect changepoints")),
+                        ## hr(),
                         div(id = "workout_view_plot",
-                            uiOutput(paste0(id, "_plot"))
-                            ))))))
+                            uiOutput(paste0(id, "_plot"))))))))
 }
 
 ## Create work capacity plot
 ## @param id A character. The ID of the plot.
 ## @param collapsed A logical. Whether or not the UI box should be collapsed.
-create_work_capacity_plot0 <- function(id, collapsed = TRUE) {
-    insertUI(
-        selector = ".content",
-        where = "beforeEnd",
-        ui = conditionalPanel(
-            condition = "output.work_capacity == false",
-            div(class = "plots", id = id,
-                fluidRow(
-                    box(
-                        width = 12,
-                        collapsible = TRUE,
-                        collapsed = collapsed,
-                        title = tagList(
-                            icon("gear"),
-                            switch(id, "pace" = paste0("Pace"),
-                                   "heart.rate" = paste0("Heart Rate"),
-                                   "altitude" = paste0("Altitude"),
-                                   "work_capacity" = "Work Capacity",
-                                   "speed" = paste0("Speed"))),
-                        conditionalPanel(
-                            condition = "output.work_capacity_cycling == false",
-                            fluidRow(
-                                column(2, numericInput(
-                                              min = 2, max = 10, step = 0.1,
-                                              inputId = "critical_power_cycling",
-                                              label = "Critical power [W]", value = 4)),
-                                column(2, actionButton(
-                                              "cycling_update_power",
-                                              "Update critical power"))),
-                            div(id = "workout_view_plot",
-                                uiOutput(paste0("cycling_work_capacity", "_plot")))),
-                        conditionalPanel(
-                            condition = "output.work_capacity_running == false",
-                            fluidRow(
-                                column(2, numericInput(min = 0.01, max = 6.5, step = 0.1,
-                                                       inputId = "critical_power_running",
-                                                       label = "Critical speed [m/s]", value = 4)),
-                                column(2, actionButton("running_update_power",
-                                                       "Update critical speed"))),
-                            div(id = "workout_view_plot",
-                                uiOutput(paste0("running_work_capacity", "_plot")))))))))
-}
+## create_work_capacity_plot <- function(id, collapsed = TRUE) {
+##     insertUI(
+##         selector = ".content",
+##         where = "beforeEnd",
+##         ui = conditionalPanel(
+##             condition = "output.work_capacity == false",
+##             div(class = "plots", id = id,
+##                 fluidRow(
+##                     box(
+##                         width = 12,
+##                         collapsible = TRUE,
+##                         collapsed = collapsed,
+##                         title = tagList(icon("gear"),
+##                                         switch(id, "pace" = paste0("Pace"),
+##                                                "heart.rate" = paste0("Heart Rate"),
+##                                                "altitude" = paste0("Altitude"),
+##                                                "work_capacity" = paste("W' expended (scaled)"),
+##                                                "speed" = paste0("Speed"))),
+##                         conditionalPanel(
+##                             condition = "output.work_capacity_cycling == false",
+##                             dropdownButton(
+##                                 circle = TRUE,
+##                                 up = TRUE,
+##                                 icon = icon("wrench"), width = "300px",
+##                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
+##                                 numericInput(min = 2, max = 10, step = 0.1,
+##                                              inputId = "critical_power_cycling",
+##                                              label = "Critical power [W]", value = 4),
+##                                 actionButton("cycling_update_power",
+##                                              "Update W' expended")),
+##                             div(id = "workout_view_plot",
+##                                 uiOutput(paste0("cycling_work_capacity", "_plot")))),
+##                         conditionalPanel(
+##                             condition = "output.work_capacity_running == false",
+##                             dropdownButton(
+##                                 circle = TRUE,
+##                                 up = TRUE,
+##                                 icon = icon("wrench"),
+##                                 width = "300px",
+##                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
+##                                 numericInput(min = 0.01, max = 6.5, step = 0.1,
+##                                              inputId = "critical_power_running",
+##                                              label = "Critical speed [m/s]", value = 4),
+##                                 actionButton("running_update_power",
+##                                              "Update W' expended")),
+##                             div(id = "workout_view_plot",
+##                                 uiOutput(paste0("running_work_capacity", "_plot")))))))))
+## }
 
-
-## Create work capacity plot
-## @param id A character. The ID of the plot.
-## @param collapsed A logical. Whether or not the UI box should be collapsed.
 create_work_capacity_plot <- function(id, collapsed = TRUE) {
-    insertUI(
+        insertUI(
         selector = ".content",
         where = "beforeEnd",
         ui = conditionalPanel(
-            condition = "output.work_capacity == false",
+            condition = "output.work_capacity_running == false",
             div(class = "plots", id = id,
                 fluidRow(
                     box(
                         width = 12,
                         collapsible = TRUE,
                         collapsed = collapsed,
-                        title = tagList(icon("gear"),
-                                        switch(id, "pace" = paste0("Pace"),
-                                               "heart.rate" = paste0("Heart Rate"),
-                                               "altitude" = paste0("Altitude"),
-                                               "work_capacity" = paste("W' expended (scaled)"),
-                                               "speed" = paste0("Speed"))),
-                        conditionalPanel(
-                            condition = "output.work_capacity_cycling == false",
-                            dropdownButton(
-                                circle = TRUE,
-                                up = TRUE,
-                                icon = icon("wrench"), width = "300px",
-                                tooltip = tooltipOptions(title = "Click to see inputs !"),
-                                numericInput(min = 2, max = 10, step = 0.1,
-                                             inputId = "critical_power_cycling",
-                                             label = "Critical power [W]", value = 4),
-                                actionButton("cycling_update_power",
-                                             "Update W' expended")),
-                            div(id = "workout_view_plot",
-                                uiOutput(paste0("cycling_work_capacity", "_plot")))),
-                        conditionalPanel(
-                            condition = "output.work_capacity_running == false",
+                        title = tagList(icon("gear"), "W' expended running (scaled)"),
                             dropdownButton(
                                 circle = TRUE,
                                 up = TRUE,
@@ -212,7 +192,32 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                                 actionButton("running_update_power",
                                              "Update W' expended")),
                             div(id = "workout_view_plot",
-                                uiOutput(paste0("running_work_capacity", "_plot")))))))))
+                                uiOutput(paste0("running_work_capacity", "_plot"))))))))
+    insertUI(
+        selector = ".content",
+        where = "beforeEnd",
+        ui = conditionalPanel(
+            condition = "output.work_capacity_cycling == false",
+            div(class = "plots", id = id,
+                fluidRow(
+                    box(
+                        width = 12,
+                        collapsible = TRUE,
+                        collapsed = collapsed,
+                        title = tagList(icon("gear"), "W' expended cycling (scaled)"),
+                            dropdownButton(
+                                circle = TRUE,
+                                up = TRUE,
+                                icon = icon("wrench"),
+                                width = "300px",
+                                tooltip = tooltipOptions(title = "Click to see inputs !"),
+                                numericInput(min = 2, max = 10, step = 0.1,
+                                             inputId = "critical_power_cycling",
+                                             label = "Critical power [W]", value = 4),
+                                actionButton("cycling_update_power",
+                                             "Update W' expended")),
+                            div(id = "workout_view_plot",
+                                uiOutput(paste0("cycling_work_capacity", "_plot"))))))))
 }
 
 ## Create concentration profile plot UI.
@@ -267,19 +272,19 @@ create_zones_box <- function(inputId, plotId, choices) {
                                                   options = list(`actions-box` = TRUE),
                                                   multiple = TRUE,
                                                   selected = c("speed"))),
-                        column(2, pickerInput(inputId = "n_zones",
-                                              label = "Select number of zones:",
-                                              multiple = FALSE,
-                                              choices = c("2" = 2,
-                                                          "3" = 3,
-                                                          "4" = 4,
-                                                          "5" = 5,
-                                                          "6" = 6,
-                                                          "7" = 7,
-                                                          "8" = 8,
-                                                          "9" = 9),
-                                              options = list(`actions-box` = TRUE),
-                                              selected = "6"))),
+                            column(2, pickerInput(inputId = "n_zones",
+                                                  label = "Select number of zones:",
+                                                  multiple = FALSE,
+                                                  choices = c("2" = 2,
+                                                              "3" = 3,
+                                                              "4" = 4,
+                                                              "5" = 5,
+                                                              "6" = 6,
+                                                              "7" = 7,
+                                                              "8" = 8,
+                                                              "9" = 9),
+                                                  options = list(`actions-box` = TRUE),
+                                                  selected = "6"))),
                         uiOutput(plotId))))))
 }
 

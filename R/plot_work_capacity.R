@@ -8,14 +8,14 @@
 #' @param cp A numeric. Critical power/speed, i.e., the power/speed which can be maintained for longer period of time.
 plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) {
     opts <- trops()
-    if (is.null(session)) {
-        return(plotly_empty())
+    if (!length(session)) {
+        return(plotly_empty(type = "scatter", mode= "markers"))
     }
     units <- getUnits(x)
     sports <- get_sport(x)[session]
-    if ((length(unique(sports)) != 1) | (sum(c("running", "cycling") %in% na.omit(unique(sports))) != 1)) {
-        stop("Wprime applies only for running or only for cycling sessions")
-    }
+    ## if ((length(unique(sports)) != 1) | (sum(c("running", "cycling") %in% na.omit(unique(sports))) != 1)) {
+    ##     stop("Wprime applies only for running or only for cycling sessions")
+    ## }
     x <- Wprime(object = x, session = session, quantity = "expended",
                 cp = cp, version = "2012")
 
@@ -139,7 +139,8 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
                          showlegend = show_legend) %>%
                 layout(annotations = annotations_list,
                        xaxis = axis_list, yaxis = c(axis_list, list(range = maximal_range * 1.02,
-                                                                    showticklabels = TRUE)))}
+                                                                    showticklabels = TRUE)))
+        }
         plot_stored[[i]] <- a
         sport_image <- switch(sports[which(i == unique(df$id))],
                               "running" = "running.png",
@@ -159,8 +160,8 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
     y <- list(title = "", fixedrange = TRUE, range = y_axis_range, list(showticklabels = FALSE))
     x <- list(title = "Time", fixedrange = TRUE)
 
-    return(subplot(plot_stored, nrows = 1, shareY = TRUE, shareX = FALSE, margin = 0.002) %>%
-           config(displayModeBar = F) %>%
+    return(subplot(plot_stored, nrows = 1, shareY = TRUE, shareX = FALSE, margin = 0.003) %>%
+           config(displayModeBar = FALSE) %>%
            layout(yaxis = y, xaxis = x, images = images, hovermode = "x",
                   legend = list(y = 1, orientation = "h")))
 }

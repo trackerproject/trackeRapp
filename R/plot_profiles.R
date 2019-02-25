@@ -8,7 +8,7 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
                                         what = c("speed")) {
 
     if (is.null(session)) {
-        return(plotly_empty())
+        return(plotly_empty(type = "scatter", mode= "markers"))
     }
 
     tracker_object <- x
