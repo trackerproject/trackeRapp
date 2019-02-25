@@ -138,10 +138,10 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
         na.omit(df_subset),
         x = ~ Index, y = ~ Value,
         hoverinfo = "none",
-        color = I(opts$workouts_changepoint_colour), legendgroup = ~ Series,
+        color = I(opts$workouts_background_colour), legendgroup = ~ Series,
         name = mylabels[1], showlegend = show_legend
       ) %>%
-        add_lines(alpha = 0.4) %>%
+        add_lines(alpha = 0.2) %>%
         add_lines(
           data = na.omit(df_wprime),
           x = ~ Index, y = ~ Value, hoverinfo = "text",

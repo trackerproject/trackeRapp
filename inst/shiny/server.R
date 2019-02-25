@@ -31,12 +31,9 @@ options(shiny.maxRequestSize = 30 * 1024^3)
 server <- function(input, output, session) {
     ## Ensure that when button for changepoints clicked, the window does not
     ## dissapear by a click in the window.
-    shinyjs::runjs(
-                 '$(document).on("click", ".dropdown-menu", function (e) {
-    e.stopPropagation();
-  });
-    ')
-
+    shinyjs::runjs('$(document).on("click", ".dropdown-menu", function (e) {
+                     e.stopPropagation();
+                     });')
     ## Main object where most data is stored
     data <- reactiveValues(
         summary = NULL,
@@ -298,22 +295,27 @@ server <- function(input, output, session) {
         ## Render UI for time in zones plot
         output$zonesPlotUi <- renderUI({
             shiny::req(input$zonesMetricsPlot)
-            shinycssloaders::withSpinner(plotly::plotlyOutput(
-                                                     "zones_plot",
-                                                     width = "100%",
-                                                     height = paste0(opts$workout_view_rel_height, "vh")))
+            plotly::plotlyOutput(
+                        "zones_plot",
+                        width = "100%",
+                        height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vh"))
         })
+        withProgress(message = 'Making zones plots', value = 0, {
+        incProgress(1/2, detail = "Computing breaks")
         breaks <- reactive({
             compute_breaks(object = data$object, limits = data$limits,
                            n_breaks = as.numeric(input$n_zones),
                            what = input$zonesMetricsPlot)
         })
         ## Render actual plot
+        incProgress(1, detail = "Rendering zones plot")
         output$zones_plot <- plotly::renderPlotly({
             trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
                                     what = input$zonesMetricsPlot, breaks = breaks(),
                                     n_zones = as.numeric(input$n_zones))
         })
+        })
+
         ## Update metrics available each time different sessions selected
         observeEvent(data$selected_sessions, {
             shinyWidgets::updatePickerInput(session = session, inputId = "zonesMetricsPlot",
@@ -373,7 +375,7 @@ server <- function(input, output, session) {
             shinycssloaders::withSpinner(plotly::plotlyOutput(
                                                      "conc_profiles_plots",
                                                      width = "100%",
-                                                     height = paste0(opts$workout_view_rel_height, "vh")))
+                                                     height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh")))
         })
         concentration_profiles <- reactive({
             trackeR::concentration_profile(data$object,

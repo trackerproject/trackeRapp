@@ -86,17 +86,6 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
     x <- threshold(x, th$variable, th$lower, th$upper, th$sport)
   }
 
-  # speed_unit <- strsplit(un$unit[un$variable == "speed"], split = "_per_")[[1]]
-  # pace_unit <- paste(speed_unit[2], speed_unit[1], sep = "_per_")
-  # convert_pace <- match.fun(paste(pace_unit, un$unit[un$variable == "pace"], sep = "2"))
-
-  # x <- threshold(x,
-  #   variable = c("pace", "pace", "pace"),
-  #   lower = c(0, 0, 0),
-  #   upper = convert_pace(1 / moving_threshold),
-  #   sport = names(moving_threshold)
-  # )
-
   ##  ............................................................................
   ##  trackeR dashboard unique code                                           ####
   var_name_units <- unique(var_name_units)
@@ -108,6 +97,8 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
   changepoint_y_values <- c()
   step_size <- 1 / length(unique(session))
   start <- 0
+
+
 
   # Loop through each session
   for (i in session) {
@@ -202,7 +193,7 @@ plot_selected_workouts <- function(x, session, what, sumX, threshold = TRUE, smo
         df_subset[sampled_rows, ],
         x = ~ Index, y = ~ Value, hoverinfo = "none",
         type = "scatter", mode = "lines",
-        showlegend = FALSE, alpha = 0.1, color = I(opts$workouts_background_colour)
+        showlegend = FALSE, alpha = 0.2, color = I(opts$workouts_background_colour)
       )
 
       if (smooth) {

@@ -25,7 +25,7 @@ trops <- function() {
     }
 
     #summary tr.selected td, #summary td.selected {
-     background-color: #ff851b !important; /* #FFE9D0 */
+     background-color: #3c8dbc !important;x
     }
 
     #workout_view_plot {
@@ -38,7 +38,6 @@ trops <- function() {
      shinyjs.collapse = function(boxid) {
      $('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
      };
-     // shinyjs.resetClick = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }
      shinyjs.reset_page = function() { location.reload(); };
      shinyjs.resetSelection = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); };
      shinyjs.initialize_map_collapse = function() {
@@ -49,7 +48,6 @@ trops <- function() {
      };
      shinyjs.is_map_collapse = function() {
       $('#box1').parent().find('button').click(function(){
-       // alert($('#box1').css('display'));
        Shiny.onInputChange('is_collapse_box1', $('#box1').css('display'))
      })
      };
@@ -58,23 +56,24 @@ trops <- function() {
     list(
         ## blue, black, purple, green, red, yellow
         skin = "black",
-
         ## red, yellow, aqua, blue, light-blue, green, navy, teal, olive,
         ## lime, orange, fuchsia, purple, maroon, black.
         custom_css = custom_css,
         custom_js = custom_js,
-        ## summary_box_na_colour = "olive", ## same as #3d9970x
-        summary_box_na_colour = "light-blue", ## same as #3c8dbc
-        summary_box_ok_colour = "orange", ## same as #ff851b
-        summary_plots_selected_colour = "#ff851b", ## same as summary_box_ok_colour,
-        summary_plots_deselected_colour = "#3c8dbc", ## same as summary_box_na_colour,
-        zones_colours = c("#994700", "#ffad66"), ## https://www.hexcolortool.com/#ff851a
-        ## zones_colours = c("#276248", "#69c39b"), ## https://www.hexcolortool.com/#3d9970
+        summary_box_na_colour = "navy", ## same as #001f3f
+        summary_box_ok_colour = "light-blue", # same as #3c8dbc
+        summary_plots_selected_colour = "#3c8dbc",
+        summary_plots_deselected_colour = "#d2d6de",
+        zones_colours = c("#6fc1f1", "#095b8b"),
         workouts_background_colour = "black",
-        workouts_changepoint_colour = "grey",
-        workouts_smoother_colour = "#ff851b",
+        workouts_changepoint_colour = "#3c8dbc", ## "grey"
+        workouts_smoother_colour = "#3c8dbc",
         mapbox_default_style = "light",
         workout_view_rel_width = 40,
         workout_view_rel_height = 20
     )
 }
+
+
+## zones_colours = c("#994700", "#ffad66"), ## https://www.hexcolortool.com/#ff851a
+## zones_colours = c("#276248", "#69c39b"), ## https://www.hexcolortool.com/#3d9970
