@@ -13,7 +13,7 @@ create_map <- function() {
         title = tagList(icon("map"), "Map"),
         plotlyOutput("map",
           width = "auto",
-          height = "700px"
+          height = "50vh"
         )
       )))
     )
@@ -62,7 +62,7 @@ create_workout_plots <- function(feature) {
           title = tagList(icon(create_icon(feature)), fname),
           plotlyOutput(paste0(feature, "_plot"),
             width = "auto",
-            height = "180px"
+            height = "30vh"
             )
         )
         ))
@@ -98,7 +98,7 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
           dropdownButton(
               circle = TRUE,
               up = TRUE,
-              icon = icon("wrench"), width = "300px",
+              icon = icon("wrench"), width = "20vw",
               tooltip = tooltipOptions(title = "Click to see inputs !"),
             selectizeInput(
               inputId = paste0("n_changepoints", id),
@@ -160,7 +160,7 @@ create_work_capacity_plot0 <- function(id, collapsed = TRUE) {
             switch(id, "pace" = paste0("Pace"),
             "heart.rate" = paste0("Heart Rate"),
             "altitude" = paste0("Altitude"),
-            "work_capacity" = paste0("Work Capacity (W' expended)"),
+            "work_capacity" = "Work Capacity",
             "speed" = paste0("Speed")
             )
           ),
@@ -235,14 +235,14 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                             switch(id, "pace" = paste0("Pace"),
                                    "heart.rate" = paste0("Heart Rate"),
                                    "altitude" = paste0("Altitude"),
-                                   "work_capacity" = paste0("Work Capacity"),
+                                   "work_capacity" = paste("Work Capacity", "(W' expended)"),
                                    "speed" = paste0("Speed"))),
                         conditionalPanel(
                             condition = "output.work_capacity_cycling == false",
                             dropdownButton(
                                 circle = TRUE,
                                 up = TRUE,
-                                icon = icon("wrench"), width = "300px",
+                                icon = icon("wrench"), width = "20vw",
                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
                                 numericInput(
                                         min = 2, max = 10, step = 0.1,
@@ -262,7 +262,8 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                             dropdownButton(
                                 circle = TRUE,
                                 up = TRUE,
-                                icon = icon("wrench"), width = "300px",
+                                icon = icon("wrench"),
+                                width = "20vw",
                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
                                 numericInput(
                                         min = 0.01, max = 6.5, step = 0.1,

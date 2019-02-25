@@ -225,12 +225,6 @@ show_warning_window <- function() {
   ))
 }
 
-## Calculate plot height for either time in zones or work capacity
-## @param metrics vector of metrics that will be plotted.
-calculate_plot_height <- function(metrics) {
-  paste0(250 * length(metrics), "px")
-}
-
 ## Process \code{trackeRdata} object by setting thresholds to remove wrong values, change units, set a moving threshold and test which variables contain data
 ## @param data object of class \code{reactivevalues}.
 process_dataset <- function(data) {
