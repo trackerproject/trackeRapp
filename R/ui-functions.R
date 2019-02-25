@@ -98,7 +98,7 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
           dropdownButton(
               circle = TRUE,
               up = TRUE,
-              icon = icon("wrench"), width = "20vw",
+              icon = icon("wrench"), width = "300px",
               tooltip = tooltipOptions(title = "Click to see inputs !"),
             selectizeInput(
               inputId = paste0("n_changepoints", id),
@@ -242,7 +242,7 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                             dropdownButton(
                                 circle = TRUE,
                                 up = TRUE,
-                                icon = icon("wrench"), width = "20vw",
+                                icon = icon("wrench"), width = "300px",
                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
                                 numericInput(
                                         min = 2, max = 10, step = 0.1,
@@ -263,7 +263,7 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
                                 circle = TRUE,
                                 up = TRUE,
                                 icon = icon("wrench"),
-                                width = "20vw",
+                                width = "300px",
                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
                                 numericInput(
                                         min = 0.01, max = 6.5, step = 0.1,
