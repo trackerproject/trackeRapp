@@ -301,20 +301,23 @@ server <- function(input, output, session) {
                         height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vh"))
         })
 
-        breaks <- reactive({
-                compute_breaks(object = data$object, limits = data$limits,
-                               n_breaks = as.numeric(input$n_zones),
-                               what = input$zonesMetricsPlot)
-        })
         ## Render actual plot
 
         output$zones_plot <- plotly::renderPlotly({
-                shiny::incProgress(2/2, detail = "Rendering zones plots")
-
+            shiny::withProgress(message = 'Zones plots', value = 0, {
+                breaks <- reactive({
+                    shiny::incProgress(1/2, detail = "Computing breaks")
+                    trackeR::compute_breaks(object = data$object, limits = data$limits,
+                                            n_breaks = as.numeric(input$n_zones),
+                                            what = input$zonesMetricsPlot)
+                })
+                br <- breaks()
+                shiny::incProgress(2/2, detail = "Plotting")
                 trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
-                                        what = input$zonesMetricsPlot, breaks = breaks(),
+                                        what = input$zonesMetricsPlot, breaks = br,
                                         n_zones = as.numeric(input$n_zones))
             })
+        })
 
 
         ## Update metrics available each time different sessions selected
@@ -346,16 +349,19 @@ server <- function(input, output, session) {
 
             ## Render individual sessions plots (except work capacity)
             output[[paste0(i, "Plot")]] <- plotly::renderPlotly({
-                ## Whether to detect changepoints
-                if (!is.null(input[[paste0("detect_changepoints", i)]])) {
-                    fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
-                }
-                trackeRapp:::plot_selected_workouts(
-                                 x = data$object, session = data$selected_sessions, what = i,
-                                 sumX = data$summary, changepoints = fit_changepoint,
-                                 threshold = FALSE, smooth = TRUE,
-                                 n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
-                                 desampling = 1, y_axis_range = data$limits[[i]])
+                shiny::withProgress(message = paste(i, 'plots'), value = 0, {
+                    ## Whether to detect changepoints
+                    if (!is.null(input[[paste0("detect_changepoints", i)]])) {
+                        fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
+                    }
+                    shiny::incProgress(1/1, detail = "Plotting")
+                    trackeRapp:::plot_selected_workouts(
+                                     x = data$object, session = data$selected_sessions, what = i,
+                                     sumX = data$summary, changepoints = fit_changepoint,
+                                     threshold = FALSE, smooth = TRUE,
+                                     n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
+                                     desampling = 1, y_axis_range = data$limits[[i]])
+                })
             })
 
             output[[i]] <- reactive({
@@ -377,18 +383,23 @@ server <- function(input, output, session) {
             width = "100%",
             height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
-        concentration_profiles <- reactive({
-            trackeR::concentration_profile(data$object,
-                                           what = metrics[have_data_metrics_selected()],
-                                           limits = data$limits)
-        })
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
-            trackeRapp:::plot_concentration_profiles(
-                             x = data$object,
-                             session = data$selected_sessions,
-                             what = input$profileMetricsPlot,
-                             profiles_calculated = concentration_profiles())
+            shiny::withProgress(message = 'Concentration profiles', value = 0, {
+                concentration_profiles <- reactive({
+                    shiny::incProgress(1/2, detail = "Computng profiles")
+                    trackeR::concentration_profile(data$object,
+                                                   what = metrics[have_data_metrics_selected()],
+                                                   limits = data$limits)
+                })
+                cps <- concentration_profiles()
+                shiny::incProgress(1/1, detail = "Plotting")
+                trackeRapp:::plot_concentration_profiles(
+                                 x = data$object,
+                                 session = data$selected_sessions,
+                                 what = input$profileMetricsPlot,
+                                 profiles_calculated = cps)
+            })
         })
 
         ## Update metrics available each time different sessions selected
@@ -418,13 +429,16 @@ server <- function(input, output, session) {
 
             ## Render work capacity
             output[[paste0(sport_id, "Plot")]] <- plotly::renderPlotly({
+                shiny::withProgress(message = 'Work capacity plots', value = 0, {
                 ## If button to change units is pressed re-render plot with new units
                 change_power[[sport_id]]
                 work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] %in% sport_id
+                shiny::incProgress(1/1, detail = "Plotting")
                 trackeRapp:::plot_work_capacity(
                                  x = data$object,
                                  session = data$selected_sessions[work_capacity_sessions],
                                  cp = isolate(as.numeric(input[[paste0('critical_power_', sport_id)]])))
+                })
             })
         })
 
