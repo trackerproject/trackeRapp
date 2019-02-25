@@ -27,7 +27,6 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
     p <- plot_mapbox()
     for (i in all_sessions) {
         plot_df <- df[which(df$SessionID == i), ]
-
         df_markers <- plot_df[round(seq(1, nrow(plot_df), length.out = 10)), ]
         df_markers$true_session_id <- i
         p <- add_markers(p, data = df_markers, x = ~ longitude, y = ~ latitude,
@@ -39,8 +38,8 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
         p <- add_paths(p,
                        data = plot_df,
                        x = ~ longitude, y = ~ latitude,
-                   size = I(2), color = I(colour), opacity = 0.5,
-                   text = ~ popupText(session = SessionID, speed = speed))
+                       size = I(2), color = I(colour), opacity = 0.5,
+                       text = ~ popupText(session = SessionID, speed = speed))
     }
     center_lat <- ifelse(is.null(colour_sessions), median(df$latitude),
                          median(df$latitude[df$SessionID %in% colour_sessions]))
@@ -66,11 +65,11 @@ plot_map <- function(sumX, df = NULL, threshold = TRUE, all_sessions, colour_ses
                                             button("dark", "Dark"),
                                             button("satellite", "Satellite"),
                                             button("satellite-streets", "Satellite streets"))))
-  diff_lon <- abs(max(df$longitude) - min(df$longitude))
-  p <- layout(p, mapbox = list(zoom = 9,
-                               center = list(lat = center_lat, lon = center_lon),
-                               style = trops()$mapbox_default_style),
-              dragmode = "pan", showlegend = FALSE, updatemenus = updatemenus,
-              margin = list(l = 0, r = 0, t = 0, b = 0))
-  return(p)
+    diff_lon <- abs(max(df$longitude) - min(df$longitude))
+    p <- layout(p, mapbox = list(zoom = 9,
+                                 center = list(lat = center_lat, lon = center_lon),
+                                 style = trops()$mapbox_default_style),
+                dragmode = "pan", showlegend = FALSE, updatemenus = updatemenus,
+                margin = list(l = 0, r = 0, t = 0, b = 0))
+    return(p)
 }
