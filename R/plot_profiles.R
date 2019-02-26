@@ -38,7 +38,9 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
                      color = ~ series, colors = pal[feature_profile$Series], legendgroup = ~ Series,
                      hoverinfo = "text", text = ~ paste(" Value:", round(Index, 1), var_units, "\n", series)) %>%
             add_lines() %>%
-            layout(xaxis = x, yaxis = y, hovermode = "closest")
+            layout(xaxis = x, yaxis = y, hovermode = "closest",
+                   plot_bgcolor = "rgba(0, 0, 0, 0)",
+                   paper_bgcolor = "rgba(0, 0, 0, 0)")
         individual_plots[[feature]] <- style(p, showlegend = legend_status)
         legend_status <- FALSE
     }

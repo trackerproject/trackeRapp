@@ -22,7 +22,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
         group <- c('moving')
     }
     if (what != "wrRatio") {
-        feature <- lab_sum(feature = what, data = sumX)
+        feature <- lab_sum(feature = what, data = sumX, whole_text = FALSE)
         units_text <- lab_sum(feature = what, data = sumX, whole_text = FALSE)
     }
     else {
@@ -76,7 +76,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
                                 "Sport:", sport), showlegend = FALSE) %>%
         add_markers(key = dat$session, color = I(opts$summary_plots_deselected_colour),
                     symbol = ~ sport,
-                    symbols = c("circle", "x", "square"), legendgroup = ~ sport,
+                    symbols = c("circle", "x", "square"), legendgroup = sport ~ .,
                     showlegend = TRUE) %>%
         add_lines(color = I(opts$summary_plots_deselected_colour), connectgaps = TRUE, legendgroup = ~ sport,
                   line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE))
@@ -102,19 +102,23 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
         if (feature == 'avgHeartRate') {
             80
         }
-        else if (feature %in% features){
+        else if (feature %in% features) {
             min(dat$value, na.rm = TRUE) * 0.6
-        } else {
+        }
+        else {
             0
         }
     }
-    y <- list(title = feature, range = c(lower_range_y(what, dat),
-                                         max(dat$value, na.rm = TRUE) * 1.5))
-    x <- list(title = "Date",  range = ra)
+    y <- list(title = feature,
+              range = c(lower_range_y(what, dat),
+                        max(dat$value, na.rm = TRUE) * 1.5))
+    x <- list(title = "",  range = ra) ##list(title = "Date",  range = ra)
 
     layout(p,
            dragmode = "select", showlegend = TRUE, yaxis = y, legend = list(y = 1.1, orientation = "h"),
-           xaxis = x, margin = list(l = 80, b = 50, pad = 0)) %>%
+           xaxis = x, margin = list(l = 80, b = 50, pad = 0),
+           plot_bgcolor = "rgba(0, 0, 0, 0)",
+           paper_bgcolor = "rgba(0, 0, 0, 0)") %>%
         ## list of buttons at
         ## https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js
         config(collaborate = FALSE, displaylogo = FALSE,

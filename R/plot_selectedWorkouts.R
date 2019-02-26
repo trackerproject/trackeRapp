@@ -397,9 +397,8 @@ plot_selected_workouts <- function(x,
                          type = "scatter", mode = "none",
                          showlegend = FALSE) %>%
                 layout(annotations = annotations_list,
-                       xaxis = axis_list, yaxis = c(axis_list,
-                                                    list(range = y_axis_range,
-                                                         showticklabels = TRUE)))
+                       xaxis = axis_list,
+                       yaxis = c(axis_list, list(range = y_axis_range, showticklabels = TRUE)))
         }
         plot_stored[[as.character(i)]] <- a
         sport_image <- switch(sports[which(i == session)],
@@ -418,14 +417,15 @@ plot_selected_workouts <- function(x,
         start <- start + step_size
     }
 
-    ## y <- list(title = var_name_units, fixedrange = TRUE)
     y <- list(title = var_units, fixedrange = TRUE)
     x <- list(title = NULL, fixedrange = TRUE)
 
     return(subplot(plot_stored, nrows = 1,  titleY = FALSE, margin = 0.003) %>%
            config(displayModeBar = FALSE) %>%
            layout(showlegend = FALSE, xaxis = x, yaxis = y, images = images,
-                  hovermode = "x", shapes = shapes, dragmode = "pan"))
+                  hovermode = "x", shapes = shapes, dragmode = "pan",
+                  plot_bgcolor = "rgba(0, 0, 0, 0)",
+                  paper_bgcolor = "rgba(0, 0, 0, 0)"))
 }
 
 

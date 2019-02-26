@@ -162,5 +162,7 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
     return(subplot(plot_stored, nrows = 1, shareY = TRUE, shareX = FALSE, margin = 0.003) %>%
            config(displayModeBar = FALSE) %>%
            layout(yaxis = y, xaxis = x, images = images, hovermode = "x",
-                  legend = list(y = 1, orientation = "h")))
+                  legend = list(y = 1, orientation = "h"),
+                  plot_bgcolor = "rgba(0, 0, 0, 0)",
+                  paper_bgcolor = "rgba(0, 0, 0, 0)"))
 }

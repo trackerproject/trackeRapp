@@ -36,7 +36,9 @@ plot_zones <- function(x, session, what = c("heart_rate"),
                      color = ~ Session, colors = pal[feature_zones$session], legendgroup = ~ Session, hoverinfo = "text",
                      text = ~ paste0("Proportion of session: ", round(percent, 1), "%", "\n", Session)) %>%
             add_bars() %>%
-            layout(xaxis = x, yaxis = y, hovermode = "closest")
+            layout(xaxis = x, yaxis = y, hovermode = "closest",
+                   plot_bgcolor = "rgba(0, 0, 0, 0)",
+                   paper_bgcolor = "rgba(0, 0, 0, 0)")
         individual_plots[[feature]] <- style(p, showlegend = legend_status)
         legend_status <- FALSE
     }

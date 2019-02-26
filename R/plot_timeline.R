@@ -35,7 +35,9 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
                                            sumX$sessionEnd[which(df$session %in% session)]))
         y <- list(title = "")
         x <- list(title = "")
-        p <- layout(p, dragmode = "select", showlegend = FALSE, yaxis = y, xaxis = x) %>%
+        p <- layout(p, dragmode = "select", showlegend = FALSE, yaxis = y, xaxis = x,
+                    plot_bgcolor = "rgba(0, 0, 0, 0)",
+                    paper_bgcolor = "rgba(0, 0, 0, 0)") %>%
             config(displayModeBar = F)
         p
     }
