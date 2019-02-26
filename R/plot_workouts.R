@@ -114,5 +114,6 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
 
     layout(p,
            dragmode = "select", showlegend = TRUE, yaxis = y, legend = list(y = 1.1, orientation = "h"),
-           xaxis = x, margin = list(l = 80, b = 50, pad = 0))
+           xaxis = x, margin = list(l = 80, b = 50, pad = 0)) %>%
+        config(displayModeBar = FALSE)
 }
