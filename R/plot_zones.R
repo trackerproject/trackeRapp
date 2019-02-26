@@ -26,7 +26,7 @@ plot_zones <- function(x, session, what = c("heart_rate"),
     units <- getUnits(x)
     pal <- colorRampPalette(trops()$zones_colours)(max(dat$session))
     individual_plots <- list()
-    legend_status <- TRUE
+    legend_status <- FALSE
     for (feature in what) {
         y <- list(title = "% of time")
         x <- list(title = lab_data(feature, units))
@@ -34,7 +34,7 @@ plot_zones <- function(x, session, what = c("heart_rate"),
         p <- plot_ly(feature_zones,
                      x = ~ zoneF, y = ~ percent,
                      color = ~ Session, colors = pal[feature_zones$session], legendgroup = ~ Session, hoverinfo = "text",
-                     text = ~ paste0("Proportion of a session: ", round(percent, 1), "%", "\n", Session)) %>%
+                     text = ~ paste0("Proportion of session: ", round(percent, 1), "%", "\n", Session)) %>%
             add_bars() %>%
             layout(xaxis = x, yaxis = y, hovermode = "closest")
         individual_plots[[feature]] <- style(p, showlegend = legend_status)
@@ -43,7 +43,8 @@ plot_zones <- function(x, session, what = c("heart_rate"),
 
     plots <- subplot(individual_plots,
                      nrows = length(what),
-                     margin = 0.05, shareY = FALSE, titleX = TRUE, titleY = TRUE) %>%
+                     margin = 0.05,
+                     shareY = FALSE, titleX = TRUE, titleY = TRUE) %>%
         config(displayModeBar = FALSE)
 
     return(plots)

@@ -24,7 +24,7 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
     df$series <- paste("Session", sprintf(paste0("%0", nchar(max(df$Series)), "d"), df$Series))
     pal <- colorRampPalette(trops()$zones_colours)(max(df$Series))
     individual_plots <- list()
-    legend_status <- TRUE
+    legend_status <- FALSE
     for (feature in what) {
         y <- list(title = "dtime", tickangle = 0)
         x <- list(title = lab_data(feature, units), tickangle = 0)

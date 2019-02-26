@@ -320,7 +320,7 @@ server <- function(input, output, session) {
         }, ignoreInit = TRUE)
 
         ## Generate individual sessions plots (except work capacity)
-        metrics_to_expand <- c('speed')
+        metrics_to_expand <- "" #c('speed')
 
         ## First generate all plots irrespective if data available
         for (i in c(metrics)) {

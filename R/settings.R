@@ -25,7 +25,7 @@ trops <- function() {
     }
 
     #summary tr.selected td, #summary td.selected {
-     background-color: #3c8dbc !important;x
+     background-color: #0073b7 !important;x
     }
 
     #workout_view_plot {
@@ -61,16 +61,17 @@ trops <- function() {
         custom_css = custom_css,
         custom_js = custom_js,
         summary_box_na_colour = "navy", ## same as #001f3f
-        summary_box_ok_colour = "light-blue", # same as #3c8dbc
-        summary_plots_selected_colour = "#3c8dbc",
+        summary_box_ok_colour = "blue", # light-blue: #3c8dbc blue: #0073b7
+        summary_plots_selected_colour = "#0073b7",
         summary_plots_deselected_colour = "#d2d6de",
         zones_colours = c("#6fc1f1", "#095b8b"),
         workouts_background_colour = "black",
-        workouts_changepoint_colour = "#3c8dbc", ## "grey"
-        workouts_smoother_colour = "#3c8dbc",
+        workouts_changepoint_colour = "#0073b7", ## "grey"
+        workouts_smoother_colour = "#0073b7",
         mapbox_default_style = "light",
         workout_view_rel_width = 60,
-        workout_view_rel_height = 30
+        workout_view_rel_height = 40,
+        dropdown_button_size = "sm" ## see ?shinyWidget::dropdownButton
     )
 }
 

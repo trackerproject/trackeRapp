@@ -86,7 +86,8 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                         dropdownButton(
                             circle = TRUE,
                             up = TRUE,
-                            icon = icon("wrench"), width = "300px",
+                            icon = icon("wrench"),
+                            size = trops()$dropdown_button_size,
                             tooltip = tooltipOptions(title = "Click to see inputs !"),
                             selectizeInput(
                                 inputId = paste0("n_changepoints", id),
@@ -264,7 +265,7 @@ create_zones_box <- function(inputId, plotId, choices) {
                         width = 12,
                         collapsible = TRUE,
                         collapsed = FALSE,
-                        title = tagList(icon("gear"), "Time in Zones"),
+                        title = tagList(icon("gear"), "Time in zones"),
                         fluidRow(
                             column(2, pickerInput(inputId = inputId,
                                                   label ="Features",
