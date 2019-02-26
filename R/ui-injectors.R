@@ -169,18 +169,18 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
 ## }
 
 create_work_capacity_plot <- function(id, collapsed = TRUE) {
-        insertUI(
+    insertUI(
         selector = ".content",
         where = "beforeEnd",
         ui = conditionalPanel(
-            condition = "output.work_capacity_running == false",
+            condition = "output.work_capacity == false & output.work_capacity_running == false",
             div(class = "plots", id = id,
                 fluidRow(
                     box(
                         width = 12,
                         collapsible = TRUE,
                         collapsed = collapsed,
-                        title = tagList(icon("gear"), "W' expended running (scaled)"),
+                        title = tagList(icon("gear"), "W' expended running"),
                             dropdownButton(
                                 circle = TRUE,
                                 up = TRUE,
@@ -198,14 +198,14 @@ create_work_capacity_plot <- function(id, collapsed = TRUE) {
         selector = ".content",
         where = "beforeEnd",
         ui = conditionalPanel(
-            condition = "output.work_capacity_cycling == false",
+            condition = "output.work_capacity == false & output.work_capacity_cycling == false",
             div(class = "plots", id = id,
                 fluidRow(
                     box(
                         width = 12,
                         collapsible = TRUE,
                         collapsed = collapsed,
-                        title = tagList(icon("gear"), "W' expended cycling (scaled)"),
+                        title = tagList(icon("gear"), "W' expended cycling"),
                             dropdownButton(
                                 circle = TRUE,
                                 up = TRUE,
