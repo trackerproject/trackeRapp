@@ -448,10 +448,6 @@ server <- function(input, output, session) {
                 change_power[["running"]]
                 work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] == "running"
                 incProgress(1/1, detail = "Plotting")
-                ## trackeRapp:::plot_selected_workouts(
-                ##                  x = data$object, session = data$selected_sessions, what = "speed",
-                ##                  sumX = data$summary,
-                ##                  threshold = FALSE, smooth = TRUE))
                 trackeRapp:::plot_work_capacity(x = data$object,
                                                 session = data$selected_sessions[work_capacity_sessions],
                                                 cp = isolate(as.numeric(input[['critical_power_running']])))

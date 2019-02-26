@@ -41,8 +41,10 @@ plot_zones <- function(x, session, what = c("heart_rate"),
         legend_status <- FALSE
     }
 
-    plots <- do.call(subplot, c(individual_plots,
-                                nrows = length(what),
-                                margin = 0.05, shareY = FALSE, titleX = TRUE, titleY = TRUE))
+    plots <- subplot(individual_plots,
+                     nrows = length(what),
+                     margin = 0.05, shareY = FALSE, titleX = TRUE, titleY = TRUE) %>%
+        config(displayModeBar = FALSE)
+
     return(plots)
 }
