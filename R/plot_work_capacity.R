@@ -16,6 +16,7 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
     ## if ((length(unique(sports)) != 1) | (sum(c("running", "cycling") %in% na.omit(unique(sports))) != 1)) {
     ##     stop("Wprime applies only for running or only for cycling sessions")
     ## }
+
     x <- Wprime(object = x, session = session, quantity = "expended",
                 cp = cp, version = "2012")
 
@@ -29,13 +30,13 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
                   paste("W'", quantity, "[scaled]"))
     ## select sessions
     if (is.null(session)) session <- seq_along(x)
-
+    dfo <- fortify_trackeRWprime(x, melt = TRUE)
     ## transform W' to match power/speed scale
     if (scaled) {
         sdMov <- sd(unlist(lapply(x, function(z) z$movement)), na.rm = TRUE)
         mMov <- mean(unlist(lapply(x, function(z) z$movement)), na.rm = TRUE)
 
-        x <- lapply(x, function(z) {
+        u <- lapply(x, function(z) {
             if (!all(z$wprime == 0 | is.na(z$wprime))) {
                 wdat <- coredata(z$wprime)
                 w <- (wdat - mean(wdat, na.rm = TRUE)) / sd(wdat, na.rm = TRUE)
@@ -44,10 +45,12 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
             }
             z
         })
+        class(u) <- "trackeRWprime"
     }
     ## get data
-    class(x) <- "trackeRWprime"
-    df <- fortify_trackeRWprime(x, melt = TRUE)
+    df <- fortify_trackeRWprime(u, melt = TRUE)
+    df$Value0 <- dfo$Value
+
     df$id <- format(session[df$SessionID])
     ## prepare session id for panel header
     if (dates) {
@@ -124,8 +127,9 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
                 add_lines(alpha = 0.2) %>%
                 add_lines(data = na.omit(df_wprime),
                           x = ~ Index, y = ~ Value, hoverinfo = "text",
-                          text = ~ paste(round(Value, 2), "W'"),
-                          color = I(opts$workouts_smoother_colour), legendgroup = ~ Series, name = mylabels[2],
+                          text = ~ paste(round(Value0, 2), ifelse(cycling, "J", "m")),
+                          color = I(opts$workouts_smoother_colour), legendgroup = ~ Series,
+                          name = mylabels[2],
                           showlegend = show_legend) %>%
                 layout(annotations = annotations_list,
                        xaxis = axis_list, yaxis = c(axis_list, list(range = maximal_range * 1.02)))
@@ -147,7 +151,7 @@ plot_work_capacity <- function(x, session, dates = TRUE, scaled = TRUE, cp = 4) 
         images[[i]] <- list(source = sport_image,
                             xref = "paper",
                             yref = "paper",
-                            x = start + step_size / 2,
+                            x = start + step_size / 10,
                             y = 1,
                             sizex = 0.1,
                             sizey = 0.1,

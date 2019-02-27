@@ -409,11 +409,11 @@ plot_selected_workouts <- function(x,
         images[[which(i == session)]] <- list(source = sport_image,
                                               xref = "paper",
                                               yref = "paper",
-                                              x = start + step_size / 2,
+                                              x = start + step_size / 10,
                                               y = 1,
                                               sizex = 0.1,
                                               sizey = 0.1,
-                                              opacity = 0.8)
+                                              opacity = 0.5)
         start <- start + step_size
     }
 
