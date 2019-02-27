@@ -32,6 +32,14 @@ trops <- function() {
      overflow-x:scroll;
      overflow-y:hidden;
     }
+
+     .main_plots rect.legendtoggle {
+       display: none;
+     }
+
+     .main_plots rect.legendtoggle {
+       cursor: default;
+     }
     "
     custom_js <-
     "
