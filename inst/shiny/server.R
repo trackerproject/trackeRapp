@@ -121,7 +121,7 @@ server <- function(input, output, session) {
             trackeRapp:::generate_selected_sessions_object(data, input,
                                                            table_selection = TRUE)
         }
-    }, ignoreNULL = TRUE)
+    }, ignoreNULL = FALSE)
 
     ## Reset button clicked
     observeEvent(input$resetSelection, {
