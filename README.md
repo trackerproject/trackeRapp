@@ -1,14 +1,14 @@
-The trackeRapp
-==============
+trackeRapp
+==========
 
-The goal of the [**trackeRapp**](https://trackerapp.com) is to provide
-an integrated workflow and a web interface for the analysis of sports
-data from GPS-enabled tracking devices. The **trackeRapp** is a platform
-with flexible and extensive visualisation and analysis tools. It has a
-user friendly, intuitive and adjustable interface and it was developed
-open-source on top of the
+The goal of [**trackeRapp**](https://trackerapp.com) is to provide an
+integrated workflow and a web interface for the analysis of sports data
+from GPS-enabled tracking devices. The **trackeRapp** is a platform with
+flexible and extensive visualisation and analytics tools. It has a user
+friendly, intuitive and adjustable interface and it was developed as an
+open-source interface on top of the
 [**trackeR**](https://github.com/trackerproject/trackeR) package. The
-interface was fully built using the **shiny** package.
+interface was fully built using the **shiny** R package.
 
 Installation
 ------------
@@ -53,8 +53,8 @@ Launching the user-interface
 ----------------------------
 
 A user can access the web interface remotely at
-<a href="https://www.trackerapp.com" class="uri">https://www.trackerapp.com</a>
-or on their local machine by running the following commands:
+<https://www.trackerapp.com> or on their local machine by running the
+following commands:
 
     # Load the package
     library("trackeRapp")

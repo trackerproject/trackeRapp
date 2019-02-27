@@ -21,7 +21,6 @@ Imports:
     changepoint,
     shiny,
     shinyjs,
-    shinycssloaders,
     shinydashboard,
     shinyWidgets
 License: GPL-3
