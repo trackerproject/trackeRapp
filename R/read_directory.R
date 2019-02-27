@@ -12,7 +12,7 @@ read_directory_shiny <- function(directory,
                                  silent = TRUE,
                                  parallel = FALSE,
                                  verbose = FALSE) {
-  read_expression <- quote({
+    read_expression <- quote({
         tcxFiles <- list.files(directory, pattern = "tcx", ignore.case = TRUE, full.names = TRUE,
                                no.. = TRUE)
         gpxFiles <- list.files(directory, pattern = "gpx", ignore.case = TRUE, full.names = TRUE,
@@ -33,29 +33,26 @@ read_directory_shiny <- function(directory,
         fileType <- c(rep("tcx", ltcx), rep("gpx", lgpx), rep("db3", ldb3), rep("json", ljson))
 
         allData <- list()
-
         in_expression <- quote({
-
             read_fun <- function(j) {
                 currentType <- fileType[j]
                 incProgress(1/lall, detail = paste(j, "out of", lall, paste0("(", currentType, ")")))
-
                 out <- try(read_container(file = allFiles[j],
-                                   type = currentType,
-                                   table = table,
-                                   timezone = timezone,
-                                   session_threshold = session_threshold,
-                                   correct_distances = correct_distances,
-                                   country = country,
-                                   mask = mask,
-                                   from_distances = from_distances,
-                                   speedunit = speedunit[[currentType]],
-                                   distanceunit = distanceunit[[currentType]],
-                                   sport = sport,
-                                   lgap = lgap,
-                                   lskip = lskip,
-                                   m = m,
-                                   silent = silent))
+                                          type = currentType,
+                                          table = table,
+                                          timezone = timezone,
+                                          session_threshold = session_threshold,
+                                          correct_distances = correct_distances,
+                                          country = country,
+                                          mask = mask,
+                                          from_distances = from_distances,
+                                          speedunit = speedunit[[currentType]],
+                                          distanceunit = distanceunit[[currentType]],
+                                          sport = sport,
+                                          lgap = lgap,
+                                          lskip = lskip,
+                                          m = m,
+                                          silent = silent))
 
                 out
             }
@@ -83,9 +80,9 @@ read_directory_shiny <- function(directory,
         ## clean and return
         allData <- allData[!sapply(allData, is.null)]
         allData
-  })
-  out <- reactive(read_expression, quoted = TRUE)
-  return(out())
+    })
+    out <- reactive(read_expression, quoted = TRUE)
+    return(out())
 }
 
 
