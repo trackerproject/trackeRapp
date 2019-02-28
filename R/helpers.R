@@ -223,6 +223,7 @@ generate_objects <- function(data, output, session, choices) {
                         "Cycling" = "cycling",
                         "Swimming" = "swimming")
     identified_sports <- sports_options %in% unique(get_sport(data$object))
+    data$sports <- sports_options[identified_sports]
     data$identified_sports <- sports_options[identified_sports]
     data$limits <- compute_limits(data$object, a = 0.1)
     data$is_location_data <- sapply(data$object, function(x) {
@@ -339,14 +340,13 @@ render_summary_box <- function(short_name, long_name, data) {
 ## @param table_selection A logical. Whether session selection made from the summary table.
 ## @param no_selection A logical. Whether no sessions are selected.
 generate_selected_sessions_object <- function(data, input,
-                                              sports = NULL,
                                               plot_selection = FALSE,
                                               sport_selection = FALSE,
                                               table_selection = FALSE,
                                               no_selection = FALSE) {
     data$hover <- event_data("plotly_selected")
     if (sport_selection) {
-        data$selected_sessions <- data$summary$session[get_sport(data$object) %in% sports]
+        data$selected_sessions <- data$summary$session[get_sport(data$object) %in% data$sports]
     }
     if (plot_selection) {
         sessions <- data$hover$key

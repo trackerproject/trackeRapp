@@ -14,7 +14,7 @@ trops <- function() {
      padding: 0px;
     }
 
-    #uploadButton, #resetButton, #return_to_main_page, #plotSelectedWorkouts, #showModalUnits, #resetSelection, #sport_is_running, #sport_is_cycling, #sport_is_swimming {
+    #uploadButton, #resetButton, #return_to_main_page, #plotSelectedWorkouts, #showModalUnits, #resetSelection, #sport_is_running, #sport_is_cycling, #sport_is_swimming, #all_sports {
      width: 100%;
      margin: 0px 0px 0px 0px;
     }

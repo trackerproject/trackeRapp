@@ -369,41 +369,35 @@ create_option_box <- function(sport_options, metrics_available) {
                                                      icon = icon("search-plus")))),
                              column(3, actionButton(inputId = "showModalUnits",
                                                     label = "Change units",
-                                                    icon = icon("balance-scale")))),
-                         br(),
-                         fluidRow(
-                             column(3,
-                                    conditionalPanel(
-                                        condition = "true",
-                                        actionButton(
-                                            inputId = "sport_is_running",
-                                            label = "Select running",
-                                            icon = icon("running")))),
-                             column(3,
-                                    conditionalPanel(
-                                        condition = "true",
-                                        actionButton(
-                                            inputId = "sport_is_cycling",
-                                            label = "Select cycling",
-                                            icon = icon("bicycle")))),
-                             column(3,
-                                    conditionalPanel(
-                                        condition = "true",
-                                        actionButton(
-                                            inputId = "sport_is_swimming",
-                                            label = "Select swimming",
-                                            icon = icon("swimmer")))),
-                             column(3,
-                                    actionButton(inputId = "resetSelection",
-                                                 label = "Clear selection",
-                                                 icon = icon("times-circle")))),
-                         br(),
-                         fluidRow(
+                                                    icon = icon("balance-scale"))),
                              column(6,
                                     pickerInput(inputId = "metricsSelected",
                                                 choices = metrics_available, options = list(`actions-box` = TRUE),
-                                                multiple = TRUE, selected = c("distance", "duration", 'avgPace'))))))))
-
+                                                multiple = TRUE, selected = c("distance", "duration", 'avgPace')))),
+                         fluidRow(
+                             column(3,
+                                    actionButton(inputId = "resetSelection",
+                                                 label = "Clear selection",
+                                                 icon = icon("times-circle"))),
+                             column(3,
+                                    actionButton(inputId = "all_sports",
+                                                 label = "Select all",
+                                                 icon = icon("times-circle"))),
+                             column(2,
+                                    actionButton(
+                                        inputId = "sport_is_running",
+                                        label = "Running",
+                                        icon = icon("running"))),
+                             column(2,
+                                    actionButton(
+                                        inputId = "sport_is_cycling",
+                                        label = "Cycling",
+                                        icon = icon("bicycle"))),
+                             column(2,
+                                    actionButton(
+                                        inputId = "sport_is_swimming",
+                                        label = "Swimming",
+                                        icon = icon("swimmer"))))))))
 }
 
 
