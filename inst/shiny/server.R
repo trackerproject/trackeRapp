@@ -175,6 +175,7 @@ server <- function(input, output, session) {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
         data$limits <- trackeR::compute_limits(data$object, a = 0.1)
+        DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         removeModal()
     })
 
@@ -437,7 +438,7 @@ server <- function(input, output, session) {
         }, ignoreInit = TRUE)
     }, once = TRUE)
 
-    ## Toggle between session summaries page and individual sessions page
+    ## Toggle between summary view and workout view
     observeEvent(input$return_to_main_page, {
         ## shinyjs::enable("metricsSelected")
         shinyjs::addClass(selector = "body", class = "sidebar-collapse")
@@ -447,7 +448,6 @@ server <- function(input, output, session) {
         data$show_summary_plots <- TRUE
         data$show_individual_sessions <- FALSE
         data$show_work_capacity <- FALSE
-        ## Enable the choice of metrics when in Summary view
     })
 
     observeEvent(input$proceed, {
@@ -475,12 +475,20 @@ server <- function(input, output, session) {
         else {
             shinyjs::click("proceed")
         }
-        ## Disable the choice of metrics when in Workouts view
-        ## shinyjs::disable("metricsSelected")
     }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
     observeEvent(input$proceed_modal, {
         shinyjs::click("proceed")
     })
+
+    ## observeEvent(input$return_to_main_page, {
+    ##     ## Enable the choice of metrics when in Summary view
+    ##     shinyjs::enable("metricsSelected")
+    ## })
+
+    ## observeEvent(input$proceed, {
+    ##     ## Disable the choice of metrics when in Workouts view
+    ##     shinyjs::disable("metricsSelected")
+    ## })
 
 }

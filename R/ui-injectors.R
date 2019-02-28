@@ -372,7 +372,8 @@ create_option_box <- function(sport_options, metrics_available) {
                                                     icon = icon("balance-scale"))),
                              column(6,
                                     pickerInput(inputId = "metricsSelected",
-                                                choices = metrics_available, options = list(`actions-box` = TRUE),
+                                                choices = metrics_available,
+                                                options = list(`actions-box` = TRUE),
                                                 multiple = TRUE, selected = trops()$default_summary_plots))),
                          fluidRow(
                              column(3,
