@@ -80,7 +80,7 @@ server <- function(input, output, session) {
                                                                data$object)), decreasing = FALSE)
             ## See helper file
             trackeRapp:::generate_objects(data, output, session, choices)
-            trackeRapp:::update_sport_selection(data, session)
+            ## trackeRapp:::update_sport_selection(data, session)
         }
     })
 
@@ -94,11 +94,12 @@ server <- function(input, output, session) {
     })
 
     ## Sessions selected by sport using radio buttons
-    observeEvent(input$sports, {
-        trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE)
+    observeEvent(c(input$sport_is_running, input$sport_is_cycling, input$sport_is_swimming), {
+        sports <- c("running", "cycling", "swimming")
+        trackeRapp:::generate_selected_sessions_object(data, input, sports = sports, sport_selection = TRUE)
         shinyjs::delay(100, DT::selectRows(proxy = proxy, selected = data$selected_sessions))
         ## update metrics available based on sport selected
-        has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% input$sports)],
+        has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% sports)],
                                  function(session_summaries) {
                                      !all(is.na(session_summaries) | session_summaries == 0)
                                  })
@@ -125,7 +126,7 @@ server <- function(input, output, session) {
 
     ## Reset button clicked
     observeEvent(input$resetSelection, {
-        trackeRapp:::update_sport_selection(data, session)
+        ## trackeRapp:::update_sport_selection(data, session)
         shinyjs::js$resetSelection()
         trackeRapp:::generate_selected_sessions_object(data, input, no_selection = TRUE)
         DT::selectRows(proxy = proxy, selected = NULL)
@@ -245,7 +246,7 @@ server <- function(input, output, session) {
                     incProgress(1/1, detail = "Subsetting")
                     cdat <- plot_dataframe()
                     incProgress(1/1, detail = "Plotting")
-                    sessions_to_plot <- data$summary$session[get_sport(data$object) %in% input$sports]
+                    sessions_to_plot <- data$summary$session#[get_sport(data$object) %in% input$sports]
                     trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                                what = i,
                                                dat =  cdat,
@@ -403,94 +404,84 @@ server <- function(input, output, session) {
                                             selected = 'speed')
         }, ignoreInit = TRUE)
 
-        ## Generate work capacity plot
-        ## Check which work capacity plots to generate
-        work_capacity_ids <- reactive({
-            trackeRapp:::test_work_capacity(data)
-        })
+        ## ## Generate work capacity plot
+        ## ## Check which work capacity plots to generate
+        ## work_capacity_ids <- reactive({
+        ##     trackeRapp:::test_work_capacity(data)
+        ## })
+        ## trackeRapp:::create_work_capacity_plot(id = 'work_capacity')
+        ## n_sessions_cycl <- reactive({
+        ##     sum(trackeR::get_sport(data$summary[data$selected_sessions]) == "cycling")
+        ## })
+        ## output[["cycling_work_capacity_plot"]] <- renderUI({
+        ##     plotly::plotlyOutput("cyclingPlot",
+        ##                          width = paste0(opts$workout_view_rel_width  * n_sessions_cycl(), "vw"),
+        ##                          height = paste0(opts$workout_view_rel_height, "%"))
+        ## })
+        ## ## Render work capacity
+        ## output[["cyclingPlot"]] <- plotly::renderPlotly({
+        ##     withProgress(message = 'Work capacity plots', value = 0, {
+        ##         ## If button to change units is pressed re-render plot with new units
+        ##         change_power[["cycling"]]
+        ##         work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] == "cycling"
+        ##         incProgress(1/1, detail = "Plotting")
+        ##         trackeRapp:::plot_work_capacity(x = data$object,
+        ##                                         session = data$selected_sessions[work_capacity_sessions],
+        ##                                         cp = isolate(as.numeric(input[['critical_power_cycling']])))
+        ##     })
+        ## })
+        ## n_sessions_run <- reactive({
+        ##     sum(trackeR::get_sport(data$summary[data$selected_sessions]) == "running")
+        ## })
+        ## output[["running_work_capacity_plot"]] <- renderUI({
+        ##     plotly::plotlyOutput("runningPlot",
+        ##                          width = paste0(opts$workout_view_rel_width  * n_sessions_run(), "vw"),
+        ##                          height = paste0(opts$workout_view_rel_height, "vw"))
+        ## })
+        ## ## Render work capacity
+        ## output[["runningPlot"]] <- plotly::renderPlotly({
+        ##     withProgress(message = 'Work capacity plots', value = 0, {
+        ##         ## If button to change units is pressed re-render plot with new units
+        ##         change_power[["running"]]
+        ##         work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] == "running"
+        ##         incProgress(1/1, detail = "Plotting")
+        ##         trackeRapp:::plot_work_capacity(x = data$object,
+        ##                                         session = data$selected_sessions[work_capacity_sessions],
+        ##                                         cp = isolate(as.numeric(input[['critical_power_running']])))
+        ##     })
+        ## })
+        ## ## Conditions for displaying the work capacity plot
+        ## output[['work_capacity_running']] <- reactive({
+        ##     !isTRUE('running' %in%  work_capacity_ids())
+        ## })
+        ## output[['work_capacity_cycling']] <- reactive({
+        ##     !isTRUE('cycling' %in%  work_capacity_ids())
+        ## })
+        ## output[['work_capacity']] <- reactive({
+        ##     !isTRUE((length(work_capacity_ids()) != 0) & data$show_work_capacity)
+        ## })
+        ## outputOptions(output, 'work_capacity_cycling', suspendWhenHidden = FALSE)
+        ## outputOptions(output, 'work_capacity_running', suspendWhenHidden = FALSE)
+        ## outputOptions(output, 'work_capacity', suspendWhenHidden = FALSE)
+        ## ## Update power for work capacity plot
+        ## change_power <- reactiveValues(cycling = 0, running = 0)
+        ## observeEvent(input$cycling_update_power, {
+        ##     if (!is.numeric(input$critical_power_cycling) | input$critical_power_cycling <= 0) {
+        ##         stop("Invalid input. Input has to be a positive numeric value.")
+        ##     }
+        ##     else {
+        ##         change_power$cycling <- change_power$cycling + 1
+        ##     }
+        ## })
+        ## observeEvent(input$running_update_power, {
+        ##     if (!is.numeric(input$critical_power_running) | input$critical_power_running <= 0) {
+        ##         stop("Invalid input. Input has to be a positive numeric value.")
+        ##     }
+        ##     else {
+        ##         change_power$running <- change_power$running + 1
+        ##     }
+        ## })
 
-        trackeRapp:::create_work_capacity_plot(id = 'work_capacity')
-
-
-        n_sessions_cycl <- reactive({
-            sum(trackeR::get_sport(data$summary[data$selected_sessions]) == "cycling")
-        })
-        output[["cycling_work_capacity_plot"]] <- renderUI({
-            plotly::plotlyOutput("cyclingPlot",
-                                 width = paste0(opts$workout_view_rel_width  * n_sessions_cycl(), "vw"),
-                                 height = paste0(opts$workout_view_rel_height, "%"))
-        })
-        ## Render work capacity
-        output[["cyclingPlot"]] <- plotly::renderPlotly({
-            withProgress(message = 'Work capacity plots', value = 0, {
-                ## If button to change units is pressed re-render plot with new units
-                change_power[["cycling"]]
-                work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] == "cycling"
-                incProgress(1/1, detail = "Plotting")
-                trackeRapp:::plot_work_capacity(x = data$object,
-                                                session = data$selected_sessions[work_capacity_sessions],
-                                                cp = isolate(as.numeric(input[['critical_power_cycling']])))
-            })
-        })
-
-        n_sessions_run <- reactive({
-            sum(trackeR::get_sport(data$summary[data$selected_sessions]) == "running")
-        })
-        output[["running_work_capacity_plot"]] <- renderUI({
-            plotly::plotlyOutput("runningPlot",
-                                 width = paste0(opts$workout_view_rel_width  * n_sessions_run(), "vw"),
-                                 height = paste0(opts$workout_view_rel_height, "vw"))
-        })
-        ## Render work capacity
-        output[["runningPlot"]] <- plotly::renderPlotly({
-            withProgress(message = 'Work capacity plots', value = 0, {
-                ## If button to change units is pressed re-render plot with new units
-                change_power[["running"]]
-                work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] == "running"
-                incProgress(1/1, detail = "Plotting")
-                trackeRapp:::plot_work_capacity(x = data$object,
-                                                session = data$selected_sessions[work_capacity_sessions],
-                                                cp = isolate(as.numeric(input[['critical_power_running']])))
-            })
-        })
-
-
-        ## Conditions for displaying the work capacity plot
-        output[['work_capacity_running']] <- reactive({
-            !isTRUE('running' %in%  work_capacity_ids())
-        })
-
-        output[['work_capacity_cycling']] <- reactive({
-            !isTRUE('cycling' %in%  work_capacity_ids())
-        })
-
-        output[['work_capacity']] <- reactive({
-            !isTRUE((length(work_capacity_ids()) != 0) & data$show_work_capacity)
-        })
-
-        outputOptions(output, 'work_capacity_cycling', suspendWhenHidden = FALSE)
-        outputOptions(output, 'work_capacity_running', suspendWhenHidden = FALSE)
-        outputOptions(output, 'work_capacity', suspendWhenHidden = FALSE)
-
-        ## Update power for work capacity plot
-        change_power <- reactiveValues(cycling = 0, running = 0)
-        observeEvent(input$cycling_update_power, {
-            if (!is.numeric(input$critical_power_cycling) | input$critical_power_cycling <= 0) {
-                stop("Invalid input. Input has to be a positive numeric value.")
-            }
-            else {
-                change_power$cycling <- change_power$cycling + 1
-            }
-        })
-
-        observeEvent(input$running_update_power, {
-            if (!is.numeric(input$critical_power_running) | input$critical_power_running <= 0) {
-                stop("Invalid input. Input has to be a positive numeric value.")
-            }
-            else {
-                change_power$running <- change_power$running + 1
-            }
-        })
     }, once = TRUE)
 
     ## Toggle between session summaries page and individual sessions page

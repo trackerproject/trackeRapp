@@ -259,17 +259,17 @@ test_work_capacity <- function(data) {
     return(c(cycling, running))
 }
 
-## Update selection of sports
-## @param data object of class \code{reactivevalues}.
-## @param session \code{shiny} object.
-update_sport_selection <- function(data, session) {
-    updateCheckboxGroupButtons(session = session,
-                               inputId = "sports",
-                               choices = as.vector(data$identified_sports),
-                               selected = as.vector(data$identified_sports),
-                               checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                                no = icon("remove", lib = "glyphicon")))
-}
+## ## Update selection of sports
+## ## @param data object of class \code{reactivevalues}.
+## ## @param session \code{shiny} object.
+## update_sport_selection <- function(data, session) {
+##     updateCheckboxGroupButtons(session = session,
+##                                inputId = "sports",
+##                                choices = as.vector(data$identified_sports),
+##                                selected = as.vector(data$identified_sports),
+##                                checkIcon = list(yes = icon("ok", lib = "glyphicon"),
+##                                                 no = icon("remove", lib = "glyphicon")))
+## }
 
 ## Convert name
 ## @param what A character. The metric to convert.
@@ -339,13 +339,14 @@ render_summary_box <- function(short_name, long_name, data) {
 ## @param table_selection A logical. Whether session selection made from the summary table.
 ## @param no_selection A logical. Whether no sessions are selected.
 generate_selected_sessions_object <- function(data, input,
+                                              sports = NULL,
                                               plot_selection = FALSE,
                                               sport_selection = FALSE,
                                               table_selection = FALSE,
                                               no_selection = FALSE) {
     data$hover <- event_data("plotly_selected")
     if (sport_selection) {
-        data$selected_sessions <- data$summary$session[get_sport(data$object) %in% input$sports]
+        data$selected_sessions <- data$summary$session[get_sport(data$object) %in% sports]
     }
     if (plot_selection) {
         sessions <- data$hover$key
