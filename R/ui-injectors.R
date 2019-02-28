@@ -377,7 +377,7 @@ create_option_box <- function(sport_options, metrics_available) {
                                                 multiple = TRUE, selected = trops()$default_summary_plots))),
                          fluidRow(
                              column(3,
-                                    actionButton(inputId = "resetSelection",
+                                    actionButton(inputId = "no_sports",
                                                  label = "Clear selection",
                                                  icon = icon("times-circle"))),
                              column(3,

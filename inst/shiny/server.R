@@ -96,7 +96,7 @@ server <- function(input, output, session) {
         data$sports <- c("running", "cycling", "swimming")
     })
 
-    observeEvent(input$resetSelection, {
+    observeEvent(input$no_sports, {
         data$sports <- NULL
     })
 
@@ -144,7 +144,7 @@ server <- function(input, output, session) {
     ## Sessions selected through summary table
     observeEvent(input$summary_rows_selected,  {
         if (!isTRUE(setequal(input$summary_rows_selected, data$selected_sessions))) {
-            shinyjs::js$resetSelection()
+            shinyjs::js$no_sports()
             trackeRapp:::generate_selected_sessions_object(data, input,
                                                            table_selection = TRUE)
         }

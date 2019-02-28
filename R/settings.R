@@ -14,7 +14,7 @@ trops <- function() {
      padding: 0px;
     }
 
-    #uploadButton, #resetButton, #return_to_main_page, #plotSelectedWorkouts, #showModalUnits, #resetSelection, #sport_is_running, #sport_is_cycling, #sport_is_swimming, #all_sports {
+    #uploadButton, #resetButton, #return_to_main_page, #plotSelectedWorkouts, #showModalUnits, #sport_is_running, #sport_is_cycling, #sport_is_swimming, #all_sports, #no_sports {
      width: 100%;
      margin: 0px 0px 0px 0px;
     }
@@ -47,7 +47,7 @@ trops <- function() {
      $('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
      };
      shinyjs.reset_page = function() { location.reload(); };
-     shinyjs.resetSelection = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); };
+     shinyjs.no_sports = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); };
      shinyjs.initialize_map_collapse = function() {
        Shiny.onInputChange('is_collapse_box1', 'none')
      };
