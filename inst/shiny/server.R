@@ -278,7 +278,7 @@ server <- function(input, output, session) {
                     incProgress(1/1, detail = "Subsetting")
                     cdat <- plot_dataframe()
                     incProgress(1/1, detail = "Plotting")
-                    sessions_to_plot <- data$summary$session[get_sport(data$object) %in% data$sports]
+                    sessions_to_plot <- data$summary$session#[get_sport(data$object) %in% data$sports]
                     trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                                what = i,
                                                dat =  cdat,
