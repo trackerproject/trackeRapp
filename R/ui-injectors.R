@@ -373,7 +373,7 @@ create_option_box <- function(sport_options, metrics_available) {
                              column(6,
                                     pickerInput(inputId = "metricsSelected",
                                                 choices = metrics_available, options = list(`actions-box` = TRUE),
-                                                multiple = TRUE, selected = c("distance", "duration", 'avgPace')))),
+                                                multiple = TRUE, selected = trops()$default_summary_plots))),
                          fluidRow(
                              column(3,
                                     actionButton(inputId = "resetSelection",

@@ -45,9 +45,6 @@ server <- function(input, output, session) {
     ## Load named vectors
     choices <- trackeRapp:::summary_view_features()
     metrics <- trackeRapp:::workout_view_features()
-    ##:ess-bp-start::browser@nil:##
-browser(expr=is.null(.ESSBP.[["@19@"]]));##:ess-bp-end:##
-
 
     ##  Upload data
     observeEvent(input$uploadButton, {
@@ -118,8 +115,8 @@ browser(expr=is.null(.ESSBP.[["@19@"]]));##:ess-bp-end:##
     ## Sessions selected by sport using selection panel.
     observeEvent(data$sports, {
         ## c(input$sport_is_cycling, input$sport_is_running, input$sport_is_swimming, input$all_sports), {
-        shinyjs::delay(100, trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
-        shinyjs::delay(100,  DT::selectRows(proxy = proxy, selected = data$selected_sessions))
+        shinyjs::delay(1000, trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
+        shinyjs::delay(1000,  DT::selectRows(proxy = proxy, selected = data$selected_sessions))
         ## update metrics available based on sport selected
         has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% data$sports)],
                                  function(session_summaries) {
@@ -128,6 +125,12 @@ browser(expr=is.null(.ESSBP.[["@19@"]]));##:ess-bp-end:##
         selected_metrics <- c(input$metricsSelected[sapply(input$metricsSelected, function(x)
             has_data_sport[[x]]
             )])
+
+        ## The default value of selected metrics
+        if (is.null(selected_metrics)) {
+            selected_metrics <- opts$default_summary_plots
+        }
+
         metrics_available_sport <- reactive({c(choices[sapply(choices, function(x)
             has_data_sport[[x]]
             )])

@@ -51,8 +51,7 @@ read_directory_shiny <- function(directory,
                                           sport = sport,
                                           lgap = lgap,
                                           lskip = lskip,
-                                          m = m,
-                                          silent = silent))
+                                          m = m, silent = silent), silent = silent)
 
                 out
             }

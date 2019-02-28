@@ -79,7 +79,8 @@ trops <- function() {
         mapbox_default_style = "light",
         workout_view_rel_width = 60,
         workout_view_rel_height = 40,
-        dropdown_button_size = "sm" ## see ?shinyWidget::dropdownButton
+        dropdown_button_size = "sm", ## see ?shinyWidget::dropdownButton
+        default_summary_plots = c("distance", "duration", "avgSpeed", "avgPace", "wrRatio")
     )
 }
 
