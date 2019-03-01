@@ -78,6 +78,17 @@ server <- function(input, output, session) {
             ## Remove duplicate sessions and create trackeRdata object from both raw and processed data
             data$object <- sort(unique(trackeR:::c.trackeRdata(processed_data, raw_data,
                                                                data$object)), decreasing = FALSE)
+            ## Threshold?
+            if (opts$threshold) {
+                th <- trackeR::generate_thresholds()
+                units <- get_units(data$object)
+                th <- trackeR:::change_units.trackeRthresholds(th, variable = units$variable, unit = units$unit, sport = units$sport)
+                data$object <- threshold(data$object,
+                                         variable = th$variable,
+                                         lower = th$lower,
+                                         upper = th$upper,
+                                         sport = th$sport)
+            }
             ## See helper file
             trackeRapp:::generate_objects(data, output, session, choices)
         }
