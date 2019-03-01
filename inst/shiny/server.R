@@ -78,9 +78,19 @@ server <- function(input, output, session) {
             ## Remove duplicate sessions and create trackeRdata object from both raw and processed data
             data$object <- sort(unique(trackeR:::c.trackeRdata(processed_data, raw_data,
                                                                data$object)), decreasing = FALSE)
+            ## Threshold?
+            if (opts$threshold) {
+                th <- trackeR::generate_thresholds()
+                units <- get_units(data$object)
+                th <- trackeR:::change_units.trackeRthresholds(th, variable = units$variable, unit = units$unit, sport = units$sport)
+                data$object <- threshold(data$object,
+                                         variable = th$variable,
+                                         lower = th$lower,
+                                         upper = th$upper,
+                                         sport = th$sport)
+            }
             ## See helper file
             trackeRapp:::generate_objects(data, output, session, choices)
-            trackeRapp:::update_sport_selection(data, session)
         }
     })
 
@@ -93,22 +103,50 @@ server <- function(input, output, session) {
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
     })
 
-    ## Sessions selected by sport using radio buttons
-    observeEvent(input$sports, {
-        trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE)
-        shinyjs::delay(100, DT::selectRows(proxy = proxy, selected = data$selected_sessions))
+    observeEvent(input$all_sports, {
+        data$sports <- c("running", "cycling", "swimming")
+    })
+
+    observeEvent(input$no_sports, {
+        data$sports <- NULL
+    })
+
+    observeEvent(input$sport_is_cycling, {
+        data$sports <- "cycling"
+    })
+
+    observeEvent(input$sport_is_running, {
+        data$sports <- "running"
+    })
+
+    observeEvent(input$sport_is_swimming, {
+        data$sports <- "swimming"
+    })
+
+    ## Sessions selected by sport using selection panel.
+    observeEvent(data$sports, {
+        ## c(input$sport_is_cycling, input$sport_is_running, input$sport_is_swimming, input$all_sports), {
+        shinyjs::delay(1000, trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
+        shinyjs::delay(1000,  DT::selectRows(proxy = proxy, selected = data$selected_sessions))
         ## update metrics available based on sport selected
-        has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% input$sports)],
+        has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% data$sports)],
                                  function(session_summaries) {
                                      !all(is.na(session_summaries) | session_summaries == 0)
                                  })
         selected_metrics <- c(input$metricsSelected[sapply(input$metricsSelected, function(x)
             has_data_sport[[x]]
             )])
+
+        ## The default value of selected metrics
+        if (is.null(selected_metrics)) {
+            selected_metrics <- opts$default_summary_plots
+        }
+
         metrics_available_sport <- reactive({c(choices[sapply(choices, function(x)
             has_data_sport[[x]]
             )])
         })
+
         shinyjs::delay(100, shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
                                                             selected = selected_metrics,
                                                             choices = metrics_available_sport()))
@@ -117,19 +155,18 @@ server <- function(input, output, session) {
     ## Sessions selected through summary table
     observeEvent(input$summary_rows_selected,  {
         if (!isTRUE(setequal(input$summary_rows_selected, data$selected_sessions))) {
-            shinyjs::js$resetSelection()
+            shinyjs::js$no_sports()
             trackeRapp:::generate_selected_sessions_object(data, input,
                                                            table_selection = TRUE)
         }
     }, ignoreNULL = FALSE)
 
     ## Reset button clicked
-    observeEvent(input$resetSelection, {
-        trackeRapp:::update_sport_selection(data, session)
-        shinyjs::js$resetSelection()
-        trackeRapp:::generate_selected_sessions_object(data, input, no_selection = TRUE)
-        DT::selectRows(proxy = proxy, selected = NULL)
-    })
+    ## observeEvent(input$resetSelection, {
+    ##     shinyjs::js$resetSelection()
+    ##     trackeRapp:::generate_selected_sessions_object(data, input, no_selection = TRUE)
+    ##     DT::selectRows(proxy = proxy, selected = NULL)
+    ## })
 
     ##  Uploading sample dataset
     observeEvent(input$uploadSampleDataset, {
@@ -149,6 +186,7 @@ server <- function(input, output, session) {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
         data$limits <- trackeR::compute_limits(data$object, a = 0.1)
+        DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         removeModal()
     })
 
@@ -168,6 +206,13 @@ server <- function(input, output, session) {
         })
         trackeRapp:::create_option_box(sport_options = data$identified_sports,
                                        metrics_available = metrics_available())
+
+        ## Check which sports are available in the data and disable the selectors accordingly
+        sapply(c("running", "cycling", "swimming"), function(sp) {
+            if (!(sp %in% data$identified_sports)) {
+                shinyjs::disable(paste0("sport_is_", sp))
+            }
+        })
 
         ## Summary table
         trackeRapp:::create_summary_timeline_boxes()
@@ -245,7 +290,7 @@ server <- function(input, output, session) {
                     incProgress(1/1, detail = "Subsetting")
                     cdat <- plot_dataframe()
                     incProgress(1/1, detail = "Plotting")
-                    sessions_to_plot <- data$summary$session[get_sport(data$object) %in% input$sports]
+                    sessions_to_plot <- data$summary$session#[get_sport(data$object) %in% data$sports]
                     trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                                what = i,
                                                dat =  cdat,
@@ -402,99 +447,11 @@ server <- function(input, output, session) {
                                             choices =  metrics[have_data_metrics_selected()],
                                             selected = 'speed')
         }, ignoreInit = TRUE)
-
-        ## Generate work capacity plot
-        ## Check which work capacity plots to generate
-        work_capacity_ids <- reactive({
-            trackeRapp:::test_work_capacity(data)
-        })
-
-        trackeRapp:::create_work_capacity_plot(id = 'work_capacity')
-
-
-        n_sessions_cycl <- reactive({
-            sum(trackeR::get_sport(data$summary[data$selected_sessions]) == "cycling")
-        })
-        output[["cycling_work_capacity_plot"]] <- renderUI({
-            plotly::plotlyOutput("cyclingPlot",
-                                 width = paste0(opts$workout_view_rel_width  * n_sessions_cycl(), "vw"),
-                                 height = paste0(opts$workout_view_rel_height, "%"))
-        })
-        ## Render work capacity
-        output[["cyclingPlot"]] <- plotly::renderPlotly({
-            withProgress(message = 'Work capacity plots', value = 0, {
-                ## If button to change units is pressed re-render plot with new units
-                change_power[["cycling"]]
-                work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] == "cycling"
-                incProgress(1/1, detail = "Plotting")
-                trackeRapp:::plot_work_capacity(x = data$object,
-                                                session = data$selected_sessions[work_capacity_sessions],
-                                                cp = isolate(as.numeric(input[['critical_power_cycling']])))
-            })
-        })
-
-        n_sessions_run <- reactive({
-            sum(trackeR::get_sport(data$summary[data$selected_sessions]) == "running")
-        })
-        output[["running_work_capacity_plot"]] <- renderUI({
-            plotly::plotlyOutput("runningPlot",
-                                 width = paste0(opts$workout_view_rel_width  * n_sessions_run(), "vw"),
-                                 height = paste0(opts$workout_view_rel_height, "vw"))
-        })
-        ## Render work capacity
-        output[["runningPlot"]] <- plotly::renderPlotly({
-            withProgress(message = 'Work capacity plots', value = 0, {
-                ## If button to change units is pressed re-render plot with new units
-                change_power[["running"]]
-                work_capacity_sessions <- trackeR::get_sport(data$summary)[data$selected_sessions] == "running"
-                incProgress(1/1, detail = "Plotting")
-                trackeRapp:::plot_work_capacity(x = data$object,
-                                                session = data$selected_sessions[work_capacity_sessions],
-                                                cp = isolate(as.numeric(input[['critical_power_running']])))
-            })
-        })
-
-
-        ## Conditions for displaying the work capacity plot
-        output[['work_capacity_running']] <- reactive({
-            !isTRUE('running' %in%  work_capacity_ids())
-        })
-
-        output[['work_capacity_cycling']] <- reactive({
-            !isTRUE('cycling' %in%  work_capacity_ids())
-        })
-
-        output[['work_capacity']] <- reactive({
-            !isTRUE((length(work_capacity_ids()) != 0) & data$show_work_capacity)
-        })
-
-        outputOptions(output, 'work_capacity_cycling', suspendWhenHidden = FALSE)
-        outputOptions(output, 'work_capacity_running', suspendWhenHidden = FALSE)
-        outputOptions(output, 'work_capacity', suspendWhenHidden = FALSE)
-
-        ## Update power for work capacity plot
-        change_power <- reactiveValues(cycling = 0, running = 0)
-        observeEvent(input$cycling_update_power, {
-            if (!is.numeric(input$critical_power_cycling) | input$critical_power_cycling <= 0) {
-                stop("Invalid input. Input has to be a positive numeric value.")
-            }
-            else {
-                change_power$cycling <- change_power$cycling + 1
-            }
-        })
-
-        observeEvent(input$running_update_power, {
-            if (!is.numeric(input$critical_power_running) | input$critical_power_running <= 0) {
-                stop("Invalid input. Input has to be a positive numeric value.")
-            }
-            else {
-                change_power$running <- change_power$running + 1
-            }
-        })
     }, once = TRUE)
 
-    ## Toggle between session summaries page and individual sessions page
+    ## Toggle between summary view and workout view
     observeEvent(input$return_to_main_page, {
+        ## shinyjs::enable("metricsSelected")
         shinyjs::addClass(selector = "body", class = "sidebar-collapse")
         output$cond <- reactive({
             TRUE
@@ -534,5 +491,15 @@ server <- function(input, output, session) {
     observeEvent(input$proceed_modal, {
         shinyjs::click("proceed")
     })
+
+    ## observeEvent(input$return_to_main_page, {
+    ##     ## Enable the choice of metrics when in Summary view
+    ##     shinyjs::enable("metricsSelected")
+    ## })
+
+    ## observeEvent(input$proceed, {
+    ##     ## Disable the choice of metrics when in Workouts view
+    ##     shinyjs::disable("metricsSelected")
+    ## })
 
 }

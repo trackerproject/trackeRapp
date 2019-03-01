@@ -59,7 +59,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "avgCadenceCycling" = prettyUnit,
                           "avgPower" = prettyUnit,
                           "avgHeartRate" = prettyUnit,
-                          "wrRatio" = "work-to-rest ratio")
+                          "wrRatio" = "")
         }
         else {
             ret <- switch(feature,
@@ -223,6 +223,7 @@ generate_objects <- function(data, output, session, choices) {
                         "Cycling" = "cycling",
                         "Swimming" = "swimming")
     identified_sports <- sports_options %in% unique(get_sport(data$object))
+    data$sports <- sports_options[identified_sports]
     data$identified_sports <- sports_options[identified_sports]
     data$limits <- compute_limits(data$object, a = 0.1)
     data$is_location_data <- sapply(data$object, function(x) {
@@ -259,17 +260,17 @@ test_work_capacity <- function(data) {
     return(c(cycling, running))
 }
 
-## Update selection of sports
-## @param data object of class \code{reactivevalues}.
-## @param session \code{shiny} object.
-update_sport_selection <- function(data, session) {
-    updateCheckboxGroupButtons(session = session,
-                               inputId = "sports",
-                               choices = as.vector(data$identified_sports),
-                               selected = as.vector(data$identified_sports),
-                               checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                                no = icon("remove", lib = "glyphicon")))
-}
+## ## Update selection of sports
+## ## @param data object of class \code{reactivevalues}.
+## ## @param session \code{shiny} object.
+## update_sport_selection <- function(data, session) {
+##     updateCheckboxGroupButtons(session = session,
+##                                inputId = "sports",
+##                                choices = as.vector(data$identified_sports),
+##                                selected = as.vector(data$identified_sports),
+##                                checkIcon = list(yes = icon("ok", lib = "glyphicon"),
+##                                                 no = icon("remove", lib = "glyphicon")))
+## }
 
 ## Convert name
 ## @param what A character. The metric to convert.
@@ -345,7 +346,7 @@ generate_selected_sessions_object <- function(data, input,
                                               no_selection = FALSE) {
     data$hover <- event_data("plotly_selected")
     if (sport_selection) {
-        data$selected_sessions <- data$summary$session[get_sport(data$object) %in% input$sports]
+        data$selected_sessions <- data$summary$session[get_sport(data$object) %in% data$sports]
     }
     if (plot_selection) {
         sessions <- data$hover$key
