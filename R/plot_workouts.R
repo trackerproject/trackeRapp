@@ -103,7 +103,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
             80
         }
         else if (feature %in% features) {
-            min(dat$value, na.rm = TRUE) * 0.6
+            min(dat$value, na.rm = TRUE) * 0.8
         }
         else {
             0
@@ -111,7 +111,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
     }
     y <- list(title = feature,
               range = c(lower_range_y(what, dat),
-                        max(dat$value, na.rm = TRUE) * 1.5))
+                        max(dat$value, na.rm = TRUE) * 1.2))
     x <- list(title = "",  range = ra) ##list(title = "Date",  range = ra)
 
     layout(p,
