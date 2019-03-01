@@ -178,7 +178,7 @@ server <- function(input, output, session) {
     observeEvent(input$updateUnits, {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
-        data$limits <- trackeR::compute_limits(data$object, a = 0.1)
+        data$limits0 <- data$limits <- trackeR::compute_limits(data$object, a = 0.1)
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         removeModal()
     })
@@ -356,6 +356,12 @@ server <- function(input, output, session) {
             shinyWidgets::updatePickerInput(session = session, inputId = "zonesMetricsPlot",
                                             choices =  metrics[have_data_metrics_selected()],
                                             selected = 'speed')
+            if (isTRUE(length(data$selected_sessions) == 0)) {
+                data$limits <- data$limits0
+            }
+            else {
+                data$limits <- trackeR::compute_limits(data$object[data$selected_sessions], a = 0.1)
+            }
         }, ignoreInit = TRUE)
 
         ## Generate individual sessions plots (except work capacity)
