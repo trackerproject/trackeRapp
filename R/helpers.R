@@ -59,7 +59,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "avgCadenceCycling" = prettyUnit,
                           "avgPower" = prettyUnit,
                           "avgHeartRate" = prettyUnit,
-                          "wrRatio" = "work-to-rest ratio")
+                          "wrRatio" = "")
         }
         else {
             ret <- switch(feature,

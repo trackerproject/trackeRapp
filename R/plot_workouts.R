@@ -21,14 +21,14 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
     else {
         group <- c('moving')
     }
-    if (what != "wrRatio") {
+    ## if (what != "wrRatio") {
         feature <- lab_sum(feature = what, data = sumX, whole_text = FALSE)
         units_text <- lab_sum(feature = what, data = sumX, whole_text = FALSE)
-    }
-    else {
-        feature <- "Work-to-rest ratio"
-        units_text <- NULL
-    }
+    ## }
+    ## else {
+    ##     feature <- "Work-to-rest ratio"
+    ##     units_text <- ""
+    ## }
     ##  Copied from core trackeR
     ## the following line is just intended to prevent R CMD check to produce the NOTE 'no
     ## visible binding for global variable *' because those variables are used in subset()
