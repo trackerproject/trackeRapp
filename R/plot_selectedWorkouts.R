@@ -216,8 +216,8 @@ plot_selected_workouts <- function(x,
                                               yref = "paper",
                                               x = start + step_size / 10,
                                               y = 1,
-                                              sizex = 0.1,
-                                              sizey = 0.1,
+                                              sizex = 0.07,
+                                              sizey = 0.07,
                                               opacity = 0.3)
         start <- start + step_size
     }

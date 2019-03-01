@@ -161,13 +161,6 @@ server <- function(input, output, session) {
         }
     }, ignoreNULL = FALSE)
 
-    ## Reset button clicked
-    ## observeEvent(input$resetSelection, {
-    ##     shinyjs::js$resetSelection()
-    ##     trackeRapp:::generate_selected_sessions_object(data, input, no_selection = TRUE)
-    ##     DT::selectRows(proxy = proxy, selected = NULL)
-    ## })
-
     ##  Uploading sample dataset
     observeEvent(input$uploadSampleDataset, {
         removeModal()
@@ -334,8 +327,9 @@ server <- function(input, output, session) {
         output$zonesPlotUi <- renderUI({
             req(input$zonesMetricsPlot)
             plotly::plotlyOutput("zones_plot",
-                                 width = "100%",
-                                 height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vw"))
+                                 width = "auto",
+                                 height = "auto")
+                                 ## height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vw"))
         })
 
         ## Render actual plot
@@ -382,7 +376,8 @@ server <- function(input, output, session) {
             output[[paste0(i, "_plot")]] <- renderUI({
                 plotly::plotlyOutput(paste0(i, "Plot"),
                                      width = plot_width(),
-                                     height = paste0(opts$workout_view_rel_height, "vw"))
+                                     height = "auto")
+                                     ## height = paste0(opts$workout_view_rel_height, "vw"))
             })
 
             ## Render individual sessions plots (except work capacity)
@@ -417,8 +412,9 @@ server <- function(input, output, session) {
         output$concentration_profiles <- renderUI({
             req(input$profileMetricsPlot)
             plotly::plotlyOutput("conc_profiles_plots",
-                                 width = "100%",
-                                 height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vw")) ## , "vw"))
+                                 width = "auto",
+                                 height = "auto")
+            ## paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vw"))
         })
 
         concentration_profiles <- reactive({
@@ -430,7 +426,7 @@ server <- function(input, output, session) {
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
             withProgress(message = 'Concentration profiles', value = 0, {
-                incProgress(1/2, detail = "Computng profiles")
+                incProgress(1/2, detail = "Computing profiles")
                 cps <- concentration_profiles()
                 incProgress(1/1, detail = "Plotting")
                 trackeRapp:::plot_concentration_profiles(

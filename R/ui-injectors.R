@@ -15,7 +15,8 @@ create_map <- function() {
                              title = tagList(icon("map"), "Map"),
                              plotlyOutput("map",
                                           width = "auto",
-                                          height = "50vh"))))))
+                                          height = "auto"))))))
+                                          ## height = "50vh"))))))
 }
 
 ## Insert summary boxes
@@ -57,7 +58,7 @@ create_workout_plots <- function(feature) {
                              title = tagList(icon(create_icon(feature)), fname),
                              plotlyOutput(paste0(feature, "_plot"),
                                           width = "auto",
-                                          height = "30vh"))))))
+                                          height = "auto"))))))
 }
 
 ## Create selected_workouts plot
@@ -115,58 +116,6 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                         div(id = "workout_view_plot",
                             uiOutput(paste0(id, "_plot"))))))))
 }
-
-## Create work capacity plot
-## @param id A character. The ID of the plot.
-## @param collapsed A logical. Whether or not the UI box should be collapsed.
-## create_work_capacity_plot <- function(id, collapsed = TRUE) {
-##     insertUI(
-##         selector = ".content",
-##         where = "beforeEnd",
-##         ui = conditionalPanel(
-##             condition = "output.work_capacity == false",
-##             div(class = "plots", id = id,
-##                 fluidRow(
-##                     box(
-##                         width = 12,
-##                         collapsible = TRUE,
-##                         collapsed = collapsed,
-##                         title = tagList(icon("gear"),
-##                                         switch(id, "pace" = paste0("Pace"),
-##                                                "heart.rate" = paste0("Heart Rate"),
-##                                                "altitude" = paste0("Altitude"),
-##                                                "work_capacity" = paste("W' expended (scaled)"),
-##                                                "speed" = paste0("Speed"))),
-##                         conditionalPanel(
-##                             condition = "output.work_capacity_cycling == false",
-##                             dropdownButton(
-##                                 circle = TRUE,
-##                                 up = TRUE,
-##                                 icon = icon("wrench"), width = "300px",
-##                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
-##                                 numericInput(min = 2, max = 10, step = 0.1,
-##                                              inputId = "critical_power_cycling",
-##                                              label = "Critical power [W]", value = 4),
-##                                 actionButton("cycling_update_power",
-##                                              "Update W' expended")),
-##                             div(id = "workout_view_plot",
-##                                 uiOutput(paste0("cycling_work_capacity", "_plot")))),
-##                         conditionalPanel(
-##                             condition = "output.work_capacity_running == false",
-##                             dropdownButton(
-##                                 circle = TRUE,
-##                                 up = TRUE,
-##                                 icon = icon("wrench"),
-##                                 width = "300px",
-##                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
-##                                 numericInput(min = 0.01, max = 6.5, step = 0.1,
-##                                              inputId = "critical_power_running",
-##                                              label = "Critical speed [m/s]", value = 4),
-##                                 actionButton("running_update_power",
-##                                              "Update W' expended")),
-##                             div(id = "workout_view_plot",
-##                                 uiOutput(paste0("running_work_capacity", "_plot")))))))))
-## }
 
 ## create_work_capacity_plot <- function(id, collapsed = TRUE) {
 ##     insertUI(
@@ -289,58 +238,6 @@ create_zones_box <- function(inputId, plotId, choices) {
                         uiOutput(plotId))))))
 }
 
-## ## Create a return button from selected workouts plot
-## ## @param sport_options A vector of sports identified from the uploaded sessions.
-## ## @param metrics_available A vector of metrics that are found in the dataset.
-## create_option_box <- function(sport_options, metrics_available) {
-##     insertUI(
-##         immediate = TRUE,
-##         selector = ".content",
-##         where = "afterBegin",
-##         ui = div(class = "option_boxes",
-##                  fluidRow(
-##                      box(
-##                          width = 12,
-##                          collapsible = TRUE,
-##                          title = "Toolbar",
-##                          column(4, conditionalPanel(
-##                                        condition = "output.cond == false",
-##                                        actionButton(
-##                                            inputId = "return_to_main_page",
-##                                            label = "Summary view",
-##                                            icon = icon("search-minus"))),
-##                                 conditionalPanel(
-##                                     condition = "output.cond == true",
-##                                     actionButton(inputId = "plotSelectedWorkouts",
-##                                                  label = "Workout view",
-##                                                  icon = icon("search-plus")))),
-##                          column(4, actionButton(inputId = "showModalUnits",
-##                                                 label = "Change units",
-##                                                 icon = icon("balance-scale"))),
-##                          column(4, actionButton(inputId = "resetSelection",
-##                                                 label = "Clear selection",
-##                                                 icon = icon("times-circle"))))),
-##                  fluidRow(
-##                      box(
-##                          width = 6,
-##                          collapsible = TRUE,
-##                          title = tagList("Features"),
-##                          pickerInput(inputId = "metricsSelected",
-##                                      choices = metrics_available, options = list(`actions-box` = TRUE),
-##                                      multiple = TRUE, selected = c("distance", "duration", 'avgPace'))),
-##                      box(
-##                          width = 6,
-##                          collapsible = TRUE,
-##                          title = tagList("Sports"),
-##                          checkboxGroupButtons(inputId = "sports",
-##                                               choices = sport_options,
-##                                               selected = sport_options,
-##                                               justified = TRUE,
-##                                               checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-##                                                                no = icon("remove", lib = "glyphicon")))))))
-## }
-
-
 ## Create a return button from selected workouts plot
 ## @param sport_options A vector of sports identified from the uploaded sessions.
 ## @param metrics_available A vector of metrics that are found in the dataset.
@@ -355,26 +252,6 @@ create_option_box <- function(sport_options, metrics_available) {
                          width = 12,
                          collapsible = TRUE,
                          title = "Toolbar",
-                         fluidRow(
-                             column(3, conditionalPanel(
-                                           condition = "output.cond == false",
-                                           actionButton(
-                                               inputId = "return_to_main_page",
-                                               label = "Summary view",
-                                               icon = icon("search-minus"))),
-                                    conditionalPanel(
-                                        condition = "output.cond == true",
-                                        actionButton(inputId = "plotSelectedWorkouts",
-                                                     label = "Workout view",
-                                                     icon = icon("search-plus")))),
-                             column(3, actionButton(inputId = "showModalUnits",
-                                                    label = "Change units",
-                                                    icon = icon("balance-scale"))),
-                             column(6,
-                                    pickerInput(inputId = "metricsSelected",
-                                                choices = metrics_available,
-                                                options = list(`actions-box` = TRUE),
-                                                multiple = TRUE, selected = trops()$default_summary_plots))),
                          fluidRow(
                              column(3,
                                     actionButton(inputId = "no_sports",
@@ -398,7 +275,28 @@ create_option_box <- function(sport_options, metrics_available) {
                                     actionButton(
                                         inputId = "sport_is_swimming",
                                         label = "Swimming",
-                                        icon = icon("swimmer"))))))))
+                                        icon = icon("swimmer")))),
+                         br(),
+                         fluidRow(
+                             column(3, conditionalPanel(
+                                           condition = "output.cond == false",
+                                           actionButton(
+                                               inputId = "return_to_main_page",
+                                               label = "Summary view",
+                                               icon = icon("search-minus"))),
+                                    conditionalPanel(
+                                        condition = "output.cond == true",
+                                        actionButton(inputId = "plotSelectedWorkouts",
+                                                     label = "Workout view",
+                                                     icon = icon("search-plus")))),
+                             column(3, actionButton(inputId = "showModalUnits",
+                                                    label = "Change units",
+                                                    icon = icon("balance-scale"))),
+                             column(6,
+                                    pickerInput(inputId = "metricsSelected",
+                                                choices = metrics_available,
+                                                options = list(`actions-box` = TRUE),
+                                                multiple = TRUE, selected = trops()$default_summary_plots)))))))
 }
 
 
@@ -415,7 +313,7 @@ create_summary_timeline_boxes <- function() {
                          width = 6,
                          collapsible = TRUE,
                          title = tagList(icon("reorder"), "Workout summary"),
-                         DTOutput("summary", height = "auto")),
+                         DTOutput("summary", height = "365px")),
                      box(
                          id = "workout_timeline_box",
                          width = 6,

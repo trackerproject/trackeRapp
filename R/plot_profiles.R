@@ -6,8 +6,7 @@
 ## #' @param profiles_calculated Pre-calculated concentration profiles for all sessions.
 plot_concentration_profiles <- function(x, session, profiles_calculated,
                                         what = c("speed")) {
-
-    if (is.null(session)) {
+    if (isTRUE(length(session) == 0)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
     }
 
