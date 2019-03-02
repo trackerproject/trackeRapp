@@ -94,7 +94,7 @@ server <- function(input, output, session) {
             trackeRapp:::generate_objects(data, output, session, choices)
         }
     })
-    
+
     has_data_sport <- reactive({lapply(data$summary[which(trackeR::get_sport(data$summary) %in% if(!is.null(data$sports)) data$sports else c("running", "cycling", "swimming"))],
                                        function(session_summaries) {
                                          !all(is.na(session_summaries) | session_summaries == 0)
@@ -338,8 +338,8 @@ server <- function(input, output, session) {
             req(input$zonesMetricsPlot)
             plotly::plotlyOutput("zones_plot",
                                  width = "auto",
-                                 height = "auto")
-                                 ## height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vw"))
+                                 ## height = "auto")
+                                 height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vh"))
         })
 
         ## Render actual plot
@@ -429,8 +429,8 @@ server <- function(input, output, session) {
             req(input$profileMetricsPlot)
             plotly::plotlyOutput("conc_profiles_plots",
                                  width = "auto",
-                                 height = "auto")
-            ## paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vw"))
+                                 ## height = "auto")
+            paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
 
         concentration_profiles <- reactive({
