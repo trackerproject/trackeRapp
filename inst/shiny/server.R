@@ -38,7 +38,8 @@ server <- function(input, output, session) {
     data <- reactiveValues(summary = NULL,
                            object = NULL,
                            selected_sessions = NULL,
-                           has_data = NULL)
+                           has_data = NULL,
+                           dummy = 0)
     ## Store the previous value to let user upload new data constantly
     previous_file_paths <- reactiveValues(processed = 'NULL')
 
@@ -93,7 +94,24 @@ server <- function(input, output, session) {
             trackeRapp:::generate_objects(data, output, session, choices)
         }
     })
-
+    
+    has_data_sport <- reactive({lapply(data$summary[which(trackeR::get_sport(data$summary) %in% if(!is.null(data$sports)) data$sports else c("running", "cycling", "swimming"))],
+                                       function(session_summaries) {
+                                         !all(is.na(session_summaries) | session_summaries == 0)
+                                       })
+    })
+    metrics_available_sport <- reactive({c(choices[sapply(choices, function(x)
+      has_data_sport()[[x]]
+    )])
+    })
+    selected_metrics <- reactive({
+      s <- c(input$metricsSelected[sapply(input$metricsSelected, function(x) has_data_sport()[[x]])])
+      if (is.null(s)) {
+        opts$default_summary_plots
+      } else {
+        s
+      }
+    })
     ## Selected sessions
     proxy <- DT::dataTableProxy('summary')
     ## Sessions selected from plots using box/lasso selection
@@ -101,6 +119,9 @@ server <- function(input, output, session) {
         trackeRapp:::generate_selected_sessions_object(data, input,
                                                        plot_selection = TRUE)
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
+        shinyjs::delay(100, shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
+                                                            selected = selected_metrics(),
+                                                            choices = metrics_available_sport()))
     })
 
     observeEvent(input$all_sports, {
@@ -109,6 +130,7 @@ server <- function(input, output, session) {
 
     observeEvent(input$no_sports, {
         data$sports <- NULL
+        data$dummy <- data$dummy + 1
     })
 
     observeEvent(input$sport_is_cycling, {
@@ -122,33 +144,21 @@ server <- function(input, output, session) {
     observeEvent(input$sport_is_swimming, {
         data$sports <- "swimming"
     })
-
     ## Sessions selected by sport using selection panel.
-    observeEvent(data$sports, {
+    observeEvent(c(data$sports, data$dummy), {
         ## c(input$sport_is_cycling, input$sport_is_running, input$sport_is_swimming, input$all_sports), {
         shinyjs::delay(1000, trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
         shinyjs::delay(1000,  DT::selectRows(proxy = proxy, selected = data$selected_sessions))
         ## update metrics available based on sport selected
-        has_data_sport <- lapply(data$summary[which(trackeR::get_sport(data$summary) %in% data$sports)],
-                                 function(session_summaries) {
-                                     !all(is.na(session_summaries) | session_summaries == 0)
-                                 })
-        selected_metrics <- c(input$metricsSelected[sapply(input$metricsSelected, function(x)
-            has_data_sport[[x]]
-            )])
 
         ## The default value of selected metrics
-        if (is.null(selected_metrics)) {
-            selected_metrics <- opts$default_summary_plots
-        }
-
-        metrics_available_sport <- reactive({c(choices[sapply(choices, function(x)
-            has_data_sport[[x]]
-            )])
-        })
-
+        # if (is.null(selected_metrics())) {
+        #     selected_metrics_non_reactive <- opts$default_summary_plots
+        # } else {
+        #   selected_metrics_non_reactive <- selected_metrics()
+        # }
         shinyjs::delay(100, shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
-                                                            selected = selected_metrics,
+                                                            selected = selected_metrics(),
                                                             choices = metrics_available_sport()))
     }, ignoreNULL = FALSE, ignoreInit = TRUE)
 
