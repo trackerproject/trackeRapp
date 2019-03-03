@@ -1,5 +1,5 @@
-trackeRapp
-==========
+
+# trackeRapp
 
 The goal of [**trackeRapp**](https://trackerapp.com) is to provide an
 integrated workflow and a web interface for the analysis of sports data
@@ -10,32 +10,32 @@ open-source interface on top of the
 [**trackeR**](https://github.com/trackerproject/trackeR) package. The
 interface was fully built using the **shiny** R package.
 
-Installation
-------------
+## Installation
 
 You can install the **trackeRapp** from CRAN by typing
 
-    install.packages("trackeRapp")
+``` r
+install.packages("trackeRapp")
+```
 
 You can also install the development version of **trackeRapp** from
 github by doing
 
-    # install.packages("devtools")
-    devtools::install_github("trackerproject/trackeRapp")
+``` r
+# install.packages("devtools")
+devtools::install_github("trackerproject/trackeRapp")
+```
 
-Getting started
----------------
+## Getting started
 
 Please see the [**tour de
 trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn
 about the **trackeRapp** and all its capabilities, including many
 tutorial videos and visualisations. The following are a few screenshots
-from the **trackeRapp** web interface
+from the **trackeRapp** web
+interface
 
-<img src="README_files/evening_sessions.png" alt="Session summaries" width="95%" />
-<p class="caption">
-Session summaries
-</p>
+<img src="README_files/evening_sessions.png" title="Session summaries" alt="Session summaries" width="95%" style="display: block; margin: auto;" />
 
 <br>
 
@@ -49,14 +49,15 @@ Session summaries
 
 <img src="README_files/zones_multiple_sessions.png" width="95%" style="display: block; margin: auto;" />
 
-Launching the user-interface
-----------------------------
+## Launching the user-interface
 
 A user can access the web interface remotely at
 <https://www.trackerapp.com> or on their local machine by running the
 following commands:
 
-    # Load the package
-    library("trackeRapp")
-    # Open the interface in the browser
-    trackeR_app()
+``` r
+# Load the package
+library("trackeRapp")
+# Open the interface in the browser
+trackeR_app()
+```
