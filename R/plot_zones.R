@@ -11,6 +11,9 @@ plot_zones <- function(x, session, what = c("heart_rate"),
     if (isTRUE(length(session) == 0)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
     }
+    if (is.null(what)) {
+      return(NULL)
+    }
     x <- zones(x, session = session, what = what, breaks = breaks,
                n_zones = n_zones, parallel = parallel)
     dat <- do.call("rbind", x)

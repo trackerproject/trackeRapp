@@ -9,6 +9,10 @@ plot_concentration_profiles <- function(x, session, profiles_calculated,
     if (isTRUE(length(session) == 0)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
     }
+  
+    if (is.null(what)) {
+      return(NULL)
+    }
 
     tracker_object <- x
     ## Generate concentration profile
