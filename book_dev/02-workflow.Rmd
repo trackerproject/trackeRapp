@@ -15,7 +15,7 @@ The user can select both a path to a processed file and a raw file. The **tracke
 Raw data is defined as data from a GPS-enabled tracking device saved in a common format. The **trackeRapp** package supports reading files in the following formats: TCX, GPX, JSON and DB3. 
 
 ```{r}
-embed_youtube("oJn8MiB3mHQ", width = '650', height = '365.63') %>% div(align = 'center') 
+embed_youtube("9hKUl3Pg1So", width = '650', height = '365.63') %>% div(align = 'center') 
 ```
 
 ### Upload processed data
@@ -23,7 +23,7 @@ embed_youtube("oJn8MiB3mHQ", width = '650', height = '365.63') %>% div(align = '
 Processed data is a file in an _rds_ format, which is a _trackeRdata_ object generated using the _R_ programming language. It is also the file that is generated if a user downloads the processed data through the **trackeRapp**. The user can upload the downloaded processed file to the **trackeRapp** allowing to save processing time. 
 
 ```{r}
-embed_youtube("6KnKSXNLBJo", width = '650', height = '365.63') %>% div(align = 'center') 
+embed_youtube("PqXC1zrdLWQ", width = '650', height = '365.63') %>% div(align = 'center') 
 ```
 
 ## Download data
@@ -32,7 +32,7 @@ In order for the user to avoid re-processing the same raw data file each time th
 
 
 ```{r}
-embed_youtube("KGvQZV7srRI", width = '650', height = '365.63') %>% div(align = 'center') 
+embed_youtube("Q6J98930l4k", width = '650', height = '365.63') %>% div(align = 'center') 
 ```
 
 ## Session selection 
@@ -42,7 +42,7 @@ The session selection methods are demonstrated in the video below.
 
 
 ```{r}
-embed_youtube("KPu-TNuyIr4", width = '650', height = '365.63') %>% div(align = 'center') 
+embed_youtube("CiQpR-QmBKs", width = '650', height = '365.63') %>% div(align = 'center') 
 ```
 
 ## Select variables to plot
@@ -61,7 +61,7 @@ All the plots and summaries are automatically updated once the _Apply_ button is
 
 
 ```{r}
-embed_youtube("MrQRwdGdkuI", width = '650', height = '365.63') %>% div(align = 'center') 
+embed_youtube("h5L-vVgFt88", width = '650', height = '365.63') %>% div(align = 'center') 
 ```
 
 
@@ -71,7 +71,7 @@ As explained in Section \@ref(changepointDetection), the user is able to detect 
 session for the available variables. 
 
 ```{r}
-embed_youtube("EDxV-4Z37FE", width = '650', height = '365.63') %>% div(align = 'center') 
+embed_youtube("2HYbgF6HGJQ", width = '650', height = '365.63') %>% div(align = 'center') 
 ```
 
 
