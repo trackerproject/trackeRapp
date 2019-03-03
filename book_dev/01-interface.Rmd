@@ -26,8 +26,7 @@ analyse, for example, evening sessions and morning sessions separately,
 as well as the user might be interested in analysing sessions within a
 specific time range. For example, Figure \@ref(fig:workoutTimelineSelectedSessions)
 illustrates the user selecting
-sessions between 14:30-18:00 and 1 - 13 June 2013. As shown in Figure
-\@ref(fig:timelinePlot), hovering over session segments displays
+sessions between 16:00-21:00. Hovering over session segments displays
 the session number, start and end date to provide a more detailed
 description.
 
@@ -43,7 +42,7 @@ knitr::include_graphics('Images/workout_timeline_selected_sessions.png')
 
 ## Summary table of selected sessions 
 
-The summary table (Figure \@ref(fig:summarySelectedSessions)) displays the date, the start time, the end time, the duration and the sport of each session. Currently selected sessions are highlighted with a grey colour. In order to accommodate for large datasets, the table is
+The summary table (Figure \@ref(fig:summarySelectedSessions)) displays the date, the start time, the end time, the duration and the sport of each session, as well as it allows users to select sessions directly from the table. Currently selected sessions are highlighted with a blue colour. In order to accommodate for large datasets, the table is
 scrollable with the ability to search for key values.
 
 ```{r summarySelectedSessions, out.width='95%', fig.align='center', fig.cap='Summary of Selected Sessions'}
@@ -53,8 +52,7 @@ knitr::include_graphics('Images/summary_selected_sessions.png')
 ## Map 
 
 The map (Figure \@ref(fig:map)) displays routes of all the currently selected
-sessions in a blue colour and currently selected sessions are highlighted with an orange colour. Hovering over a session displays a basic summary of the session as shown in Figure
-\@ref(fig:map). The basic summary displays the session number, 
+sessions in a blue colour and all the unselected sessions are displayed in a grey colour colour. Hovering over a route displays a basic summary of the session. The basic summary displays the session number, 
 distance, duration, average pace of the session and also the current speed depending.
 
 ```{r map, out.width='95%', fig.align='center', fig.cap='Map'}
@@ -68,7 +66,7 @@ The session summary plot in Figure \@ref(fig:sessionSummaries) displays the scal
 session on a plot with date on the x-axis and the value on the y-axis.
 It also shows the current units of measurement on the y-axis. The plot
 enables the user to track their progress over time, identify changes in
-their training pattern or detect changes in intensity of their
+their training pattern or detect changes in the intensity of their
 performance.
 
 Session summary values include: average speed, pace, power, cadence running, cadence cycling, and
@@ -81,7 +79,7 @@ selected variable is individually plotted in a separate box (Figure
 \@ref(fig:sessionSummaries)), providing a clear separation in the
 user interface. As shown in Figure
 \@ref(fig:sessionSummaries), selected sessions are highlighted
-with an orange colour and hovering over an individual point displays the
+with a blue colour and hovering over an individual point displays the
 exact value, the date, the number and the sport of the session.
 
 
@@ -94,8 +92,7 @@ knitr::include_graphics('Images/session_summaries.png')
 
 The summary boxes (Figure \@ref(fig:summaryBoxes)) display the average values for the total
 distance covered, average duration, average pace and average heart rate
-for the selected sessions (note that all sessions are considered if none
-are selected). The boxes provide a tool for an instant analysis and
+for the selected sessions. The boxes provide a tool for an instant analysis and
 gaining insights of training data in the selected training sessions.
 
 ```{r summaryBoxes, out.width='95%', fig.align='center', fig.cap='Summary boxes'}
@@ -103,18 +100,16 @@ knitr::include_graphics('Images/summary_boxes.png')
 ```
 
 For example, the user might be interested in comparing their training
-results in the morning (6:00-10:00) and the afternoon (17:00-20:00), as
+results in the morning and the afternoon, as
 displayed in Figures \@ref(fig:morningSessions) and \@ref(fig:eveningSessions), respectively, by selecting sessions from the
 workout timeline plot. The user can right away see that the morning and
-afternoon workouts are quite similar in average distance, pace and heart
-rate and the afternoon workouts seem to have on average slightly higher
-average pace.
+afternoon workouts are quite similar in average distance and duration, but the average pace of 3.2 min/km in the afternoon sessions seems quite considerably lower than for the morning sessions with average pace of 4.6 min/km. 
 
 ```{r morningSessions, out.width='95%', fig.align='center', fig.cap='Morning workouts'}
 knitr::include_graphics('Images/morning_sessions.png')
 ```
 
-```{r eveningSessions, out.width='95%', fig.align='center', fig.cap='Evening workouts'}
+```{r eveningSessions, out.width='95%', fig.align='center', fig.cap='Afternoon workouts'}
 knitr::include_graphics('Images/evening_sessions.png')
 ```
 
@@ -137,7 +132,7 @@ example, identify patterns between sessions such as detecting
 consistently high fluctuations in heart rate over the selected sessions.
 
 Each plot has exactly two traces, where the grey colour represents the
-processed data from and the blue line is the data after
+processed data and the blue line is the data after
 smoothing. 
 
 ```{r individualSessionNew, out.width='95%', fig.align='center', fig.cap='Individual session plots'}
@@ -149,9 +144,9 @@ knitr::include_graphics('Images/individual_session_new.png')
 The time in zones plots \@ref(fig:zonesMultipleSessions) are grouped bar charts coloured
 by the session number, where x-axis shows the zone categories (e.g.,
 speed zones, heart rate zones) and y-axis represents the percentage of
-the session spent in the zone. The plots, for example, allow summarizing
-and quantifying training intensity distributions by the
-time spent exercising in certain zones. The user can also evaluate their
+the session spent in the zone. The plots summarize
+and quantify training intensity distributions by the
+time spent exercising in certain zones. The user is also able to evaluate their
 consistency and changes in their performance by comparing the proportion
 of time spent in different zones. The **trackeRapp** implements
 time in zones plots for the following variables: heart rate, speed,
@@ -160,17 +155,8 @@ can specify which variables to plot, as well as how many zones to split
 the data into. An exact percentage values are displayed by hovering over
 individual bars.
 
-In Figure \@ref(fig:zonesMultipleSessions), 4 sessions and the variables
-speed, heart rate and cadence were selected, each split into 6 zones.
-The user can see that session 13 had a lot higher intensity than the
-other three sessions, with a heart rate of above 155 bpm 95% of the time
-and cadence above 92 steps/min around 70% of the session. It appears
-that the user's heart rate distribution was changing over the four
-sessions, with higher proportion of sessions in the 155-170 bpm zone and
-less time being spent in the 140-155 zone. The user can also analyse
-intensity by the time spent above critical power (see @trackeR), assuming CP at
-4m/s. In sessions 8,9, and 10 the athlete spent around 15-20% of the
-sessions above CP and around 40% above CP in session 13.
+In Figure \@ref(fig:zonesMultipleSessions), 21 sessions and the variables
+speed and heart rate were selected, each split into 5 zones.
 
 ```{r zonesMultipleSessions, out.width='95%', fig.align='center', fig.cap='Time in zones multiple sessions'}
 knitr::include_graphics('Images/zones_multiple_sessions.png')
@@ -216,27 +202,24 @@ values.
 knitr::include_graphics('Images/concentration_profiles.png')
 ```
 
-```{r heartRateComparison,out.width='95%', fig.align='center', fig.cap='Heart rate comparison between Sessions 14 and 10'}
-knitr::include_graphics('Images/heart_rate_session_comparison.png')
-```
 
-The importance of concentration profiles can be demonstrated using the
-same example as in Section \@ref(timeInZones) with the 4 selected sessions \@ref(fig:zonesMultipleSessions) and concentration profiles for
-the same four sessions (Figure \@ref(fig:concentrationProfiles)). The profiles reveal that in
-session 13 the athlete's heart rate is very strongly concentrated near
-158-160 bpm, i.e., on the lower range of 155-170bpm range of the time in
-zones plot. On the other hand, session 10 is completely different, where
-the athlete's heart rate is rather evenly distributed in a wider range
-of 140-164 bpm and reaching above 162 bpm relatively more often.
-Additionally, the high peak of session 13 reveals that the athletes
-heart rate near 158-160 bpm was sustained for a relatively long time
-(around 1h 15min). Figure \@ref(fig:heartRateComparison) demonstrates the difference
-between sessions 13 and 10 by plotting the individual sessions. Lastly,
-assuming critical speed (see Section \@ref(workCapacity)) of 4m/s, the speed of sessions 8, 9 and 10 is
-concentrated below the critical speed, whereas session 13 is
-concentrated above the critical speed. This might suggest that for an
-optimal training progress, the athletes intensity might be too high in
-session 13, or too low in the sessions 8, 9 and 10.
+<!-- The importance of concentration profiles can be demonstrated using the -->
+<!-- same example as in Section \@ref(timeInZones) with the 4 selected sessions \@ref(fig:zonesMultipleSessions) and concentration profiles for -->
+<!-- the same four sessions (Figure \@ref(fig:concentrationProfiles)). The profiles reveal that in -->
+<!-- session 13 the athlete's heart rate is very strongly concentrated near -->
+<!-- 158-160 bpm, i.e., on the lower range of 155-170bpm range of the time in -->
+<!-- zones plot. On the other hand, session 10 is completely different, where -->
+<!-- the athlete's heart rate is rather evenly distributed in a wider range -->
+<!-- of 140-164 bpm and reaching above 162 bpm relatively more often. -->
+<!-- Additionally, the high peak of session 13 reveals that the athletes -->
+<!-- heart rate near 158-160 bpm was sustained for a relatively long time -->
+<!-- (around 1h 15min). Figure \@ref(fig:heartRateComparison) demonstrates the difference -->
+<!-- between sessions 13 and 10 by plotting the individual sessions. Lastly, -->
+<!-- assuming critical speed (see Section \@ref(workCapacity)) of 4m/s, the speed of sessions 8, 9 and 10 is -->
+<!-- concentrated below the critical speed, whereas session 13 is -->
+<!-- concentrated above the critical speed. This might suggest that for an -->
+<!-- optimal training progress, the athletes intensity might be too high in -->
+<!-- session 13, or too low in the sessions 8, 9 and 10. -->
 
 <!-- ## Work capacity plot {#workCapacity} -->
 
@@ -280,9 +263,8 @@ session 13, or too low in the sessions 8, 9 and 10.
 
 Many athletes collect data on various sports, such as swimming, running
 and cycling. In order to allow the user to analyse the individual sports
-separately, the **trackeRapp** splits the users sessions by sport. The **trackeRapp** lets the  select which sports to display as shown in Figure \@ref(fig:sportClassification), where the user can select any
-subset of the sports and the user interface is automatically updated
-based on the selection.
+separately, the **trackeRapp** splits the users sessions by sport. The **trackeRapp** lets the user select which sports to display as shown in Figure \@ref(fig:sportClassification), where the user can select any of the sports and the user interface is automatically updated
+based on the selection. 
 
 ```{r sportClassification,out.width='95%', fig.align='center', fig.cap='Sport classification'}
 knitr::include_graphics('Images/sport_classification.png')
@@ -313,7 +295,7 @@ to set the maximum number of changepoints, the user is able to set a
 reasonable maximum number after observing the shape of the data.
 
 
-```{r changePointDetection, out.width='95%', fig.align='center', fig.cap='Changepoint detection in two triathlon sessions (dark red dash line'}
+```{r changePointDetection, out.width='95%', fig.align='center', fig.cap='Changepoint detection (dark red dash line'}
 knitr::include_graphics('Images/changepoint_detection.png')
 ```
 
