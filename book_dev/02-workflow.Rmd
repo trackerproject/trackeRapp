@@ -48,7 +48,7 @@ embed_youtube("Q6J98930l4k", width = '650', height = '365.63') %>% div(align = '
 
 ## Session selection 
 
-The workout timeline (\@ref(fig:timelinePlot)), the session summaries plots (\@ref(fig:sessionSummaries)), the map (\@ref(fig:map)), the sport identification ( \@ref(fig:sportClassification)) and the summary table of selected sessions (\@ref(fig:summarySelectedSessions)) all enable the selection of sessions. The user is able to select sessions in the plots in two ways - a box and lasso selection. The box selection selects sessions using a rectangular box of any size and all the sessions within the box will be selected. Lasso selection is very useful when the user wants to select specific sessions. These methods allow comparison and analysis of any sessions of interest. Session selection can be reset by clicking the _Clear selection_ button at the top of the page. 
+The workout timeline, the session summaries plots, the map, the sport identification and the summary table of selected sessions all enable the selection of sessions. The user is able to select sessions in the plots in two ways - a box and lasso selection. The box selection selects sessions using a rectangular box of any size and all the sessions within the box will be selected. Lasso selection is very useful when the user wants to select specific sessions. These methods allow comparison and analysis of any sessions of interest. Session selection can be reset by clicking the _Clear selection_ button at the top of the page. 
 The session selection methods are demonstrated in the video below. 
 
 
@@ -61,7 +61,7 @@ embed_youtube("CiQpR-QmBKs", width = '650', height = '365.63') %>% div(align = '
 The **trackeRapp** lets the user adjust the interface by selecting which variables to plot. The user is able to change the selection at any point and the interface automatically updates. 
 
 ```{r}
-embed_youtube("RgphETRFWt0", width = '650', height = '365.63') %>% div(align = 'center') 
+embed_youtube("bJQeFEw3bFE", width = '650', height = '365.63') %>% div(align = 'center') 
 ```
 
 

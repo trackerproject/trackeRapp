@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Tour de trackerApp</title>
-  <meta name="description" content="Tour de trackerApp">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <title>1 Interface | Tour de trackeRapp</title>
+  <meta name="description" content="1 Interface | Tour de trackeRapp">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Tour de trackerApp" />
+  <meta property="og:title" content="1 Interface | Tour de trackeRapp" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Tour de trackerApp" />
+  <meta name="twitter:title" content="1 Interface | Tour de trackeRapp" />
   
   
   
@@ -34,6 +34,7 @@
 <link rel="next" href="workflow.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -70,9 +71,8 @@
 <li class="chapter" data-level="1.6" data-path="interface.html"><a href="interface.html#individual-sessions-plots"><i class="fa fa-check"></i><b>1.6</b> Individual sessions plots</a></li>
 <li class="chapter" data-level="1.7" data-path="interface.html"><a href="interface.html#timeInZones"><i class="fa fa-check"></i><b>1.7</b> Time in zones plots</a></li>
 <li class="chapter" data-level="1.8" data-path="interface.html"><a href="interface.html#concentration-profiles-plots"><i class="fa fa-check"></i><b>1.8</b> Concentration profiles plots</a></li>
-<li class="chapter" data-level="1.9" data-path="interface.html"><a href="interface.html#workCapacity"><i class="fa fa-check"></i><b>1.9</b> Work capacity plot</a></li>
-<li class="chapter" data-level="1.10" data-path="interface.html"><a href="interface.html#sports-identification"><i class="fa fa-check"></i><b>1.10</b> Sports identification</a></li>
-<li class="chapter" data-level="1.11" data-path="interface.html"><a href="interface.html#changepointDetection"><i class="fa fa-check"></i><b>1.11</b> Changepoint detection within sessions</a></li>
+<li class="chapter" data-level="1.9" data-path="interface.html"><a href="interface.html#sports-identification"><i class="fa fa-check"></i><b>1.9</b> Sports identification</a></li>
+<li class="chapter" data-level="1.10" data-path="interface.html"><a href="interface.html#changepointDetection"><i class="fa fa-check"></i><b>1.10</b> Changepoint detection within sessions</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>2</b> Workflow</a><ul>
 <li class="chapter" data-level="2.1" data-path="workflow.html"><a href="workflow.html#upload-data"><i class="fa fa-check"></i><b>2.1</b> Upload data</a><ul>
@@ -95,7 +95,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tour de trackerApp</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tour de trackeRapp</a>
           </h1>
         </div>
 
@@ -283,20 +283,10 @@ sessions above CP and around 40% above CP in session 13.</p>
 Figure 1.10: Time in zones multiple sessions
 </p>
 </div>
-<p>In order to get more detail on a particular session or sessions, the
-user can select which sessions to display by clicking on the legend in
-the top right corner of the plot, as displayed in Figure <a href="interface.html#fig:zonesIndividualSession">1.11</a>, where only session 13 was
-selected.</p>
-<div class="figure" style="text-align: center"><span id="fig:zonesIndividualSession"></span>
-<img src="Images/zones_individual_session.png" alt="Time in zones individual session" width="95%" />
-<p class="caption">
-Figure 1.11: Time in zones individual session
-</p>
-</div>
 </div>
 <div id="concentration-profiles-plots" class="section level2">
 <h2><span class="header-section-number">1.8</span> Concentration profiles plots</h2>
-<p>The concentration profiles (Figure <a href="interface.html#fig:concentrationProfiles">1.12</a>) are the negative derivative of
+<p>The concentration profiles (Figure <a href="interface.html#fig:concentrationProfiles">1.11</a>) are the negative derivative of
 the distribution profiles, where distribution profiles describe the time
 spent exercising above a threshold for a selected variable (e.g., m/s or
 bpm) in a given session, as defined in <span class="citation">Kosmidis and Passfield (<a href="#ref-concentration_profiles">2015</a>)</span>. The
@@ -330,18 +320,18 @@ values.</p>
 <div class="figure" style="text-align: center"><span id="fig:concentrationProfiles"></span>
 <img src="Images/concentration_profiles.png" alt="Heart rate comparison between Sessions 14 and 10" width="95%" />
 <p class="caption">
-Figure 1.12: Heart rate comparison between Sessions 14 and 10
+Figure 1.11: Heart rate comparison between Sessions 14 and 10
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:heartRateComparison"></span>
 <img src="Images/heart_rate_session_comparison.png" alt="Heart rate comparison between Sessions 14 and 10" width="95%" />
 <p class="caption">
-Figure 1.13: Heart rate comparison between Sessions 14 and 10
+Figure 1.12: Heart rate comparison between Sessions 14 and 10
 </p>
 </div>
 <p>The importance of concentration profiles can be demonstrated using the
 same example as in Section <a href="interface.html#timeInZones">1.7</a> with the 4 selected sessions <a href="interface.html#fig:zonesMultipleSessions">1.10</a> and concentration profiles for
-the same four sessions (Figure <a href="interface.html#fig:concentrationProfiles">1.12</a>). The profiles reveal that in
+the same four sessions (Figure <a href="interface.html#fig:concentrationProfiles">1.11</a>). The profiles reveal that in
 session 13 the athlete’s heart rate is very strongly concentrated near
 158-160 bpm, i.e., on the lower range of 155-170bpm range of the time in
 zones plot. On the other hand, session 10 is completely different, where
@@ -349,73 +339,68 @@ the athlete’s heart rate is rather evenly distributed in a wider range
 of 140-164 bpm and reaching above 162 bpm relatively more often.
 Additionally, the high peak of session 13 reveals that the athletes
 heart rate near 158-160 bpm was sustained for a relatively long time
-(around 1h 15min). Figure <a href="interface.html#fig:heartRateComparison">1.13</a> demonstrates the difference
+(around 1h 15min). Figure <a href="interface.html#fig:heartRateComparison">1.12</a> demonstrates the difference
 between sessions 13 and 10 by plotting the individual sessions. Lastly,
-assuming critical speed (see Section <a href="interface.html#workCapacity">1.9</a>) of 4m/s, the speed of sessions 8, 9 and 10 is
+assuming critical speed (see Section <a href="#workCapacity"><strong>??</strong></a>) of 4m/s, the speed of sessions 8, 9 and 10 is
 concentrated below the critical speed, whereas session 13 is
 concentrated above the critical speed. This might suggest that for an
 optimal training progress, the athletes intensity might be too high in
 session 13, or too low in the sessions 8, 9 and 10.</p>
-</div>
-<div id="workCapacity" class="section level2">
-<h2><span class="header-section-number">1.9</span> Work capacity plot</h2>
-<p>The work capacity plots
-(Figure <a href="interface.html#fig:sessionExample">1.14</a>) display the amount of a finite work
-capacity (W’) above a critical power (CP) expended at a given time in
-the workout, displayed by the blue line with the grey line representing
-the processed data from <strong>trackeR</strong>, where the x-axis represents time
-and y-axis the value.</p>
-<p>CP is defined as “the maximum rate (of work) that can be kept up for
-a very long time without fatigue.” <span class="citation">(Friere Skiba et al. <a href="#ref-work_capacity">2012</a>)</span>. CP is, however,
-often calculated as the maximum rate (of work) that can be kept for
-a particular period of time. For example, the Functional Threshold Power
-(FTP) is the CP that can be sustained for one hour . It is assumed that
-finite work capacity gets depleted with power output above the CP and
-replenished with power output below the CP. Analysis of CP and W’
-expended helps athletes evaluate and personalise intensities of their
-workouts and maximise progress. For instance, an athlete might aim to
-train at &gt;121% of FTP to increase anaerobic capacity, at 56-75% of FTP
-to increase muscle fuel storage (endurance) or at 55% for active
-recovery . In order to calculate W’ for runners, power and critical
-power can be substituted by speed and critical speed, as suggested by
-<span class="citation">Friere Skiba et al. (<a href="#ref-work_capacity">2012</a>)</span>. A detailed explanation with mathematical calculations of
-the quantification of work capacity can be found in <span class="citation">Frick and Kosmidis (<a href="#ref-trackeR">2017</a>)</span>.</p>
-<p>Session 10 in Figure <a href="interface.html#fig:sessionExample">1.14</a> provides an example (assume CP at 4
-m/s), where the user’s speed is well below the 4 m/s CP threshold at the
-beginning of the session resulting in almost no W’ expended, followed by
-an increased speed above the CP threshold for a short segment resulting
-in a steep increase in W’ expended and a subsequent reduction in speed
-below the CP threshold resulting in a gradual replenishment of W’
-continuing until the end of the session.</p>
-<div class="figure" style="text-align: center"><span id="fig:sessionExample"></span>
-<img src="Images/session_example.png" alt="Work capacity" width="95%" />
-<p class="caption">
-Figure 1.14: Work capacity
-</p>
-</div>
+<!-- ## Work capacity plot {#workCapacity} -->
+<!-- The work capacity plots -->
+<!-- (Figure \@ref(fig:sessionExample)) display the amount of a finite work -->
+<!-- capacity (W') above a critical power (CP) expended at a given time in -->
+<!-- the workout, displayed by the blue line with the grey line representing -->
+<!-- the processed data from **trackeR**, where the x-axis represents time -->
+<!-- and y-axis the value. -->
+<!-- CP is defined as "the maximum rate (of work) that can be kept up for -->
+<!-- a very long time without fatigue." [@work_capacity]. CP is, however, -->
+<!-- often calculated as the maximum rate (of work) that can be kept for -->
+<!-- a particular period of time. For example, the Functional Threshold Power -->
+<!-- (FTP) is the CP that can be sustained for one hour . It is assumed that -->
+<!-- finite work capacity gets depleted with power output above the CP and -->
+<!-- replenished with power output below the CP. Analysis of CP and W' -->
+<!-- expended helps athletes evaluate and personalise intensities of their -->
+<!-- workouts and maximise progress. For instance, an athlete might aim to -->
+<!-- train at \>121% of FTP to increase anaerobic capacity, at 56-75% of FTP -->
+<!-- to increase muscle fuel storage (endurance) or at 55% for active -->
+<!-- recovery . In order to calculate W' for runners, power and critical -->
+<!-- power can be substituted by speed and critical speed, as suggested by -->
+<!-- @work_capacity. A detailed explanation with mathematical calculations of -->
+<!-- the quantification of work capacity can be found in @trackeR. -->
+<!-- Session 10 in Figure \@ref(fig:sessionExample) provides an example (assume CP at 4 -->
+<!-- m/s), where the user's speed is well below the 4 m/s CP threshold at the -->
+<!-- beginning of the session resulting in almost no W' expended, followed by -->
+<!-- an increased speed above the CP threshold for a short segment resulting -->
+<!-- in a steep increase in W' expended and a subsequent reduction in speed -->
+<!-- below the CP threshold resulting in a gradual replenishment of W' -->
+<!-- continuing until the end of the session. -->
+<!-- ```{r sessionExample,out.width='95%', fig.align='center', fig.cap='Work capacity'} -->
+<!-- knitr::include_graphics('Images/session_example.png') -->
+<!-- ``` -->
 </div>
 <div id="sports-identification" class="section level2">
-<h2><span class="header-section-number">1.10</span> Sports identification</h2>
+<h2><span class="header-section-number">1.9</span> Sports identification</h2>
 <p>Many athletes collect data on various sports, such as swimming, running
 and cycling. In order to allow the user to analyse the individual sports
-separately, the <strong>trackeRapp</strong> splits the users sessions by sport. The <strong>trackeRapp</strong> lets the select which sports to display as shown in Figure <a href="interface.html#fig:sportClassification">1.15</a>, where the user can select any
+separately, the <strong>trackeRapp</strong> splits the users sessions by sport. The <strong>trackeRapp</strong> lets the select which sports to display as shown in Figure <a href="interface.html#fig:sportClassification">1.13</a>, where the user can select any
 subset of the sports and the user interface is automatically updated
 based on the selection.</p>
 <div class="figure" style="text-align: center"><span id="fig:sportClassification"></span>
 <img src="Images/sport_classification.png" alt="Sport classification" width="95%" />
 <p class="caption">
-Figure 1.15: Sport classification
+Figure 1.13: Sport classification
 </p>
 </div>
 </div>
 <div id="changepointDetection" class="section level2">
-<h2><span class="header-section-number">1.11</span> Changepoint detection within sessions</h2>
+<h2><span class="header-section-number">1.10</span> Changepoint detection within sessions</h2>
 <p>In order to provide an athlete with insights on their consistency,
 deterioration or improvement of their performance throughout a session
 and identify weak or strong segments, the <strong>trackeRapp</strong>
 implements a changepoint detection algorithm to detect changes within a
 session for the following variables: speed, pace, heart rate, cadence running, cadence cycling and
-power (see example in Figure <a href="interface.html#fig:changePointDetection">1.16</a>). The changepoints are
+power (see example in Figure <a href="interface.html#fig:changePointDetection">1.14</a>). The changepoints are
 detected in a given plot by clicking the <em>Detect changepoints</em> button in the toolbox circle in the top left corner of each plot
 and the detected segments in each of the selected sessions are displayed
 by a dark red dash lines.</p>
@@ -433,7 +418,7 @@ reasonable maximum number after observing the shape of the data.</p>
 <div class="figure" style="text-align: center"><span id="fig:changePointDetection"></span>
 <img src="Images/changepoint_detection.png" alt="Changepoint detection in two triathlon sessions (dark red dash line" width="95%" />
 <p class="caption">
-Figure 1.16: Changepoint detection in two triathlon sessions (dark red dash line
+Figure 1.14: Changepoint detection in two triathlon sessions (dark red dash line
 </p>
 </div>
 
@@ -446,9 +431,6 @@ Figure 1.16: Changepoint detection in two triathlon sessions (dark red dash line
 </div>
 <div id="ref-concentration_profiles">
 <p>Kosmidis, Ioannis, and Louis Passfield. 2015. “Linking the Performance of Endurance Runners to Training and Physiological Effects via Multi-Resolution Elastic Net.” <em>arXiv</em>, 1–8. <a href="http://kar.kent.ac.uk/55791/" class="uri">http://kar.kent.ac.uk/55791/</a>.</p>
-</div>
-<div id="ref-work_capacity">
-<p>Friere Skiba, Philip, Weerapong Chidnok, Anni Vanhatalo, and Andrew Jones. 2012. “Modeling the Expenditure and Reconstitution of Work Capacity Above Critical Power” 44 (February): 1526–32.</p>
 </div>
 </div>
             </section>
@@ -477,7 +459,7 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
 "all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
@@ -487,6 +469,10 @@ gitbook.start({
 "size": 2
 },
 "edit": {
+"link": null,
+"text": null
+},
+"history": {
 "link": null,
 "text": null
 },

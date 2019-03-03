@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Tour de trackerApp</title>
-  <meta name="description" content="Tour de trackerApp">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <title>2 Workflow | Tour de trackeRapp</title>
+  <meta name="description" content="2 Workflow | Tour de trackeRapp">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Tour de trackerApp" />
+  <meta property="og:title" content="2 Workflow | Tour de trackeRapp" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Tour de trackerApp" />
+  <meta name="twitter:title" content="2 Workflow | Tour de trackeRapp" />
   
   
   
@@ -34,6 +34,7 @@
 <link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -70,9 +71,8 @@
 <li class="chapter" data-level="1.6" data-path="interface.html"><a href="interface.html#individual-sessions-plots"><i class="fa fa-check"></i><b>1.6</b> Individual sessions plots</a></li>
 <li class="chapter" data-level="1.7" data-path="interface.html"><a href="interface.html#timeInZones"><i class="fa fa-check"></i><b>1.7</b> Time in zones plots</a></li>
 <li class="chapter" data-level="1.8" data-path="interface.html"><a href="interface.html#concentration-profiles-plots"><i class="fa fa-check"></i><b>1.8</b> Concentration profiles plots</a></li>
-<li class="chapter" data-level="1.9" data-path="interface.html"><a href="interface.html#workCapacity"><i class="fa fa-check"></i><b>1.9</b> Work capacity plot</a></li>
-<li class="chapter" data-level="1.10" data-path="interface.html"><a href="interface.html#sports-identification"><i class="fa fa-check"></i><b>1.10</b> Sports identification</a></li>
-<li class="chapter" data-level="1.11" data-path="interface.html"><a href="interface.html#changepointDetection"><i class="fa fa-check"></i><b>1.11</b> Changepoint detection within sessions</a></li>
+<li class="chapter" data-level="1.9" data-path="interface.html"><a href="interface.html#sports-identification"><i class="fa fa-check"></i><b>1.9</b> Sports identification</a></li>
+<li class="chapter" data-level="1.10" data-path="interface.html"><a href="interface.html#changepointDetection"><i class="fa fa-check"></i><b>1.10</b> Changepoint detection within sessions</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>2</b> Workflow</a><ul>
 <li class="chapter" data-level="2.1" data-path="workflow.html"><a href="workflow.html#upload-data"><i class="fa fa-check"></i><b>2.1</b> Upload data</a><ul>
@@ -95,7 +95,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tour de trackerApp</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tour de trackeRapp</a>
           </h1>
         </div>
 
@@ -113,14 +113,14 @@
 <h3><span class="header-section-number">2.1.1</span> Upload raw data</h3>
 <p>Raw data is defined as data from a GPS-enabled tracking device saved in a common format. The <strong>trackeRapp</strong> package supports reading files in the following formats: TCX, GPX, JSON and DB3.</p>
 <div align="center">
-<iframe src="https://www.youtube.com/embed/oJn8MiB3mHQ" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
+<iframe src="https://www.youtube.com/embed/9hKUl3Pg1So" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
 </div>
 </div>
 <div id="upload-processed-data" class="section level3">
 <h3><span class="header-section-number">2.1.2</span> Upload processed data</h3>
 <p>Processed data is a file in an <em>rds</em> format, which is a <em>trackeRdata</em> object generated using the <em>R</em> programming language. It is also the file that is generated if a user downloads the processed data through the <strong>trackeRapp</strong>. The user can upload the downloaded processed file to the <strong>trackeRapp</strong> allowing to save processing time.</p>
 <div align="center">
-<iframe src="https://www.youtube.com/embed/6KnKSXNLBJo" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
+<iframe src="https://www.youtube.com/embed/PqXC1zrdLWQ" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
 </div>
 </div>
 </div>
@@ -128,15 +128,15 @@
 <h2><span class="header-section-number">2.2</span> Download data</h2>
 <p>In order for the user to avoid re-processing the same raw data file each time they use the interface, the <strong>trackeRapp</strong> enables downloading the processed data by clicking on the <em>Download processed data button</em>. The downloaded file is in an <em>rds</em> format and named using the current date (e.g., “trackeRapp_data-2018-02-18.RData”). The user can upload the downloaded file next time they use the <strong>trackeRapp</strong>, as well as for analysis in R using the <strong>trackeR</strong> package (<span class="citation">Frick and Kosmidis (<a href="#ref-trackeR">2017</a>)</span>).</p>
 <div align="center">
-<iframe src="https://www.youtube.com/embed/KGvQZV7srRI" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
+<iframe src="https://www.youtube.com/embed/Q6J98930l4k" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
 </div>
 </div>
 <div id="session-selection" class="section level2">
 <h2><span class="header-section-number">2.3</span> Session selection</h2>
-<p>The workout timeline (<a href="interface.html#fig:timelinePlot">1.1</a>), the session summaries plots (<a href="interface.html#fig:sessionSummaries">1.5</a>), the map (<a href="interface.html#fig:map">1.4</a>), the sport identification ( <a href="interface.html#fig:sportClassification">1.15</a>) and the summary table of selected sessions (<a href="interface.html#fig:summarySelectedSessions">1.3</a>) all enable the selection of sessions. The user is able to select sessions in the plots in two ways - a box and lasso selection. The box selection selects sessions using a rectangular box of any size and all the sessions within the box will be selected. Lasso selection is very useful when the user wants to select specific sessions. These methods allow comparison and analysis of any sessions of interest. Session selection can be reset by cliking the <em>Reset session selection</em> button at the top of the page.
+<p>The workout timeline (<a href="#fig:timelinePlot"><strong>??</strong></a>), the session summaries plots (<a href="#fig:sessionSummaries"><strong>??</strong></a>), the map (<a href="#fig:map"><strong>??</strong></a>), the sport identification ( <a href="#fig:sportClassification"><strong>??</strong></a>) and the summary table of selected sessions (<a href="#fig:summarySelectedSessions"><strong>??</strong></a>) all enable the selection of sessions. The user is able to select sessions in the plots in two ways - a box and lasso selection. The box selection selects sessions using a rectangular box of any size and all the sessions within the box will be selected. Lasso selection is very useful when the user wants to select specific sessions. These methods allow comparison and analysis of any sessions of interest. Session selection can be reset by cliking the <em>Reset session selection</em> button at the top of the page.
 The session selection methods are demonstrated in the video below.</p>
 <div align="center">
-<iframe src="https://www.youtube.com/embed/KPu-TNuyIr4" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
+<iframe src="https://www.youtube.com/embed/CiQpR-QmBKs" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
 </div>
 </div>
 <div id="select-variables-to-plot" class="section level2">
@@ -151,15 +151,15 @@ The session selection methods are demonstrated in the video below.</p>
 <p>The user is often interested in displaying their data in various units of measurement and so the <strong>trackeRapp</strong> was designed for the user to be able to display and change the units of measurement of any of the variables at any point whilst using <strong>trackeRapp</strong>.
 All the plots and summaries are automatically updated once the <em>Apply</em> button is clicked. The modal dialog interface with radio buttons was designed to clearly display which units of measurement are currently selected, as well as all the other units of measurement available for each variable.</p>
 <div align="center">
-<iframe src="https://www.youtube.com/embed/MrQRwdGdkuI" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
+<iframe src="https://www.youtube.com/embed/h5L-vVgFt88" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
 </div>
 </div>
 <div id="changepoint-detection" class="section level2">
 <h2><span class="header-section-number">2.6</span> Changepoint detection</h2>
-<p>As explained in Section <a href="interface.html#changepointDetection">1.11</a>, the user is able to detect changes within a
+<p>As explained in Section <a href="interface.html#changepointDetection">1.10</a>, the user is able to detect changes within a
 session for the available variables.</p>
 <div align="center">
-<iframe src="https://www.youtube.com/embed/EDxV-4Z37FE" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
+<iframe src="https://www.youtube.com/embed/2HYbgF6HGJQ" width="650" height="365.63" frameborder="0" allowfullscreen=""></iframe>
 </div>
 
 </div>
@@ -196,7 +196,7 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
 "all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
@@ -206,6 +206,10 @@ gitbook.start({
 "size": 2
 },
 "edit": {
+"link": null,
+"text": null
+},
+"history": {
 "link": null,
 "text": null
 },
