@@ -19,7 +19,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
         group <- c('total')
     }
     else {
-        group <- c('moving')
+        group <- c('total')
     }
     ## if (what != "wrRatio") {
         feature <- lab_sum(feature = what, data = sumX, whole_text = FALSE)
