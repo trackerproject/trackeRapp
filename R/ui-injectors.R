@@ -265,7 +265,7 @@ create_option_box <- function(sport_options, metrics_available) {
                                     actionButton(
                                         inputId = "sport_is_running",
                                         label = "Running",
-                                        icon = icon("running"))),
+                                        icon = icon("walking"))),   # TODO: temporary fix, running icon is blank
                              column(2,
                                     actionButton(
                                         inputId = "sport_is_cycling",
