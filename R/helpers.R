@@ -233,6 +233,7 @@ generate_objects <- function(data, output, session, choices) {
     })
     data$sessions_map <- rep(seq_along(data$object)[data$is_location_data],
                              times = 1, each = 2)
+    data$dummy <- data$dummy + 1
 }
 
 ## Test whether we can plot work capacity for at least one of cycling or running.
