@@ -280,15 +280,14 @@ session for the following variables: speed, pace, heart rate, cadence running, c
 power (see example in Figure \@ref(fig:changePointDetection)). The changepoints are
 detected in a given plot by clicking the *Detect changepoints* button in the toolbox circle in the top left corner of each plot
 and the detected segments in each of the selected sessions are displayed
-by a dark red dash lines.
+by blue dash lines.
 
 The changepoint detection is implemented separately for all of the variables available in the users dataset. The user is able to select the maximum number of
 changepoints to search for in a session. This provides the flexibility
 to limit the number of segments to only detect, for example, the two
 most important changes in the session. For instance, in Figure
-\@ref(fig:changePointDetectionTriathlon) the maximum number of
-changepoints is set to two changes for heart rate and four changes for
-speed. However, the algorithm might detect fewer segments than the
+\@ref(fig:changePointDetection) the maximum number of
+changepoints is set to 3 changes for speed. However, the algorithm might detect fewer segments than the
 maximum set by the user due to the penalty measure implemented, in order
 to avoid over-fitting. By providing the option
 to set the maximum number of changepoints, the user is able to set a

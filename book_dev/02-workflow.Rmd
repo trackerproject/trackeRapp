@@ -1,14 +1,25 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 # Workflow
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-In this chapter, we will demonstrate the tools a user has to interact with the **trackeRapp**.
+```{r}
+library(shiny)
+library(vembedr)
+library(dplyr)
+```
+
+In this chapter, we will demonstrate the tools available for a user to interact with the **trackeRapp**.
 
 ## Upload data
 
-The user can select both a path to a processed file and a raw file. The **trackeRapp** then automatically merges all the sessions after processing raw files. The **trackeRapp** removes any duplicated sessions that might occur. This allows the user to constantly add new raw sessions and merge those with previous already processed sessions without any repeated calculations.
+The user can select both a path to a processed file and a raw file. The **trackeRapp** then automatically merges all the sessions after processing the raw files. The **trackeRapp** removes any duplicated sessions that might occur. This allows the user to constantly add new raw sessions and merge those with previous already processed sessions without any repeated calculations.
 
 ### Upload raw data
 
@@ -37,7 +48,7 @@ embed_youtube("Q6J98930l4k", width = '650', height = '365.63') %>% div(align = '
 
 ## Session selection 
 
-The workout timeline (\@ref(fig:timelinePlot)), the session summaries plots (\@ref(fig:sessionSummaries)), the map (\@ref(fig:map)), the sport identification ( \@ref(fig:sportClassification)) and the summary table of selected sessions (\@ref(fig:summarySelectedSessions)) all enable the selection of sessions. The user is able to select sessions in the plots in two ways - a box and lasso selection. The box selection selects sessions using a rectangular box of any size and all the sessions within the box will be selected. Lasso selection is very useful when the user wants to select specific sessions. These methods allow comparison and analysis of any sessions of interest. Session selection can be reset by cliking the _Reset session selection_ button at the top of the page. 
+The workout timeline (\@ref(fig:timelinePlot)), the session summaries plots (\@ref(fig:sessionSummaries)), the map (\@ref(fig:map)), the sport identification ( \@ref(fig:sportClassification)) and the summary table of selected sessions (\@ref(fig:summarySelectedSessions)) all enable the selection of sessions. The user is able to select sessions in the plots in two ways - a box and lasso selection. The box selection selects sessions using a rectangular box of any size and all the sessions within the box will be selected. Lasso selection is very useful when the user wants to select specific sessions. These methods allow comparison and analysis of any sessions of interest. Session selection can be reset by clicking the _Clear selection_ button at the top of the page. 
 The session selection methods are demonstrated in the video below. 
 
 
