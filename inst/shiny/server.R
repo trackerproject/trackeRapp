@@ -504,6 +504,9 @@ server <- function(input, output, session) {
         shinyjs::click("proceed")
     })
 
+    ## Automatically stop the Shiny app when closing the browser tab
+    ## session$onSessionEnded(stopApp)
+
     ## observeEvent(input$return_to_main_page, {
     ##     ## Enable the choice of metrics when in Summary view
     ##     shinyjs::enable("metricsSelected")
