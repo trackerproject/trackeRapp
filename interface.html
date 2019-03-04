@@ -125,8 +125,7 @@ analyse, for example, evening sessions and morning sessions separately,
 as well as the user might be interested in analysing sessions within a
 specific time range. For example, Figure <a href="interface.html#fig:workoutTimelineSelectedSessions">1.2</a>
 illustrates the user selecting
-sessions between 14:30-18:00 and 1 - 13 June 2013. As shown in Figure
-<a href="interface.html#fig:timelinePlot">1.1</a>, hovering over session segments displays
+sessions between 16:00-21:00. Hovering over session segments displays
 the session number, start and end date to provide a more detailed
 description.</p>
 <div class="figure" style="text-align: center"><span id="fig:timelinePlot"></span>
@@ -144,7 +143,7 @@ Figure 1.2: Workout Timeline - sessions selected by date and time of the day
 </div>
 <div id="summary-table-of-selected-sessions" class="section level2">
 <h2><span class="header-section-number">1.2</span> Summary table of selected sessions</h2>
-<p>The summary table (Figure <a href="interface.html#fig:summarySelectedSessions">1.3</a>) displays the date, the start time, the end time, the duration and the sport of each session. Currently selected sessions are highlighted with a grey colour. In order to accommodate for large datasets, the table is
+<p>The summary table (Figure <a href="interface.html#fig:summarySelectedSessions">1.3</a>) displays the date, the start time, the end time, the duration and the sport of each session, as well as it allows users to select sessions directly from the table. Currently selected sessions are highlighted with a blue colour. In order to accommodate for large datasets, the table is
 scrollable with the ability to search for key values.</p>
 <div class="figure" style="text-align: center"><span id="fig:summarySelectedSessions"></span>
 <img src="Images/summary_selected_sessions.png" alt="Summary of Selected Sessions" width="95%" />
@@ -156,8 +155,7 @@ Figure 1.3: Summary of Selected Sessions
 <div id="map" class="section level2">
 <h2><span class="header-section-number">1.3</span> Map</h2>
 <p>The map (Figure <a href="interface.html#fig:map">1.4</a>) displays routes of all the currently selected
-sessions in a blue colour and currently selected sessions are highlighted with an orange colour. Hovering over a session displays a basic summary of the session as shown in Figure
-<a href="interface.html#fig:map">1.4</a>. The basic summary displays the session number,
+sessions in a blue colour and all the unselected sessions are displayed in a grey colour colour. Hovering over a route displays a basic summary of the session. The basic summary displays the session number,
 distance, duration, average pace of the session and also the current speed depending.</p>
 <div class="figure" style="text-align: center"><span id="fig:map"></span>
 <img src="Images/map.png" alt="Map" width="95%" />
@@ -172,7 +170,7 @@ Figure 1.4: Map
 session on a plot with date on the x-axis and the value on the y-axis.
 It also shows the current units of measurement on the y-axis. The plot
 enables the user to track their progress over time, identify changes in
-their training pattern or detect changes in intensity of their
+their training pattern or detect changes in the intensity of their
 performance.</p>
 <p>Session summary values include: average speed, pace, power, cadence running, cadence cycling, and
 heart rate, where each variable is calculated over the time spent moving throughout the session. The summaries also include total distance covered, total duration, and work-to-rest ratio. See <span class="citation">Frick and Kosmidis (<a href="#ref-trackeR">2017</a>)</span> for detail on calculation of each variable and any mathematical
@@ -183,7 +181,7 @@ selected variable is individually plotted in a separate box (Figure
 <a href="interface.html#fig:sessionSummaries">1.5</a>), providing a clear separation in the
 user interface. As shown in Figure
 <a href="interface.html#fig:sessionSummaries">1.5</a>, selected sessions are highlighted
-with an orange colour and hovering over an individual point displays the
+with a blue colour and hovering over an individual point displays the
 exact value, the date, the number and the sport of the session.</p>
 <div class="figure" style="text-align: center"><span id="fig:sessionSummaries"></span>
 <img src="Images/session_summaries.png" alt="Session summary plots for selected variables" width="95%" />
@@ -196,8 +194,7 @@ Figure 1.5: Session summary plots for selected variables
 <h2><span class="header-section-number">1.5</span> Summary boxes of selected sessions</h2>
 <p>The summary boxes (Figure <a href="interface.html#fig:summaryBoxes">1.6</a>) display the average values for the total
 distance covered, average duration, average pace and average heart rate
-for the selected sessions (note that all sessions are considered if none
-are selected). The boxes provide a tool for an instant analysis and
+for the selected sessions. The boxes provide a tool for an instant analysis and
 gaining insights of training data in the selected training sessions.</p>
 <div class="figure" style="text-align: center"><span id="fig:summaryBoxes"></span>
 <img src="Images/summary_boxes.png" alt="Summary boxes" width="95%" />
@@ -206,12 +203,10 @@ Figure 1.6: Summary boxes
 </p>
 </div>
 <p>For example, the user might be interested in comparing their training
-results in the morning (6:00-10:00) and the afternoon (17:00-20:00), as
+results in the morning and the afternoon, as
 displayed in Figures <a href="interface.html#fig:morningSessions">1.7</a> and <a href="interface.html#fig:eveningSessions">1.8</a>, respectively, by selecting sessions from the
 workout timeline plot. The user can right away see that the morning and
-afternoon workouts are quite similar in average distance, pace and heart
-rate and the afternoon workouts seem to have on average slightly higher
-average pace.</p>
+afternoon workouts are quite similar in average distance and duration, but the average pace of 3.2 min/km in the afternoon sessions seems quite considerably lower than for the morning sessions with average pace of 4.6 min/km.</p>
 <div class="figure" style="text-align: center"><span id="fig:morningSessions"></span>
 <img src="Images/morning_sessions.png" alt="Morning workouts" width="95%" />
 <p class="caption">
@@ -219,9 +214,9 @@ Figure 1.7: Morning workouts
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:eveningSessions"></span>
-<img src="Images/evening_sessions.png" alt="Evening workouts" width="95%" />
+<img src="Images/evening_sessions.png" alt="Afternoon workouts" width="95%" />
 <p class="caption">
-Figure 1.8: Evening workouts
+Figure 1.8: Afternoon workouts
 </p>
 </div>
 </div>
@@ -242,7 +237,7 @@ within and between individual sessions. This allows users to, for
 example, identify patterns between sessions such as detecting
 consistently high fluctuations in heart rate over the selected sessions.</p>
 <p>Each plot has exactly two traces, where the grey colour represents the
-processed data from and the blue line is the data after
+processed data and the blue line is the data after
 smoothing.</p>
 <div class="figure" style="text-align: center"><span id="fig:individualSessionNew"></span>
 <img src="Images/individual_session_new.png" alt="Individual session plots" width="95%" />
@@ -256,9 +251,9 @@ Figure 1.9: Individual session plots
 <p>The time in zones plots <a href="interface.html#fig:zonesMultipleSessions">1.10</a> are grouped bar charts coloured
 by the session number, where x-axis shows the zone categories (e.g.,
 speed zones, heart rate zones) and y-axis represents the percentage of
-the session spent in the zone. The plots, for example, allow summarizing
-and quantifying training intensity distributions by the
-time spent exercising in certain zones. The user can also evaluate their
+the session spent in the zone. The plots summarize
+and quantify training intensity distributions by the
+time spent exercising in certain zones. The user is also able to evaluate their
 consistency and changes in their performance by comparing the proportion
 of time spent in different zones. The <strong>trackeRapp</strong> implements
 time in zones plots for the following variables: heart rate, speed,
@@ -266,17 +261,8 @@ pace, altitude, cadence and power. In the <strong>trackeRapp</strong> the user
 can specify which variables to plot, as well as how many zones to split
 the data into. An exact percentage values are displayed by hovering over
 individual bars.</p>
-<p>In Figure <a href="interface.html#fig:zonesMultipleSessions">1.10</a>, 4 sessions and the variables
-speed, heart rate and cadence were selected, each split into 6 zones.
-The user can see that session 13 had a lot higher intensity than the
-other three sessions, with a heart rate of above 155 bpm 95% of the time
-and cadence above 92 steps/min around 70% of the session. It appears
-that the user’s heart rate distribution was changing over the four
-sessions, with higher proportion of sessions in the 155-170 bpm zone and
-less time being spent in the 140-155 zone. The user can also analyse
-intensity by the time spent above critical power (see <span class="citation">Frick and Kosmidis (<a href="#ref-trackeR">2017</a>)</span>), assuming CP at
-4m/s. In sessions 8,9, and 10 the athlete spent around 15-20% of the
-sessions above CP and around 40% above CP in session 13.</p>
+<p>In Figure <a href="interface.html#fig:zonesMultipleSessions">1.10</a>, 21 sessions and the variables
+speed and heart rate were selected, each split into 5 zones.</p>
 <div class="figure" style="text-align: center"><span id="fig:zonesMultipleSessions"></span>
 <img src="Images/zones_multiple_sessions.png" alt="Time in zones multiple sessions" width="95%" />
 <p class="caption">
@@ -323,29 +309,23 @@ values.</p>
 Figure 1.11: Heart rate comparison between Sessions 14 and 10
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:heartRateComparison"></span>
-<img src="Images/heart_rate_session_comparison.png" alt="Heart rate comparison between Sessions 14 and 10" width="95%" />
-<p class="caption">
-Figure 1.12: Heart rate comparison between Sessions 14 and 10
-</p>
-</div>
-<p>The importance of concentration profiles can be demonstrated using the
-same example as in Section <a href="interface.html#timeInZones">1.7</a> with the 4 selected sessions <a href="interface.html#fig:zonesMultipleSessions">1.10</a> and concentration profiles for
-the same four sessions (Figure <a href="interface.html#fig:concentrationProfiles">1.11</a>). The profiles reveal that in
-session 13 the athlete’s heart rate is very strongly concentrated near
-158-160 bpm, i.e., on the lower range of 155-170bpm range of the time in
-zones plot. On the other hand, session 10 is completely different, where
-the athlete’s heart rate is rather evenly distributed in a wider range
-of 140-164 bpm and reaching above 162 bpm relatively more often.
-Additionally, the high peak of session 13 reveals that the athletes
-heart rate near 158-160 bpm was sustained for a relatively long time
-(around 1h 15min). Figure <a href="interface.html#fig:heartRateComparison">1.12</a> demonstrates the difference
-between sessions 13 and 10 by plotting the individual sessions. Lastly,
-assuming critical speed (see Section <a href="#workCapacity"><strong>??</strong></a>) of 4m/s, the speed of sessions 8, 9 and 10 is
-concentrated below the critical speed, whereas session 13 is
-concentrated above the critical speed. This might suggest that for an
-optimal training progress, the athletes intensity might be too high in
-session 13, or too low in the sessions 8, 9 and 10.</p>
+<!-- The importance of concentration profiles can be demonstrated using the -->
+<!-- same example as in Section \@ref(timeInZones) with the 4 selected sessions \@ref(fig:zonesMultipleSessions) and concentration profiles for -->
+<!-- the same four sessions (Figure \@ref(fig:concentrationProfiles)). The profiles reveal that in -->
+<!-- session 13 the athlete's heart rate is very strongly concentrated near -->
+<!-- 158-160 bpm, i.e., on the lower range of 155-170bpm range of the time in -->
+<!-- zones plot. On the other hand, session 10 is completely different, where -->
+<!-- the athlete's heart rate is rather evenly distributed in a wider range -->
+<!-- of 140-164 bpm and reaching above 162 bpm relatively more often. -->
+<!-- Additionally, the high peak of session 13 reveals that the athletes -->
+<!-- heart rate near 158-160 bpm was sustained for a relatively long time -->
+<!-- (around 1h 15min). Figure \@ref(fig:heartRateComparison) demonstrates the difference -->
+<!-- between sessions 13 and 10 by plotting the individual sessions. Lastly, -->
+<!-- assuming critical speed (see Section \@ref(workCapacity)) of 4m/s, the speed of sessions 8, 9 and 10 is -->
+<!-- concentrated below the critical speed, whereas session 13 is -->
+<!-- concentrated above the critical speed. This might suggest that for an -->
+<!-- optimal training progress, the athletes intensity might be too high in -->
+<!-- session 13, or too low in the sessions 8, 9 and 10. -->
 <!-- ## Work capacity plot {#workCapacity} -->
 <!-- The work capacity plots -->
 <!-- (Figure \@ref(fig:sessionExample)) display the amount of a finite work -->
@@ -383,13 +363,12 @@ session 13, or too low in the sessions 8, 9 and 10.</p>
 <h2><span class="header-section-number">1.9</span> Sports identification</h2>
 <p>Many athletes collect data on various sports, such as swimming, running
 and cycling. In order to allow the user to analyse the individual sports
-separately, the <strong>trackeRapp</strong> splits the users sessions by sport. The <strong>trackeRapp</strong> lets the select which sports to display as shown in Figure <a href="interface.html#fig:sportClassification">1.13</a>, where the user can select any
-subset of the sports and the user interface is automatically updated
+separately, the <strong>trackeRapp</strong> splits the users sessions by sport. The <strong>trackeRapp</strong> lets the user select which sports to display as shown in Figure <a href="interface.html#fig:sportClassification">1.12</a>, where the user can select any of the sports and the user interface is automatically updated
 based on the selection.</p>
 <div class="figure" style="text-align: center"><span id="fig:sportClassification"></span>
 <img src="Images/sport_classification.png" alt="Sport classification" width="95%" />
 <p class="caption">
-Figure 1.13: Sport classification
+Figure 1.12: Sport classification
 </p>
 </div>
 </div>
@@ -400,25 +379,24 @@ deterioration or improvement of their performance throughout a session
 and identify weak or strong segments, the <strong>trackeRapp</strong>
 implements a changepoint detection algorithm to detect changes within a
 session for the following variables: speed, pace, heart rate, cadence running, cadence cycling and
-power (see example in Figure <a href="interface.html#fig:changePointDetection">1.14</a>). The changepoints are
+power (see example in Figure <a href="interface.html#fig:changePointDetection">1.13</a>). The changepoints are
 detected in a given plot by clicking the <em>Detect changepoints</em> button in the toolbox circle in the top left corner of each plot
 and the detected segments in each of the selected sessions are displayed
-by a dark red dash lines.</p>
+by blue dash lines.</p>
 <p>The changepoint detection is implemented separately for all of the variables available in the users dataset. The user is able to select the maximum number of
 changepoints to search for in a session. This provides the flexibility
 to limit the number of segments to only detect, for example, the two
 most important changes in the session. For instance, in Figure
-<a href="#fig:changePointDetectionTriathlon"><strong>??</strong></a> the maximum number of
-changepoints is set to two changes for heart rate and four changes for
-speed. However, the algorithm might detect fewer segments than the
+<a href="interface.html#fig:changePointDetection">1.13</a> the maximum number of
+changepoints is set to 3 changes for speed. However, the algorithm might detect fewer segments than the
 maximum set by the user due to the penalty measure implemented, in order
 to avoid over-fitting. By providing the option
 to set the maximum number of changepoints, the user is able to set a
 reasonable maximum number after observing the shape of the data.</p>
 <div class="figure" style="text-align: center"><span id="fig:changePointDetection"></span>
-<img src="Images/changepoint_detection.png" alt="Changepoint detection in two triathlon sessions (dark red dash line" width="95%" />
+<img src="Images/changepoint_detection.png" alt="Changepoint detection (dark red dash line" width="95%" />
 <p class="caption">
-Figure 1.14: Changepoint detection in two triathlon sessions (dark red dash line
+Figure 1.13: Changepoint detection (dark red dash line
 </p>
 </div>
 
