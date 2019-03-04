@@ -1,5 +1,5 @@
 Package: trackeRapp
-Title: Interface for the Analysis of Running and Cycling Data from GPS-Enabled Tracking Devices
+Title: Interface for the Analysis of Running, Cycling and Swimming Data from GPS-Enabled Tracking Devices
 Version: 0.5.900
 Authors@R: c(person(given = "Robin", family = "Hornak",
 	            role = c("aut", "cre"), email = "robinhornak@gmail.com"),
