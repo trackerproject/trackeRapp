@@ -1,41 +1,48 @@
+trackeRapp
+==========
 
-# trackeRapp
+[**trackeRapp**](https://trackerapp.com) is a
+[**shiny**](http://shiny.rstudio.com) interface for the analysis and
+tracking of athletic activity data in R.
 
-The goal of [**trackeRapp**](https://trackerapp.com) is to provide an
-integrated workflow and a web interface for the analysis of sports data
-from GPS-enabled tracking devices. The **trackeRapp** is a platform with
-flexible and extensive visualisation and analytics tools. It has a user
-friendly, intuitive and adjustable interface and it was developed as an
-open-source interface on top of the
-[**trackeR**](https://github.com/trackerproject/trackeR) package. The
-interface was fully built using the **shiny** R package.
+**trackeRapp** builds on the extensive infrastructure provided by the
+[**trackeR**](https://cran.r-project.org/package=trackeR) R package and
+offers a user-friendly web-interface that implements an integrated
+workflow for the analysis of running, cycling and swimming data from
+GPS-enabled tracking devices through flexible and extensive interactive
+visualisations and data-analytic tools. **trackeRapp** offers
+functionality to import data from raw activity files of popular formats
+(tcx, gpx, json and db3), clean them, organised them and finally export
+images of processed activity data that can be used for further analysis
+not only within *trackeRapp* but also for more advanced modelling in R.
 
-## Installation
+Installation
+------------
 
-You can install the **trackeRapp** from CRAN by typing
+You can install **trackeRapp** from CRAN by typing
 
-``` r
-install.packages("trackeRapp")
-```
+    install.packages("trackeRapp")
 
 You can also install the development version of **trackeRapp** from
 github by doing
 
-``` r
-# install.packages("devtools")
-devtools::install_github("trackerproject/trackeRapp")
-```
+    # install.packages("devtools")
+    devtools::install_github("trackerproject/trackeRapp")
 
-## Getting started
+Getting started
+---------------
 
 Please see the [**tour de
-trackeRapp**](https://trackerproject.github.io/trackeRapp/) to learn
-about the **trackeRapp** and all its capabilities, including many
-tutorial videos and visualisations. The following are a few screenshots
-from the **trackeRapp** web
-interface
+trackeRapp**](https://trackerproject.github.io/trackeRapp/) pages for
+tutorial videos, explanation of the visualisations, and to learn more
+about **trackeRapp** and all of its capabilities.
 
-<img src="README_files/evening_sessions.png" title="Session summaries" alt="Session summaries" width="95%" style="display: block; margin: auto;" />
+Below are just a few screenshots from the **trackeRapp** web interface
+
+<img src="README_files/evening_sessions.png" alt="Session summaries" width="95%" />
+<p class="caption">
+Session summaries
+</p>
 
 <br>
 
@@ -49,15 +56,27 @@ interface
 
 <img src="README_files/zones_multiple_sessions.png" width="95%" style="display: block; margin: auto;" />
 
-## Launching the user-interface
+Video channel
+-------------
 
-A user can access the web interface remotely at
-<https://www.trackerapp.com> or on their local machine by running the
-following commands:
+The YouTube channel at features video tutorials about and the workflow
+it provides.
 
-``` r
-# Load the package
-library("trackeRapp")
-# Open the interface in the browser
-trackeR_app()
-```
+Launching the user-interface
+----------------------------
+
+The web-interface can be accessed remotely at
+<https://www.trackerapp.com> or on a local machine by running the
+following commands within R:
+
+    # Load the package
+    library("trackeRapp")
+    # Open the interface in the browser
+    trackeR_app()
+
+Code of Conduct
+---------------
+
+Please note that this project is released with a [Contributor Code of
+Conduct](CONDUCT.md). By participating in this project you agree to
+abide by its terms.

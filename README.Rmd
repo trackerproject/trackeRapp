@@ -63,6 +63,11 @@ knitr::include_graphics('README_files/session_summaries.png')
 knitr::include_graphics('README_files/zones_multiple_sessions.png')
 ```
 
+## Video channel
+The YouTube channel at
+\url{https://www.youtube.com/channel/UCY6y-pw8d1kek1WAIWiVhhw}
+features video tutorials about \pkg{trackeRapp} and the workflow it provides.
+
 ## Launching the user-interface
 
 The web-interface can be accessed remotely at <https://www.trackerapp.com> or on a local machine by running the following commands within R:
@@ -73,3 +78,7 @@ library("trackeRapp")
 # Open the interface in the browser
 trackeR_app()
 ```
+
+## Code of Conduct
+
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
