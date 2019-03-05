@@ -38,7 +38,13 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE) {
         p <- layout(p, dragmode = "select", showlegend = FALSE, yaxis = y, xaxis = x,
                     plot_bgcolor = "rgba(0, 0, 0, 0)",
                     paper_bgcolor = "rgba(0, 0, 0, 0)") %>%
-            config(displayModeBar = F)
+                    config(collaborate = FALSE, displaylogo = FALSE,
+                           modeBarButtonsToRemove = list("zoomIn2d",
+                                                         "zoomOut2d",
+                                                         "autoScale2d",
+                                                         "toggleSpikelines",
+                                                         "hoverClosestCartesian",
+                                             "hoverCompareCartesian"))
         p
     }
     else {
