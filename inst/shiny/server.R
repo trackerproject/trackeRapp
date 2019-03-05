@@ -136,14 +136,17 @@ server <- function(input, output, session) {
 
     observeEvent(input$sport_is_cycling, {
         data$sports <- "cycling"
+        data$dummy <- data$dummy + 1
     })
 
     observeEvent(input$sport_is_running, {
         data$sports <- "running"
+        data$dummy <- data$dummy + 1
     })
 
     observeEvent(input$sport_is_swimming, {
         data$sports <- "swimming"
+        data$dummy <- data$dummy + 1
     })
     ## Sessions selected by sport using selection panel.
     observeEvent(c(data$sports, data$dummy), {
