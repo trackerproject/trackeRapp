@@ -23,16 +23,18 @@ devices through the \code{trackeR} R package. \code{trackerRapp} or
 \section{Getting started}{
 
 See the \code{"tour de trackeRapp"} pages at
-\url{https://trackerproject.github.io/trackeRapp/>} for
-tutorials, explanations of the visualisations that \pkg{trackeRapp} provides, and to
-learn more about all its current capabilities.
+\url{https://trackerproject.github.io/trackeRapp/} for tutorial
+videos, explanation of the workflow and visualizations that
+\pkg{trackeRapp} offers, and to, generally, learn more about
+\pkg{trackeRapp} and all of its capabilities.
 }
 
 \section{Video channel}{
 
-The YouTube channel at
-\url{https://www.youtube.com/channel/UCY6y-pw8d1kek1WAIWiVhhw}
-features video tutorials about \pkg{trackeRapp} and the workflow it provides.
+\pkg{trackeRapp} has a dedicated YouTube channel at
+\url{https://www.youtube.com/channel/UCY6y-pw8d1kek1WAIWiVhhw}. The
+channel features video tutorials about \pkg{trackeRapp} and the
+workflow it provides.
 }
 
 \section{Development notes and acknowledgements}{
