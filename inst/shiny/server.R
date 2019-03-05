@@ -326,6 +326,15 @@ server <- function(input, output, session) {
         })
     })
 
+    observeEvent(data$selected_sessions, {
+        if (isTRUE(length(data$selected_sessions) == 0)) {
+            data$limits <- data$limits0
+        }
+        else {
+            data$limits <- trackeR::compute_limits(data$object[data$selected_sessions], a = 0.1)
+        }
+    })
+
     ## Workouts analysis
     observeEvent(input$proceed, {
         removeModal()
@@ -367,12 +376,6 @@ server <- function(input, output, session) {
             shinyWidgets::updatePickerInput(session = session, inputId = "zonesMetricsPlot",
                                             choices =  metrics[have_data_metrics_selected()],
                                             selected = 'speed')
-            if (isTRUE(length(data$selected_sessions) == 0)) {
-                data$limits <- data$limits0
-            }
-            else {
-                data$limits <- trackeR::compute_limits(data$object[data$selected_sessions], a = 0.1)
-            }
         }, ignoreInit = TRUE)
 
         ## Generate individual sessions plots (except work capacity)
