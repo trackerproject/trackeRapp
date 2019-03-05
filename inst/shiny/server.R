@@ -93,6 +93,7 @@ server <- function(input, output, session) {
             ## See helper file
             trackeRapp:::generate_objects(data, output, session, choices)
         }
+        shinyjs::hide("logo")
     })
 
     has_data_sport <- reactive({lapply(data$summary[which(trackeR::get_sport(data$summary) %in% if(!is.null(data$sports)) data$sports else c("running", "cycling", "swimming"))],

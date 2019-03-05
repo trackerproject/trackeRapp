@@ -1,5 +1,5 @@
-trackeRapp <img src="README_files/trackeRapp.svg" width="320" align="right">
-============================================================================
+trackeRapp <img src="README_files/hex_trackeRapp.svg" width="320" align="right">
+================================================================================
 
 [**trackeRapp**](https://trackerapp.com) is a
 [**shiny**](http://shiny.rstudio.com) interface for the analysis and

@@ -6,7 +6,9 @@ ui <- shinydashboard::dashboardPage(
   title = "trackeRapp",
   skin = opts$skin,
   shinydashboard::dashboardHeader(
-                      title = span(tagList(icon("dashboard"), "trackeRapp"))),
+                      title = span(tagList(#icon("dashboard"),
+                                           img(src = "text_trackeRapp.svg", width = "60%")))),
+                      ## title = span(tagList(img(src = "hex_trackeRapp.svg", width = "50"), "trackeRapp"))),
   shinydashboard::dashboardSidebar(
                       tags$style(HTML(opts$custom_css)),
                       shinydashboard::sidebarMenu(
@@ -62,5 +64,10 @@ ui <- shinydashboard::dashboardPage(
                                           ## Load data button is clicked
                                           shinyjs::hidden(actionLink("createDashboard", "")),
                                           shinyjs::hidden(actionLink("proceed", "")))),
-  shinydashboard::dashboardBody(shinyjs::useShinyjs(),
-                                shinyjs::extendShinyjs(text = opts$custom_js)))
+  shinydashboard::dashboardBody(
+                      img(id = "logo", src = "hex_trackeRapp.svg",
+                          style="width:50%; display:block; margin-left:auto; margin-right:auto;"),
+                      shinyjs::useShinyjs(),
+                      shinyjs::extendShinyjs(text = opts$custom_js)))
+
+
