@@ -32,7 +32,7 @@ plot_selected_workouts <- function(x,
                                    y_axis_range = NULL) {
     opts <- trops()
 
-    if (is.null(session)) {
+    if (isTRUE(length(session) == 0)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
     }
 
