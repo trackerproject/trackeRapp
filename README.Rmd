@@ -42,6 +42,12 @@ See the [**tour de trackeRapp**](https://trackerproject.github.io/trackeRapp/) p
 
 Below are just a few screenshots from the **trackeRapp** web interface
 
+```{r out.width='95%', fig.align='center', fig.cap='Home page', echo=FALSE}
+knitr::include_graphics('README_files/loading.png')
+```
+
+<br>
+
 ```{r out.width='95%', fig.align='center', fig.cap='Session summaries', echo=FALSE}
 knitr::include_graphics('README_files/evening_sessions.png')
 ```

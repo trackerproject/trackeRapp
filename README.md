@@ -42,6 +42,13 @@ tutorial videos, explanation of the workflow and visualizations that
 
 Below are just a few screenshots from the **trackeRapp** web interface
 
+<img src="README_files/loading.png" alt="Home page" width="95%" />
+<p class="caption">
+Home page
+</p>
+
+<br>
+
 <img src="README_files/evening_sessions.png" alt="Session summaries" width="95%" />
 <p class="caption">
 Session summaries
