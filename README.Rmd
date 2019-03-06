@@ -40,6 +40,7 @@ devtools::install_github("trackerproject/trackeRapp")
 
 See the [**tour de trackeRapp**](https://trackerproject.github.io/trackeRapp/) pages for tutorial videos, explanation of the workflow and visualizations that **trackeRapp** offers, and to, generally, learn more about **trackeRapp** and all of its capabilities.
 
+
 Below are just a few screenshots from the **trackeRapp** web interface
 
 ```{r out.width='95%', fig.align='center', fig.cap='Home page', echo=FALSE}
