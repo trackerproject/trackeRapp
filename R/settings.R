@@ -40,6 +40,25 @@ trops <- function() {
      .main_plots rect.legendtoggle {
        cursor: default;
      }
+
+     #logo {
+       width: 50%;
+       display: block;
+       margin-left: auto;
+       margin-right: auto;
+     }
+
+     #sad_text {
+       font-size: 1.5em;
+       text-align: center;
+       color: #222d32;
+     }
+
+     #sad_icon {
+       font-size: 3em;
+       text-align: center;
+       color: #222d32;
+     }
     "
     custom_js <-
     "
