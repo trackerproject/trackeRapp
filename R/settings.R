@@ -59,6 +59,10 @@ trops <- function() {
        text-align: center;
        color: #222d32;
      }
+
+     #important_text {
+       font-weight: bold;
+     }
     "
     custom_js <-
     "
