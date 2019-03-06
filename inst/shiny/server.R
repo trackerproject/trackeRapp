@@ -197,6 +197,18 @@ server <- function(input, output, session) {
         removeModal()
     })
 
+    ## Message and actions on firefox issues
+    shinyjs::runjs('Shiny.setInputValue("browser", bowser.name);')
+    observeEvent(input$browser, {
+        if (grepl("firef", input$browser, ignore.case = TRUE)) {
+            shinyjs::show(id = "firefoxmessage")
+            shinyjs::disable(id = "resetButton")
+            shinyjs::disable(id = "uploadButton")
+            shinyjs::disable(id = "download_data")
+        }
+    })
+
+
     ## Session summaries page
     observeEvent(input$createDashboard, {
         output$timeline_plot <- plotly::renderPlotly({
