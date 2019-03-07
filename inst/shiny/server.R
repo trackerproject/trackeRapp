@@ -3,20 +3,18 @@
 live_version <- FALSE
 if (isTRUE(live_version)) {
     library("trackeR")
-    library("shiny")
-    library("plotly")
-    library("shinyWidgets")
-    library("shinyjs")
-    library("shinyalert")
-    library("shinydashboard")
-    library("shinycssloaders")
     library("zoo")
-    library("changepoint")
+    library("foreach")
     library("mgcv")
+    library("plotly")
+    library("DT")
+    library("changepoint")
+    library("shiny")
+    library("shinyjs")
+    library("shinydashboard")
+    library("shinyWidgets")
     library("stats")
     library("utils")
-    library("foreach")
-    library("DT")
 }
 
 ## trops
