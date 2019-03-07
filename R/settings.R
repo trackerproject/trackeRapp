@@ -63,6 +63,14 @@ trops <- function() {
      #important_text {
        font-weight: bold;
      }
+
+    #fright {
+      float: right;
+    }
+
+    #fleft {
+      float: left;
+    }
     "
     custom_js <-
     "
