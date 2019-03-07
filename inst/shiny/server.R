@@ -15,6 +15,7 @@ if (isTRUE(live_version)) {
     library("shinyWidgets")
     library("stats")
     library("utils")
+    library("V8")
 }
 
 ## trops
