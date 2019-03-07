@@ -212,9 +212,11 @@ server <- function(input, output, session) {
     observeEvent(input$createDashboard, {
         output$timeline_plot <- plotly::renderPlotly({
             withProgress(message = 'Timeline', value = 0, {
+                if (!is.null(data$summary)) {
+                    ret <- trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
+                }
                 incProgress(1/1, detail = "Plotting")
-                if (!is.null(data$summary))
-                    trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
+                ret
             })
         })
         ## Re-render all plots
@@ -265,11 +267,11 @@ server <- function(input, output, session) {
                 withProgress(message = 'Map', value = 0, {
                     incProgress(1/2, detail = "Preparing routes")
                     pr <- preped_route_map()$sessions
-                    incProgress(1/1, detail = "Mapping")
                     trackeRapp:::plot_map(df = preped_route_map()$route,
                                           all_sessions = pr,
                                           sumX = data$summary,
                                           colour_sessions = isolate(data$selected_sessions))
+                    incProgress(1/1, detail = "Mapping")
                 })
             })
 
@@ -307,13 +309,14 @@ server <- function(input, output, session) {
                 withProgress(message = paste(i, "plots"), value = 0, {
                     incProgress(1/1, detail = "Subsetting")
                     cdat <- plot_dataframe()
-                    incProgress(1/1, detail = "Plotting")
                     sessions_to_plot <- data$summary$session#[get_sport(data$object) %in% data$sports]
-                    trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
-                                               what = i,
-                                               dat =  cdat,
-                                               sessions = data$selected_sessions,
-                                               sports = trackeR::get_sport(data$object)[sessions_to_plot])
+                    ret <- trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
+                                                      what = i,
+                                                      dat =  cdat,
+                                                      sessions = data$selected_sessions,
+                                                      sports = trackeR::get_sport(data$object)[sessions_to_plot])
+                    incProgress(1/1, detail = "Plotting")
+                    ret
                 })
             })
         })
@@ -377,10 +380,11 @@ server <- function(input, output, session) {
             withProgress(message = 'Zones plots', value = 0, {
                 incProgress(1/2, detail = "Computing breaks")
                 br <- breaks()
+                ret <- trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
+                                               what = input$zonesMetricsPlot, breaks = br,
+                                               n_zones = as.numeric(input$n_zones))
                 incProgress(2/2, detail = "Plotting")
-                trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
-                                        what = input$zonesMetricsPlot, breaks = br,
-                                        n_zones = as.numeric(input$n_zones))
+                ret
             })
         })
 
@@ -410,8 +414,8 @@ server <- function(input, output, session) {
             output[[paste0(i, "_plot")]] <- renderUI({
                 plotly::plotlyOutput(paste0(i, "Plot"),
                                      width = plot_width(),
-                                     height = "auto")
-                                     ## height = paste0(opts$workout_view_rel_height, "vw"))
+                                     ## height = "auto")
+                                     height = paste0(opts$workout_view_rel_height, "vw"))
             })
 
             ## Render individual sessions plots (except work capacity)
@@ -421,13 +425,14 @@ server <- function(input, output, session) {
                     if (!is.null(input[[paste0("detect_changepoints", i)]])) {
                         fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
                     }
+                    ret <- trackeRapp:::plot_selected_workouts(
+                                            x = data$object, session = data$selected_sessions, what = i,
+                                            sumX = data$summary, changepoints = fit_changepoint,
+                                            threshold = FALSE, smooth = TRUE,
+                                            n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
+                                            desampling = 1, y_axis_range = data$limits[[i]])
                     incProgress(1/1, detail = "Plotting")
-                    trackeRapp:::plot_selected_workouts(
-                                     x = data$object, session = data$selected_sessions, what = i,
-                                     sumX = data$summary, changepoints = fit_changepoint,
-                                     threshold = FALSE, smooth = TRUE,
-                                     n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
-                                     desampling = 1, y_axis_range = data$limits[[i]])
+                    ret
                 })
             })
             output[[i]] <- reactive({
@@ -462,12 +467,13 @@ server <- function(input, output, session) {
             withProgress(message = 'Concentration profiles', value = 0, {
                 incProgress(1/2, detail = "Computing profiles")
                 cps <- concentration_profiles()
+                ret <- trackeRapp:::plot_concentration_profiles(
+                                        x = data$object,
+                                        session = data$selected_sessions,
+                                        what = input$profileMetricsPlot,
+                                        profiles_calculated = cps)
                 incProgress(1/1, detail = "Plotting")
-                trackeRapp:::plot_concentration_profiles(
-                                 x = data$object,
-                                 session = data$selected_sessions,
-                                 what = input$profileMetricsPlot,
-                                 profiles_calculated = cps)
+                ret
             })
         })
 
