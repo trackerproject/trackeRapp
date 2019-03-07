@@ -1,6 +1,6 @@
 ## Live version configuration
 ## set to TRUE only for a live version
-live_version <- FALSE
+live_version <- TRUE
 if (isTRUE(live_version)) {
     library("trackeR")
     library("zoo")
@@ -267,11 +267,12 @@ server <- function(input, output, session) {
                 withProgress(message = 'Map', value = 0, {
                     incProgress(1/2, detail = "Preparing routes")
                     pr <- preped_route_map()$sessions
-                    trackeRapp:::plot_map(df = preped_route_map()$route,
+                    ret <- trackeRapp:::plot_map(df = preped_route_map()$route,
                                           all_sessions = pr,
                                           sumX = data$summary,
                                           colour_sessions = isolate(data$selected_sessions))
                     incProgress(1/1, detail = "Mapping")
+                    ret
                 })
             })
 
