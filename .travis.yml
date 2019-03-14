@@ -8,7 +8,6 @@ addons:
     packages:
      - libxml2-dev # for XML
      - libudunits2-dev
-     - libnode-dev
 
 branches:
   only:
