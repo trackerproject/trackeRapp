@@ -9,6 +9,7 @@ addons:
      - libxml2-dev # for XML
      - libudunits2-dev
      - libv8-dev
+     - libgdal1-dev
 
 branches:
   only:
