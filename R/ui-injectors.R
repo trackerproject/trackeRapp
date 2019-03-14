@@ -11,12 +11,9 @@ create_map <- function() {
                              id = "box1",
                              width = 12,
                              collapsible = TRUE,
-                             collapsed = TRUE,
+                             collapsed = FALSE,
                              title = tagList(icon("map"), "Map"),
-                             plotlyOutput("map",
-                                          width = "auto",
-                                          height = "auto"))))))
-                                          ## height = "50vh"))))))
+                             mapdeck::mapdeckOutput(outputId = "map"))))))
 }
 
 ## Insert summary boxes

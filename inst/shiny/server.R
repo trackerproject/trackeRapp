@@ -13,6 +13,7 @@ if (isTRUE(live_version)) {
     library("shinyjs")
     library("shinydashboard")
     library("shinyWidgets")
+    library("mapdeck")
     library("stats")
     library("utils")
     library("V8")
@@ -22,7 +23,8 @@ if (isTRUE(live_version)) {
 opts <- trackeRapp:::trops()
 
 ## Set token for Mapbox
-Sys.setenv("MAPBOX_TOKEN" = "pk.eyJ1IjoicnVnZWVyIiwiYSI6ImNqOTduN2phMTBmYXkyd29yNjR1amU2cjUifQ.IhNRZRmy1mlbLloz-p6vbw")
+## Sys.setenv("MAPBOX_TOKEN" = "pk.eyJ1IjoicnVnZWVyIiwiYSI6ImNqOTduN2phMTBmYXkyd29yNjR1amU2cjUifQ.IhNRZRmy1mlbLloz-p6vbw")
+mapbox_key <- "pk.eyJ1IjoicnVnZWVyIiwiYSI6ImNqOTduN2phMTBmYXkyd29yNjR1amU2cjUifQ.IhNRZRmy1mlbLloz-p6vbw"
 ## Set the maximum file size to upload
 options(shiny.maxRequestSize = 30 * 1024^3)
 
@@ -93,6 +95,7 @@ server <- function(input, output, session) {
             trackeRapp:::generate_objects(data, output, session, choices)
         }
         shinyjs::hide("logo")
+        shinyjs::hide("dummy_map")
     })
 
     has_data_sport <- reactive({lapply(data$summary[which(trackeR::get_sport(data$summary) %in% if(!is.null(data$sports)) data$sports else c("running", "cycling", "swimming"))],
@@ -258,19 +261,14 @@ server <- function(input, output, session) {
             trackeRapp:::create_map()
             preped_route_map <- reactive({
                 sessions <- seq_along(data$object)[data$is_location_data]
-                route <- trackeR:::prepare_route(data$object,
-                                                 session = sessions, threshold = FALSE)
-                route$SessionID <- sessions[route$SessionID]
-                list(route = route, sessions = sessions)
+                trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
             })
-            output$map <- plotly::renderPlotly({
+
+            output$map <- mapdeck::renderMapdeck({
                 withProgress(message = 'Map', value = 0, {
                     incProgress(1/2, detail = "Preparing routes")
-                    pr <- preped_route_map()$sessions
-                    ret <- trackeRapp:::plot_map(df = preped_route_map()$route,
-                                          all_sessions = pr,
-                                          sumX = data$summary,
-                                          colour_sessions = isolate(data$selected_sessions))
+                    ret <- mapdeck::mapdeck(token = mapbox_key,
+                                            style = mapdeck::mapdeck_style(opts$mapdeck_style))
                     incProgress(1/1, detail = "Mapping")
                     ret
                 })
@@ -278,22 +276,20 @@ server <- function(input, output, session) {
 
             ## Update map based on current selection
             observeEvent(c(data$selected_sessions, input$is_collapse_box1) , {
-                try(if (!is.null(input$is_collapse_box1)) {
-                        if (input$is_collapse_box1 != 'block') {
-                            sessions_rows <- which(preped_route_map()$route$SessionID %in% data$selected_sessions)
-                            plot_df <- preped_route_map()$route[sessions_rows, ]
-                            if (nrow(plot_df) != 0)
-                                trackeRapp:::update_map(session,
-                                                        data, longitude = plot_df$longitude,
-                                                        latitude = plot_df$latitude)
-                            else
-                                trackeRapp:::update_map(session, data,
-                                                        longitude = preped_route_map()$route$longitude,
-                                                        latitude = preped_route_map()$route$latitude)
-                        }
-                    }, silent = FALSE)
+                sessions_rows <- which(preped_route_map()$session %in% data$selected_sessions)
+                plot_df <- preped_route_map()[sessions_rows, ]
+                if (nrow(plot_df) == 0) {
+                    plot_df <- preped_route_map()
+                }
+                ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
+                plot_df$text <- paste(plot_df$text)
+                mapdeck::mapdeck_update(map_id = "map", data = plot_df) %>%
+                    mapdeck::add_path(stroke_colour = paste0(opts$summary_plots_selected_colour, "E6"),
+                                      stroke_width = opts$mapdeck_width,
+                                      tooltip = "text",
+                                      update_view = TRUE,
+                                      focus_layer = TRUE)
             }, ignoreInit = TRUE, priority = -1)
-            shinyjs::js$is_map_collapse()
         }
 
         ## Sessions summaries plots
@@ -310,7 +306,7 @@ server <- function(input, output, session) {
                 withProgress(message = paste(i, "plots"), value = 0, {
                     incProgress(1/1, detail = "Subsetting")
                     cdat <- plot_dataframe()
-                    sessions_to_plot <- data$summary$session#[get_sport(data$object) %in% data$sports]
+                    sessions_to_plot <- data$summary$session #[get_sport(data$object) %in% data$sports]
                     ret <- trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
                                                       what = i,
                                                       dat =  cdat,
@@ -528,18 +524,5 @@ server <- function(input, output, session) {
     observeEvent(input$proceed_modal, {
         shinyjs::click("proceed")
     })
-
-    ## Automatically stop the Shiny app when closing the browser tab
-    ## session$onSessionEnded(stopApp)
-
-    ## observeEvent(input$return_to_main_page, {
-    ##     ## Enable the choice of metrics when in Summary view
-    ##     shinyjs::enable("metricsSelected")
-    ## })
-
-    ## observeEvent(input$proceed, {
-    ##     ## Disable the choice of metrics when in Workouts view
-    ##     shinyjs::disable("metricsSelected")
-    ## })
 
 }
