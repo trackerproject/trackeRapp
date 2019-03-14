@@ -23,6 +23,8 @@ Imports:
     shinyjs,
     shinydashboard,
     shinyWidgets,
+    sf,
+    mapdeck,
     V8
 License: GPL-3
 URL: https://github.com/trackerproject/trackeRapp

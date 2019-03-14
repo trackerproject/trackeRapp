@@ -385,3 +385,34 @@ render_summary_table <- function(data, input) {
                   options = list(paging = FALSE, scrollY = "295px", info = FALSE))
     })
 }
+
+## Convert trackeRdata and trackeRdataSummary to an sf object  for mapdeck
+get_coords <- function(data, sessions = NULL, keep = 0.1) {
+    popupText <- function(session) {
+        w <- which(sumX$session == session)
+        paste(
+            paste("Session:", session),
+            paste(sumX$sport[w]),
+            paste(sumX$sessionStart[w], "-", sumX$sessionEnd[w]),
+            paste("Distance:", round(sumX$distance[w], 2), un$unit[un$variable == "distance"]),
+            paste("Duration:", round(as.numeric(sumX$duration[w]), 2), units(sumX$duration[w])),
+            sep = "<br/>"
+        )
+    }
+    x <- data$object
+    sumX <- data$summary
+    units <- get_units(x)
+    unit_reference_sport <- find_unit_reference_sport(x)
+    un <- collect_units(units, unit_reference_sport)
+
+    if (is.null(sessions)) {
+        sessions <- seq_along(x)
+    }
+    geometry <- lapply(sessions, function(s) {
+        coord <- coredata(x[[s]])[, c("longitude", "latitude")]
+        subsample <- seq(1, nrow(coord), length.out = ceiling(keep * nrow(coord)))
+        st_multilinestring(list(coord[subsample, ]))
+    })
+    tooltips <- sapply(sessions, popupText)
+    st_sf(session = sessions, sport = sumX$sport[sessions], text = tooltips, geometry = geometry, crs = 4326)
+}
