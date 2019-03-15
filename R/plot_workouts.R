@@ -32,6 +32,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
     ##  Copied from core trackeR
     ## the following line is just intended to prevent R CMD check to produce the NOTE 'no
     ## visible binding for global variable *' because those variables are used in subset()
+
     variable <- type <- NULL
     nsessions <- length(unique(sumX$session))
     ndates <- length(unique(sumX$sessionStart))
@@ -76,7 +77,7 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
                                 "Sport:", sport), showlegend = FALSE) %>%
         add_markers(key = dat$session, color = I(opts$summary_plots_deselected_colour),
                     symbol = ~ sport,
-                    symbols = c("circle", "x", "square"), legendgroup = sport ~ .,
+                    symbols = c("circle", "x", "square"), legendgroup = ~ sport,
                     showlegend = TRUE) %>%
         add_lines(color = I(opts$summary_plots_deselected_colour), connectgaps = TRUE, legendgroup = ~ sport,
                   line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE))
