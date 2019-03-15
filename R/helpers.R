@@ -414,5 +414,5 @@ get_coords <- function(data, sessions = NULL, keep = 0.1) {
         st_multilinestring(list(coord[subsample, ]))
     })
     tooltips <- sapply(sessions, popupText)
-    st_sf(session = sessions, sport = sumX$sport[sessions], text = tooltips, geometry = geometry, crs = 4326)
+    st_sf(session = sessions, sport = sumX$sport[sessions], tooltip = tooltips, geometry = geometry, crs = 4326)
 }

@@ -111,7 +111,8 @@ server <- function(input, output, session) {
       s <- c(input$metricsSelected[sapply(input$metricsSelected, function(x) has_data_sport()[[x]])])
       if (is.null(s)) {
         opts$default_summary_plots
-      } else {
+      }
+      else {
         s
       }
     })
@@ -122,9 +123,11 @@ server <- function(input, output, session) {
         trackeRapp:::generate_selected_sessions_object(data, input,
                                                        plot_selection = TRUE)
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
-        shinyjs::delay(100, shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
-                                                            selected = selected_metrics(),
-                                                            choices = metrics_available_sport()))
+        ## shinyjs::delay(100,
+        shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
+                                        selected = selected_metrics(),
+                                        choices = metrics_available_sport())
+        ## )
     })
 
     observeEvent(input$all_sports, {
@@ -150,22 +153,19 @@ server <- function(input, output, session) {
         data$sports <- "swimming"
         data$dummy <- data$dummy + 1
     })
+
     ## Sessions selected by sport using selection panel.
     observeEvent(c(data$sports, data$dummy), {
-        ## c(input$sport_is_cycling, input$sport_is_running, input$sport_is_swimming, input$all_sports), {
-        shinyjs::delay(1000, trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE))
-        shinyjs::delay(1000,  DT::selectRows(proxy = proxy, selected = data$selected_sessions))
-        ## update metrics available based on sport selected
-
-        ## The default value of selected metrics
-        # if (is.null(selected_metrics())) {
-        #     selected_metrics_non_reactive <- opts$default_summary_plots
-        # } else {
-        #   selected_metrics_non_reactive <- selected_metrics()
-        # }
-        shinyjs::delay(100, shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
-                                                            selected = selected_metrics(),
-                                                            choices = metrics_available_sport()))
+        ## FIXME: Do we really need these delays here?
+        shinyjs::delay(1000,
+                       trackeRapp:::generate_selected_sessions_object(data, input, sport_selection = TRUE)
+                       )
+        shinyjs::delay(1000,
+                       DT::selectRows(proxy = proxy, selected = data$selected_sessions)
+                       )
+        shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
+                                        selected = selected_metrics(),
+                                        choices = metrics_available_sport())
     }, ignoreNULL = FALSE, ignoreInit = TRUE)
 
     ## Sessions selected through summary table
@@ -227,6 +227,7 @@ server <- function(input, output, session) {
             data$has_data[[x]]
             )])
         })
+
         trackeRapp:::create_option_box(sport_options = data$identified_sports,
                                        metrics_available = metrics_available())
 
@@ -258,7 +259,9 @@ server <- function(input, output, session) {
         has_internet_connection <- curl::has_internet()
         ## do not generate map if no location data for any of the sessions
         if ((any(data$is_location_data)) & (has_internet_connection)) {
+
             trackeRapp:::create_map()
+
             preped_route_map <- reactive({
                 sessions <- seq_along(data$object)[data$is_location_data]
                 trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
@@ -267,29 +270,50 @@ server <- function(input, output, session) {
             output$map <- mapdeck::renderMapdeck({
                 withProgress(message = 'Map', value = 0, {
                     incProgress(1/2, detail = "Preparing routes")
+                    ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
+                    plot_df <- preped_route_map()
+                    plot_df$tooltip <- paste(plot_df$tooltip)
                     ret <- mapdeck::mapdeck(token = mapbox_key,
-                                            style = mapdeck::mapdeck_style(opts$mapdeck_style))
+                                            style = mapdeck::mapdeck_style(opts$mapdeck_style),
+                                            data = plot_df) %>%
+                        mapdeck::add_path(stroke_colour = paste0(opts$summary_plots_deselected_colour, "E6"),
+                                          stroke_width = opts$mapdeck_width,
+                                          tooltip = "tooltip",
+                                          layer_id = "base_path")
                     incProgress(1/1, detail = "Mapping")
                     ret
                 })
             })
 
             ## Update map based on current selection
-            observeEvent(c(data$selected_sessions, input$is_collapse_box1) , {
+            observeEvent(c(data$selected_sessions), {
                 sessions_rows <- which(preped_route_map()$session %in% data$selected_sessions)
                 plot_df <- preped_route_map()[sessions_rows, ]
                 if (nrow(plot_df) == 0) {
-                    plot_df <- preped_route_map()
+                    mapdeck::mapdeck_update(map_id = "map", data = plot_df) %>%
+                        mapdeck::clear_path("selection_path")
                 }
-                ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-                plot_df$text <- paste(plot_df$text)
-                mapdeck::mapdeck_update(map_id = "map", data = plot_df) %>%
-                    mapdeck::add_path(stroke_colour = paste0(opts$summary_plots_selected_colour, "E6"),
-                                      stroke_width = opts$mapdeck_width,
-                                      tooltip = "text",
-                                      update_view = TRUE,
-                                      focus_layer = TRUE)
-            }, ignoreInit = TRUE, priority = -1)
+                else {
+                    centroids <- sf::st_centroid(plot_df)
+                    dists <- sf::st_distance(centroids)
+                    centroids$weight <- 255 * rowMeans(unclass(dists) > 1000)
+                    ## Compute centroids and distances
+                    ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
+                    plot_df$tooltip <- paste(plot_df$tooltip)
+                    mapdeck::mapdeck_update(map_id = "map", data = plot_df) %>%
+                        mapdeck::clear_path("selection_path") %>%
+                            mapdeck::add_path(stroke_colour = paste0(opts$summary_plots_selected_colour, "E6"),
+                                              stroke_width = opts$mapdeck_width,
+                                              tooltip = "tooltip",
+                                              layer_id = "selection_path",
+                                              update_view = TRUE,
+                                              focus_layer = TRUE) %>%
+                            mapdeck::add_screengrid(data = centroids,
+                                                    colour_range = rev(colorspace::sequential_hcl(6, l = c(20, 70))),
+                                                    cell_size = 20,
+                                                    opacity = 0.05)
+                }
+            }, priority = -3)
         }
 
         ## Sessions summaries plots
@@ -397,7 +421,7 @@ server <- function(input, output, session) {
         metrics_to_expand <- "" #c('speed')
 
         ## First generate all plots irrespective if data available
-        for (i in c(metrics)) {
+        for (i in metrics) {
             collapse <- if (i %in% metrics_to_expand) FALSE else TRUE
             i <- if (i == 'heart_rate') "heart_rate" else i
             trackeRapp:::create_selected_workout_plot(id = i, collapsed = collapse)
