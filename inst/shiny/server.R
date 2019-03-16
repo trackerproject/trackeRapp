@@ -1,6 +1,6 @@
 ## Live version configuration
 ## set to TRUE only for a live version
-live_version <- FALSE
+live_version <- TRUE
 if (isTRUE(live_version)) {
     library("trackeR")
     library("zoo")
@@ -306,27 +306,25 @@ server <- function(input, output, session) {
                     ## Compute centroids and distances
                     ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
                     selected_data$tooltip <- paste(selected_data$tooltip)
-                    p <- mapdeck::mapdeck_update(map_id = "map", data = selected_data) %>%
-                        mapdeck::clear_path("selection_path")
+                    p <- mapdeck::mapdeck_update(map_id = "map", data = selected_data)
+                    p <- mapdeck::clear_path(p, "selection_path")
                     if (nrow(deselected_data)) {
-                        p <- p %>%
-                            mapdeck::add_path(
+                        p <- mapdeck::add_path(p,
                                          data = deselected_data,
                                          stroke_colour = paste0(opts$summary_plots_deselected_colour, "E6"),
                                          stroke_width = opts$mapdeck_width,
                                          layer_id = "deselection_path")
                     }
-                    p %>%
-                        mapdeck::add_path(stroke_colour = paste0(opts$summary_plots_selected_colour, "E6"),
-                                          stroke_width = opts$mapdeck_width,
-                                          tooltip = "tooltip",
-                                          layer_id = "selection_path",
-                                          update_view = TRUE,
-                                          focus_layer = TRUE) %>%
-                        mapdeck::add_screengrid(data = centroids,
-                                                colour_range = rev(colorspace::sequential_hcl(6, l = c(20, 70))),
-                                                cell_size = 20,
-                                                opacity = 0.05)
+                    p <- mapdeck::add_path(p, stroke_colour = paste0(opts$summary_plots_selected_colour, "E6"),
+                                           stroke_width = opts$mapdeck_width,
+                                           tooltip = "tooltip",
+                                           layer_id = "selection_path",
+                                           update_view = TRUE,
+                                           focus_layer = TRUE)
+                    p <- mapdeck::add_screengrid(p, data = centroids,
+                                                 colour_range = rev(colorspace::sequential_hcl(6, l = c(20, 70))),
+                                                 cell_size = 20,
+                                                 opacity = 0.05)
                 }
             }, priority = -1)
         }
