@@ -303,8 +303,6 @@ server <- function(input, output, session) {
                 else {
                     deselected_data <- preped_route_map()[!selected, ]
                     centroids <- sf::st_centroid(selected_data)
-                    dists <- sf::st_distance(centroids)
-                    centroids$weight <- 255 * rowMeans(unclass(dists) > 1000)
                     ## Compute centroids and distances
                     ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
                     selected_data$tooltip <- paste(selected_data$tooltip)
