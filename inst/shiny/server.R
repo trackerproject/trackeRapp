@@ -1,6 +1,6 @@
 ## Live version configuration
 ## set to TRUE only for a live version
-live_version <- TRUE
+live_version <- FALSE
 if (isTRUE(live_version)) {
     library("trackeR")
     library("zoo")
