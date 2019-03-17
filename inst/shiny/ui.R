@@ -87,7 +87,9 @@ ui <- shinydashboard::dashboardPage(
                                               "Please use another browser while we are investigating the issue"))),
                       shinyjs::useShinyjs(),
                       tags$head(tags$script(src="bowser.min.js")),
-                      shinyjs::extendShinyjs(text = opts$custom_js)
+                      shinyjs::extendShinyjs(text = opts$custom_js),
+                      ## A hack to load the right js
+                      mapdeck::mapdeckOutput(outputId = "dummy_map")
                       ))
 
 

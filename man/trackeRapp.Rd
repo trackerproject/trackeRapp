@@ -54,11 +54,12 @@ acknowledged.
 
 \examples{
 
-\dontrun{
-trackeRapp(quiet = TRUE)
+if (interactive()) {
+  trackeRapp(quiet = TRUE)
 }
-\dontrun{
-trackeR_app(quiet = FALSE)
+
+if (interactive()) {
+  trackeR_app(quiet = FALSE)
 }
 
 }

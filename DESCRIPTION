@@ -1,11 +1,11 @@
 Package: trackeRapp
 Title: Interface for the Analysis of Running, Cycling and Swimming Data from GPS-Enabled Tracking Devices
-Version: 0.9
-Authors@R: c(person(given = "Robin", family = "Hornak",
-	            role = c("aut", "cre"), email = "trackerproject@outlook.com"),
-             person(given = "Ioannis", family = "Kosmidis",
-	            role = c("aut"), email = "ioannis.kosmidis@warwick.ac.uk",
-		    comment = c(ORCID = "0000-0003-1556-0302")))
+Version: 0.9.1
+Authors@R: c(person(given = "Ioannis", family = "Kosmidis",
+	            role = c("aut", "cre"), email = "ioannis.kosmidis@warwick.ac.uk",
+		    comment = c(ORCID = "0000-0003-1556-0302")),
+	    person(given = "Robin", family = "Hornak",
+	            role = c("aut"), email = "robinhornak@gmail.com"))
 Description: Provides an integrated user interface and workflow for
              the analysis of running and cycling data from GPS-enabled
              tracking devices through the 'trackeR' <https://CRAN.R-project.org/package=trackeR> R package.
@@ -23,6 +23,8 @@ Imports:
     shinyjs,
     shinydashboard,
     shinyWidgets,
+    sf,
+    mapdeck,
     V8
 License: GPL-3
 URL: https://github.com/trackerproject/trackeRapp

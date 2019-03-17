@@ -2,6 +2,11 @@
 output: github_document
 ---
 
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/trackeRapp)](https://cran.r-project.org/package=trackeRapp)
+[![Travis-CI Build Status](https://travis-ci.org/ikosmidis/trackeRapp.svg?branch=master)](https://travis-ci.org/ikosmidis/trackeRapp)
+[![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+
+
 # trackeRapp <img src="README_files/hex_trackeRapp.svg" width="320" align="right">
 
 [**trackeRapp**](https://trackerapp.com) is a
