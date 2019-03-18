@@ -329,10 +329,6 @@ server <- function(input, output, session) {
         }
 
         ## Sessions summaries plots
-        plot_dataframe <- reactive({
-            trackeR:::fortify_trackeRdataSummary(data$summary, melt = TRUE)
-        })
-
         ## Generate conditional plot for each metric irrespective of whether data available
         for (metric in c(choices)) {
             trackeRapp:::create_workout_plots(metric)
@@ -342,14 +338,10 @@ server <- function(input, output, session) {
             output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
                 withProgress(message = paste(i, "plots"), value = 0, {
                     incProgress(1/1, detail = "Subsetting")
-                    cdat <- plot_dataframe()
-                    sessions_to_plot <- data$summary$session
-                    ret <- trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
+                    ret <- trackeRapp:::plot_workouts(data = data,
                                                       what = i,
-                                                      dat =  cdat,
-                                                      sessions = data$selected_sessions,
-                                                      sports = trackeR::get_sport(data$object)[sessions_to_plot],
-                                                      options = opts)
+                                                      options = opts,
+                                                      summary_type = "total")
                     incProgress(1/1, detail = "Plotting")
                     ret
                 })

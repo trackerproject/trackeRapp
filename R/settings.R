@@ -92,6 +92,8 @@ trops <- function() {
         summary_box_ok_colour = "blue", # light-blue: #3c8dbc blue: #0073b7
         summary_plots_selected_colour = "#0073b7",
         summary_plots_deselected_colour = "#d2d6de",
+        summart_plots_yaxis_max_factor = 1.2,
+        summart_plots_yaxis_min_factor = 0.8,
         zones_colours = c("#6fc1f1", "#095b8b"),
         workouts_background_colour = "black",
         workouts_changepoint_colour = "#0073b7", ## "grey"
