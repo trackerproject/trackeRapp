@@ -13,8 +13,8 @@
 ## #' @param ... Currently not used.
 ## #' @seealso \code{\link{summary.trackeRdata}}
 plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
-                          group = c("total"), lines = TRUE, sports) {
-    opts <- trops()
+                          group = c("total"), lines = TRUE, sports, options = NULL) {
+    opts <- if (is.null(options)) trops() else options
     if (what %in% c('distance', 'duration', 'wrRatio')) {
         group <- c('total')
     }
@@ -113,7 +113,136 @@ plot_workouts <- function(sumX, what, dat, sessions, shiny = TRUE, date = TRUE,
     y <- list(title = feature,
               range = c(lower_range_y(what, dat),
                         max(dat$value, na.rm = TRUE) * 1.2))
-    x <- list(title = "",  range = ra) ##list(title = "Date",  range = ra)
+    x <- list(title = "",  range = ra)
+
+    layout(p,
+           dragmode = "select", showlegend = TRUE, yaxis = y, legend = list(y = 1.1, orientation = "h"),
+           xaxis = x, margin = list(l = 80, b = 50, pad = 0),
+           plot_bgcolor = "rgba(0, 0, 0, 0)",
+           paper_bgcolor = "rgba(0, 0, 0, 0)") %>%
+        ## list of buttons at
+        ## https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js
+        config(collaborate = FALSE, displaylogo = FALSE,
+               modeBarButtonsToRemove = list("zoomIn2d",
+                                             "zoomOut2d",
+                                             "autoScale2d",
+                                             "toggleSpikelines",
+                                             "hoverClosestCartesian",
+                                             "hoverCompareCartesian"))
+}
+
+
+
+plot_workouts1 <- function(so,
+                           what,
+                           sessions,
+                           date = TRUE,
+                           type = c("total", "moving", "resting"),
+                           lines = TRUE,
+                           sports,
+                           options = NULL) {
+    opts <- if (is.null(options)) trops() else options
+    type <- match.arg(type)
+    ## FEATURE: Add ability to add moving/resting plots
+    if (what %in% c('distance', 'duration', 'wrRatio')) {
+        type <- "total"
+    }
+    else {
+        type <- "total"
+    }
+
+    ## subset
+    so <- so[sessions]
+
+    feature <- lab_sum(feature = what, data = so, whole_text = FALSE)
+    units_text <- lab_sum(feature = what, data = so, whole_text = FALSE)
+
+    ## The following line is just intended to prevent R CMD check to produce the NOTE 'no
+    ## visible binding for global variable *' because those variables are used in subset()
+
+    variable <- type <- NULL
+    nsessions <- length(unique(so$session))
+    ndates <- length(unique(so$sessionStart))
+
+    units <- get_units(so)
+
+    ## subsets on variables and type
+    if (!is.null(what)) {
+        dat <- subset(dat, variable %in% what)
+    }
+    if (!is.null(type)) {
+        dat <- subset(dat, type %in% group)
+    }
+    dat <- subset(dat, session %in% so$session)
+    dat$sport <- sports
+
+    ## remove empty factor levels
+    dat$variable <- factor(dat$variable)
+    ## clean up: if there are only NA observations for a variable, the (free) y-scale cannot
+    ## be determined
+    empty <- tapply(dat$value, dat$variable, function(x) all(is.na(x)))
+    if (any(empty)) dat <- subset(dat, !(variable %in% names(empty)[empty]))
+    ## single session
+    if (nsessions < 2) {
+        dat$sessionStart <- format(dat$sessionStart, format = "%Y-%m-%d")
+        dat$session <- factor(dat$session)
+    }
+    ## x axis
+    if (date) {
+        dat$xaxis <- dat$sessionStart
+        xlab <- "Date"
+    }
+    else {
+        dat$xaxis <- dat$session
+        xlab <- "Session"
+    }
+    #####
+
+    p <- plot_ly(dat,
+                 x = ~ xaxis, y = ~ value, hoverinfo = "text",
+                 text = ~ paste(" Session:", session, "\n",
+                                "Date:", format(sessionStart, format = "%Y-%m-%d"),
+                                "\n", convert_to_name(what), ":", round(value, 2), units_text, "\n",
+                                "Sport:", sport), showlegend = FALSE) %>%
+        add_markers(key = dat$session, color = I(opts$summary_plots_deselected_colour),
+                    symbol = ~ sport,
+                    symbols = c("circle", "x", "square"), legendgroup = ~ sport,
+                    showlegend = TRUE) %>%
+        add_lines(color = I(opts$summary_plots_deselected_colour), connectgaps = TRUE, legendgroup = ~ sport,
+                  line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE))
+    if (shiny) {
+        m <- as.data.frame(dat[dat$session %in% unique(sessions), ])
+        ## FIX for some reason cant plot when only 2 sessions selected
+        if (nrow(m) == 2) {
+            m <- rbind(m, m)
+        }
+        p <- add_markers(p,
+                         data = m, color = I(opts$summary_plots_selected_colour),
+                         symbol = ~ sport,
+                         symbols = c("circle", "x", "square"),
+                         showlegend = FALSE)
+    }
+    ra <- c(min(dat$xaxis), max(dat$xaxis))
+    if(nsessions > 1) {
+        ra[2] <- ra[2] + 0.01 * diff(ra)
+        ra[1] <- ra[1] - 0.01 * diff(ra)
+    }
+    features <- c('avgSpeed', 'avgPace', 'avgCadenceCycling', 'avgCadenceRunning')
+    lower_range_y <- function(feature, dat) {
+        if (feature == 'avgHeartRate') {
+            80
+        }
+        else if (feature %in% features) {
+            min(dat$value, na.rm = TRUE) * 0.8
+        }
+        else {
+            0
+        }
+    }
+    y <- list(title = feature,
+              range = c(lower_range_y(what, dat),
+                        max(dat$value, na.rm = TRUE) * 1.2))
+    x <- list(title = "",  range = ra)
 
     layout(p,
            dragmode = "select", showlegend = TRUE, yaxis = y, legend = list(y = 1.1, orientation = "h"),

@@ -348,7 +348,8 @@ server <- function(input, output, session) {
                                                       what = i,
                                                       dat =  cdat,
                                                       sessions = data$selected_sessions,
-                                                      sports = trackeR::get_sport(data$object)[sessions_to_plot])
+                                                      sports = trackeR::get_sport(data$object)[sessions_to_plot],
+                                                      options = opts)
                     incProgress(1/1, detail = "Plotting")
                     ret
                 })
