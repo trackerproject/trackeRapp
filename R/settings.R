@@ -100,6 +100,7 @@ trops <- function() {
         mapdeck_highlight_radius = 2000,
         mapdeck_width = 5,
         coordinates_keep = 0.2,
+        thin = 0.5,
         workout_view_rel_width = 60,
         workout_view_rel_height = 30,
         dropdown_button_size = "sm", ## see ?shinyWidget::dropdownButton
