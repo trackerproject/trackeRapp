@@ -107,7 +107,8 @@ trops <- function() {
         workout_view_rel_height = 30,
         dropdown_button_size = "sm", ## see ?shinyWidget::dropdownButton
         default_summary_plots = c("distance", "duration", "avgPace"),
-        threshold = FALSE
+        threshold = FALSE,
+        quantile_for_limits = 0.05
     )
 }
 

@@ -208,7 +208,8 @@ server <- function(input, output, session) {
     observeEvent(input$updateUnits, {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
-        data$limits0 <- data$limits <- trackeR::compute_limits(data$object, a = 0.1)
+        data$limits0 <- data$limits <- trackeR::compute_limits(data$object,
+                                                               a = opts$quantile_for_limits)
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         removeModal()
     })
@@ -271,7 +272,7 @@ server <- function(input, output, session) {
         ## Close sidebar
         shinyjs::addClass(selector = "body", class = "sidebar-collapse")
 
-        ## Map
+        ## Map (move to a plot_map function)
         ## do not generate map if no location data for any of the sessions
         if ((any(data$is_location_data)) & (has_internet_connection)) {
             trackeRapp:::create_map()
@@ -377,7 +378,8 @@ server <- function(input, output, session) {
             data$limits <- data$limits0
         }
         else {
-            data$limits <- trackeR::compute_limits(data$object[data$selected_sessions], a = 0.1)
+            data$limits <- trackeR::compute_limits(data$object[data$selected_sessions],
+                                                   a = opts$quantile_for_limits)
         }
     })
 
@@ -486,6 +488,7 @@ server <- function(input, output, session) {
                                            limits = data$limits)
         })
 
+
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
             withProgress(message = 'Concentration profiles', value = 0, {
@@ -495,7 +498,8 @@ server <- function(input, output, session) {
                                         x = data$object,
                                         session = data$selected_sessions,
                                         what = input$profileMetricsPlot,
-                                        profiles_calculated = cps)
+                                        profiles_calculated = cps,
+                                        options = opts)
                 incProgress(1/1, detail = "Plotting")
                 ret
             })
