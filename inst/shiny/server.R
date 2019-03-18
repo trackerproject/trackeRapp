@@ -51,6 +51,9 @@ server <- function(input, output, session) {
     choices <- trackeRapp:::summary_view_features()
     metrics <- trackeRapp:::workout_view_features()
 
+    ## Check if there is internet connection
+    has_internet_connection <- curl::has_internet()
+
     ##  Upload data
     observeEvent(input$uploadButton, {
 
@@ -223,7 +226,6 @@ server <- function(input, output, session) {
 
     ## Session summaries page
     observeEvent(input$createDashboard, {
-        shinyjs::addClass(selector = "body", class = "sidebar-collapse")
         output$timeline_plot <- plotly::renderPlotly({
             withProgress(message = 'Timeline', value = 0, {
                 if (!is.null(data$summary)) {
@@ -266,12 +268,12 @@ server <- function(input, output, session) {
         output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
                                                               "Average pace", data)
 
+        ## Close sidebar
+        shinyjs::addClass(selector = "body", class = "sidebar-collapse")
+
         ## Map
-        ## Check if there is internet connection
-        has_internet_connection <- curl::has_internet()
         ## do not generate map if no location data for any of the sessions
         if ((any(data$is_location_data)) & (has_internet_connection)) {
-
             trackeRapp:::create_map()
 
             preped_route_map <- reactive({
@@ -280,53 +282,50 @@ server <- function(input, output, session) {
             })
 
             output$map <- mapdeck::renderMapdeck({
-                withProgress(message = 'Map', value = 0, {
-                    incProgress(1/2, detail = "Preparing routes")
-                    ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-                    plot_df <- preped_route_map()
-                    plot_df$tooltip <- paste(plot_df$tooltip)
-                    ret <- mapdeck::mapdeck(token = mapbox_key,
-                                            style = mapdeck::mapdeck_style(opts$mapdeck_style))
-                    incProgress(1/1, detail = "Mapping")
-                    ret
-                })
+                mapdeck::mapdeck(token = mapbox_key,
+                                 style = mapdeck::mapdeck_style(opts$mapdeck_style))
             })
 
             ## Update map based on current selection
             observeEvent(data$selected_sessions, {
-                selected <- preped_route_map()$session %in% data$selected_sessions
-                selected_data <- preped_route_map()[selected, ]
-                if (!nrow(selected_data)) {
-                    mapdeck::mapdeck_update(map_id = "map", data = selected_data) %>%
-                        mapdeck::clear_path("selection_path")
-                }
-                else {
-                    deselected_data <- preped_route_map()[!selected, ]
-                    centroids <- sf::st_centroid(selected_data)
-                    ## Compute centroids and distances
-                    ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-                    selected_data$tooltip <- paste(selected_data$tooltip)
-                    p <- mapdeck::mapdeck_update(map_id = "map", data = selected_data)
-                    p <- mapdeck::clear_path(p, "selection_path")
-                    if (nrow(deselected_data)) {
-                        p <- mapdeck::add_path(p,
-                                         data = deselected_data,
-                                         stroke_colour = paste0(opts$summary_plots_deselected_colour, "E6"),
-                                         stroke_width = opts$mapdeck_width,
-                                         layer_id = "deselection_path")
+                withProgress(message = 'Map', value = 0, {
+                    incProgress(1/2, detail = "Preparing routes")
+                    selected <- preped_route_map()$session %in% data$selected_sessions
+                    selected_data <- preped_route_map()[selected, ]
+                    if (!nrow(selected_data)) {
+                        incProgress(1/1, detail = "Mapping")
+                        mapdeck::mapdeck_update(map_id = "map", data = selected_data) %>%
+                            mapdeck::clear_path("selection_path")
                     }
-                    p <- mapdeck::add_path(p, stroke_colour = paste0(opts$summary_plots_selected_colour, "E6"),
-                                           stroke_width = opts$mapdeck_width,
-                                           tooltip = "tooltip",
-                                           layer_id = "selection_path",
-                                           update_view = TRUE,
-                                           focus_layer = TRUE)
-                    p <- mapdeck::add_screengrid(p, data = centroids,
-                                                 colour_range = rev(colorspace::sequential_hcl(6, l = c(20, 70))),
-                                                 cell_size = 20,
-                                                 opacity = 0.05)
-                }
-            }, priority = -1)
+                    else {
+                        deselected_data <- preped_route_map()[!selected, ]
+                        ## Compute centroids for histogram
+                        centroids <- sf::st_centroid(selected_data)
+                        ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
+                        selected_data$tooltip <- paste(selected_data$tooltip)
+                        incProgress(1/1, detail = "Mapping")
+                        p <- mapdeck::mapdeck_update(map_id = "map", data = selected_data)
+                        p <- mapdeck::clear_path(p, "selection_path")
+                        if (nrow(deselected_data)) {
+                            p <- mapdeck::add_path(p,
+                                                   data = deselected_data,
+                                                   stroke_colour = paste0(opts$summary_plots_deselected_colour, "E6"),
+                                                   stroke_width = opts$mapdeck_width,
+                                                   layer_id = "deselection_path")
+                        }
+                        p <- mapdeck::add_path(p, stroke_colour = paste0(opts$summary_plots_selected_colour, "E6"),
+                                               stroke_width = opts$mapdeck_width,
+                                               tooltip = "tooltip",
+                                               layer_id = "selection_path",
+                                               update_view = TRUE,
+                                               focus_layer = TRUE)
+                        p <- mapdeck::add_screengrid(p, data = centroids,
+                                                     colour_range = rev(colorspace::sequential_hcl(6, l = c(20, 70))),
+                                                     cell_size = 20,
+                                                     opacity = 0.05)
+                    }
+                })
+            }, priority = -3)
         }
 
         ## Sessions summaries plots
