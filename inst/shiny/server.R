@@ -461,7 +461,8 @@ server <- function(input, output, session) {
                                             sumX = data$summary, changepoints = fit_changepoint,
                                             threshold = FALSE, smooth = TRUE,
                                             n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
-                                            desampling = opts$thin, y_axis_range = data$limits[[i]])
+                                            desampling = opts$thin,
+                                            y_axis_range = data$limits[[i]])
                     incProgress(1/1, detail = "Plotting")
                     ret
                 })
