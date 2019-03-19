@@ -29,8 +29,9 @@ plot_selected_workouts <- function(x,
                                    unit_reference_sport = NULL,
                                    moving_threshold = NULL,
                                    desampling = 1,
-                                   y_axis_range = NULL) {
-    opts <- trops()
+                                   y_axis_range = NULL,
+                                   options = NULL) {
+    opts <- if (is.null(options)) trops() else options
 
     if (isTRUE(length(session) == 0)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
@@ -108,15 +109,16 @@ plot_selected_workouts <- function(x,
     start <- 0
 
     ## Loop through each session
-    for (i in session) {
-        df_subset <- x[[which(i == session)]]
+    for (i in seq_along(session)) {
+        df_subset <- x[[i]]
         df_subset <- df_subset[, what]
         dates <- index(df_subset)
         df_subset <- data.frame(df_subset)
         names(df_subset) <- what
         df_subset$Index <- dates
-        df_subset$id <- i
-        df_subset$SessionID <- paste0(paste(i, get_sport(x[which(i == session)]), sep = ": "),
+        df_subset$id <- csession <- session[i]
+        csport <- get_sport(x[i])
+        df_subset$SessionID <- paste0(paste(csession, csport, sep = ": "),
                                       "\n", format(df_subset$Index, "%Y-%m-%d"))
         df_subset$numericDate <- as.numeric(df_subset$Index)
         n_plot <- n_plot + 1
@@ -126,7 +128,7 @@ plot_selected_workouts <- function(x,
         has_values <- non_na_values > 100
         df_subset <- if (has_values) df_subset[not_na, ] else df_subset
 
-        annotations_list <- list(text = paste("Session:", i),
+        annotations_list <- list(text = paste("Session:", csession),
                                  xref = "paper",
                                  yref = "paper",
                                  yanchor = "bottom",
@@ -176,10 +178,16 @@ plot_selected_workouts <- function(x,
             }
             sampled_rows <- sort(sample(index(df_subset),
                                         size = length(index(df_subset)) * desampling))
+            col <- ifelse(csport == "running",
+                          opts$summary_plots_selected_colour_run,
+                   ifelse(csport == "cycling",
+                          opts$summary_plots_selected_colour_ride,
+                          opts$summary_plots_selected_colour_swim))
+
             a <- plot_ly(df_subset[sampled_rows, ],
                          x = ~ Index, y = ~ Value, hoverinfo = "none",
                          type = "scatter", mode = "lines",
-                         showlegend = FALSE, alpha = 0.2, color = I(opts$workouts_background_colour))
+                         showlegend = FALSE, alpha = 0.2, color = I(col))#I(opts$workouts_background_colour))
             if (smooth) {
                 smoothed_model <- gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
                 smoothed_data <- predict.gam(smoothed_model, newdata = df_subset)
@@ -188,7 +196,7 @@ plot_selected_workouts <- function(x,
                 a <- a %>% add_lines(data = df_subset,
                                      x = ~ Index, y = smoothed_data, hoverinfo = "text",
                                      text = paste(round(smoothed_data, 2), var_units),
-                                     color = I(opts$workouts_smoother_colour),
+                                     color = I(col),#I(opts$workouts_smoother_colour),
                                      showlegend = FALSE, alpha = 1)
             }
             a <- a %>% layout(annotations = annotations_list,
@@ -206,12 +214,12 @@ plot_selected_workouts <- function(x,
                        yaxis = c(axis_list, list(range = y_axis_range, showticklabels = TRUE)))
         }
         plot_stored[[as.character(i)]] <- a
-        sport_image <- switch(sports[which(i == session)],
+        sport_image <- switch(csport,
                               "running" = "running.png",
                               "cycling" = "cycling.png",
                               "swimming" = "swimming.png")
 
-        images[[which(i == session)]] <- list(source = sport_image,
+        images[[csession]] <- list(source = sport_image,
                                               xref = "paper",
                                               yref = "paper",
                                               x = start + step_size / 10,

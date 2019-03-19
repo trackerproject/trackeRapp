@@ -7,13 +7,16 @@
 ## #' @param parallel A logical. Whether use parallel computing.
 ## #' @param breaks A named list of computed breaks for zones from \code{compute_breaks()}.
 plot_zones <- function(x, session, what = c("heart_rate"),
-                       n_zones, parallel = TRUE, breaks) {
+                       n_zones, parallel = TRUE, breaks,
+                       options = NULL) {
+    opts <- if (is.null(options)) trops() else options
     if (isTRUE(length(session) == 0)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
     }
     if (is.null(what)) {
       return(NULL)
     }
+
     x <- zones(x, session = session, what = what, breaks = breaks,
                n_zones = n_zones, parallel = parallel)
     dat <- do.call("rbind", x)
@@ -24,10 +27,11 @@ plot_zones <- function(x, session, what = c("heart_rate"),
                                                     ), ")")), ordered = TRUE)
     dat$Session <- paste("Session", sprintf(paste0("%0", nchar(max(dat$session)), "d"),
                                             dat$session))
+
     dat$timeN <- as.numeric(dat$time)
     ## facets
     units <- getUnits(x)
-    pal <- colorRampPalette(trops()$zones_colours)(max(dat$session))
+    pal <- colorRampPalette(opts$zones_colours)(max(dat$session))
     individual_plots <- list()
     legend_status <- FALSE
     for (feature in what) {
