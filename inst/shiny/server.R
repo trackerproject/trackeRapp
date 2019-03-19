@@ -227,6 +227,10 @@ server <- function(input, output, session) {
 
     ## Session summaries page
     observeEvent(input$createDashboard, {
+
+        data$limits0 <- trackeR::compute_limits(data$object,
+                                                a = opts$quantile_for_limits)
+
         output$timeline_plot <- plotly::renderPlotly({
             withProgress(message = 'Timeline', value = 0, {
                 if (!is.null(data$summary)) {
@@ -493,7 +497,9 @@ server <- function(input, output, session) {
         output$conc_profiles_plots <- plotly::renderPlotly({
             withProgress(message = 'Concentration profiles', value = 0, {
                 incProgress(1/2, detail = "Computing profiles")
+
                 cps <- concentration_profiles()
+
                 ret <- trackeRapp:::plot_concentration_profiles(
                                         x = data$object,
                                         session = data$selected_sessions,
