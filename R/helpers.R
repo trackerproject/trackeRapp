@@ -366,7 +366,8 @@ generate_selected_sessions_object <- function(data, input,
 ## Render summary table
 ## @param data An object of class \code{reactivevalues}.
 ## @param input A shiny object with user input.
-render_summary_table <- function(data, input) {
+render_summary_table <- function(data, input, options = NULL) {
+    opts <- if (is.null(options)) trops() else options
     renderDT({
         dataSelected <- data.frame("Session" = data$summary[["session"]],
                                    "Date" = format(data$summary[["sessionStart"]],
@@ -379,10 +380,14 @@ render_summary_table <- function(data, input) {
                                                       lab_sum("duration", data = data$summary,
                                                               whole_text = FALSE)),
                                    "Sport" = get_sport(data$object))
-        datatable(dataSelected,
-                  rownames = FALSE,
-                  autoHideNavigation = TRUE,
-                  options = list(paging = FALSE, scrollY = "295px", info = FALSE))
+        out <- datatable(dataSelected,
+                         rownames = FALSE,
+                         autoHideNavigation = TRUE,
+                         options = list(paging = FALSE, scrollY = "295px", info = FALSE,
+                                        drawCallback = JS(opts$dt_callback_js)))
+        formatStyle(out,
+                    c("Session", "Date", "Start", "End", "Duration", "Sport"),
+                    backgroundColor = opts$summary_plots_deselected_colour)
     })
 }
 
@@ -414,5 +419,9 @@ get_coords <- function(data, sessions = NULL, keep = 0.1) {
         st_multilinestring(list(coord[subsample, ]))
     })
     tooltips <- sapply(sessions, popupText)
-    st_sf(session = sessions, sport = sumX$sport[sessions], tooltip = tooltips, geometry = geometry, crs = 4326)
+    st_sf(session = sessions,
+          sport = sumX$sport[sessions],
+          tooltip = tooltips,
+          geometry = geometry,
+          crs = 4326)
 }

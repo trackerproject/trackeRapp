@@ -45,6 +45,12 @@ plot_workouts <- function(data,
     so <- subset(so, variable == what & type == summary_type)
 
     so$sport <- data$summary$sport
+    so$col <- ifelse(so$sport == "running",
+                     opts$summary_plots_selected_colour_run,
+              ifelse(so$sport == "cycling",
+                     opts$summary_plots_selected_colour_ride,
+                     opts$summary_plots_selected_colour_swim))
+
 
     ## remove empty factor levels
     so <- droplevels(so)
@@ -84,10 +90,12 @@ plot_workouts <- function(data,
         add_lines(color = I(opts$summary_plots_deselected_colour), connectgaps = TRUE, legendgroup = ~ sport,
                   line = list(shape = "spline", smoothing = 0.5, showlegend = FALSE))
 
+
     ## selected sesssions
+    so_sub <- so[so$session %in% data$selected_sessions, ]
     p <- add_markers(p,
-                     data = so[so$session %in% data$selected_sessions, ],
-                     color = I(opts$summary_plots_selected_colour),
+                     data = so_sub,
+                     color = I(so_sub$col), #I(opts$summary_plots_selected_colour),
                      symbol = ~ sport,
                      symbols = c("circle", "x", "square"),
                      showlegend = FALSE)

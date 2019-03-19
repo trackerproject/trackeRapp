@@ -71,7 +71,7 @@
 #' @importFrom stats sd na.omit median
 #' @importFrom utils read.csv
 #' @importFrom foreach getDoParWorkers foreach %dopar% %do%
-#' @importFrom DT renderDT datatable DTOutput dataTableProxy selectRows
+#' @importFrom DT renderDT datatable DTOutput dataTableProxy selectRows JS formatStyle
 #'
 #' @export
 trackeRapp <- function(quiet = TRUE) {

@@ -234,7 +234,8 @@ server <- function(input, output, session) {
         output$timeline_plot <- plotly::renderPlotly({
             withProgress(message = 'Timeline', value = 0, {
                 if (!is.null(data$summary)) {
-                    ret <- trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
+                    ret <- trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions,
+                                                      options = opts)
                 }
                 incProgress(1/1, detail = "Plotting")
                 ret
@@ -260,7 +261,7 @@ server <- function(input, output, session) {
         ## Summary table
         trackeRapp:::create_summary_timeline_boxes()
 
-        output$summary <- trackeRapp:::render_summary_table(data, input)
+        output$summary <- trackeRapp:::render_summary_table(data, input, options = opts)
 
         ## Summary boxes
         trackeRapp:::create_summary_boxes()
@@ -303,6 +304,11 @@ server <- function(input, output, session) {
                             mapdeck::clear_path("selection_path")
                     }
                     else {
+                        selected_data$col <- ifelse(selected_data$sport == "running",
+                                                    opts$summary_plots_selected_colour_run,
+                                             ifelse(selected_data$sport == "cycling",
+                                                    opts$summary_plots_selected_colour_ride,
+                                                    opts$summary_plots_selected_colour_swim))
                         deselected_data <- preped_route_map()[!selected, ]
                         ## Compute centroids for histogram
                         centroids <- sf::st_centroid(selected_data)
@@ -314,18 +320,19 @@ server <- function(input, output, session) {
                         if (nrow(deselected_data)) {
                             p <- mapdeck::add_path(p,
                                                    data = deselected_data,
-                                                   stroke_colour = paste0(opts$summary_plots_deselected_colour, "E6"),
+                                                   stroke_colour = paste0(opts$summary_plots_deselected_colour, "40"),
                                                    stroke_width = opts$mapdeck_width,
                                                    layer_id = "deselection_path")
                         }
-                        p <- mapdeck::add_path(p, stroke_colour = paste0(opts$summary_plots_selected_colour, "E6"),
-                                               stroke_width = opts$mapdeck_width,
+                        p <- mapdeck::add_path(p,
+                                               stroke_colour = "col",
+                                               stroke_width = opts$mapdeck_width * 2,
                                                tooltip = "tooltip",
                                                layer_id = "selection_path",
                                                update_view = TRUE,
                                                focus_layer = TRUE)
                         p <- mapdeck::add_screengrid(p, data = centroids,
-                                                     colour_range = rev(colorspace::sequential_hcl(6, l = c(20, 70))),
+                                                     colour_range = rev(sequential_hcl(palette = "Light Gray", n =6)),
                                                      cell_size = 20,
                                                      opacity = 0.05)
                     }
