@@ -16,10 +16,15 @@ plot_zones <- function(x, session, what = c("heart_rate"),
     if (is.null(what)) {
       return(NULL)
     }
+    sports <- get_sport(x)[session]
 
     x <- zones(x, session = session, what = what, breaks = breaks,
                n_zones = n_zones, parallel = parallel)
     dat <- do.call("rbind", x)
+    dat$sports <- rep(sports, each = length(breaks) * n_zones)
+    dat$col <- character(nrow(dat))
+    dat$col[dat$sport == "running"] <- colorRampPalette(opts$zones_colours)
+
     dat$zoneF <- factor(paste0("[", paste(dat$lower, dat$upper, sep = "-"), ")"),
                         levels = unique(paste0("[", paste(
                                                         dat$lower, dat$upper,
@@ -31,7 +36,7 @@ plot_zones <- function(x, session, what = c("heart_rate"),
     dat$timeN <- as.numeric(dat$time)
     ## facets
     units <- getUnits(x)
-    pal <- colorRampPalette(opts$zones_colours)(max(dat$session))
+
     individual_plots <- list()
     legend_status <- FALSE
     for (feature in what) {

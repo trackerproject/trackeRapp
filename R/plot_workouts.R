@@ -116,7 +116,7 @@ plot_workouts <- function(data,
             low <- 50
         }
         else {
-            if (feature %in% c('avgSpeed', 'avgPace', 'avgCadenceCycling', 'avgCadenceRunning')) {
+            if (feature %in% c('avgSpeed', 'avgPace', 'avgCadenceCycling', 'avgCadenceRunning', 'avgTemperature', 'avgAltitude')) {
                 low <- min(so$value, na.rm = TRUE) * low_factor
             }
             else {

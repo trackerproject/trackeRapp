@@ -265,6 +265,12 @@ server <- function(input, output, session) {
 
         ## Summary boxes
         trackeRapp:::create_summary_boxes()
+        output$nsessions_cycling_box <- trackeRapp:::render_summary_box("nsessions_cycling",
+                                                                        "rides", data)
+        output$nsessions_running_box <- trackeRapp:::render_summary_box("nsessions_running",
+                                                                        "runs", data)
+        output$nsessions_swimming_box <- trackeRapp:::render_summary_box("nsessions_swimming",
+                                                                         "swims", data)
         output$avgDistance_box <- trackeRapp:::render_summary_box("distance",
                                                                   "Average distance", data)
         output$avgDuration_box <- trackeRapp:::render_summary_box("duration",
@@ -273,6 +279,9 @@ server <- function(input, output, session) {
                                                                    "Average heart rate", data)
         output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
                                                               "Average pace", data)
+        output$avgAltitude_box <- trackeRapp:::render_summary_box("avgAltitude",
+                                                                  "Average altitude", data)
+
 
         ## Close sidebar
         shinyjs::addClass(selector = "body", class = "sidebar-collapse")
@@ -332,7 +341,7 @@ server <- function(input, output, session) {
                                                update_view = TRUE,
                                                focus_layer = TRUE)
                         p <- mapdeck::add_screengrid(p, data = centroids,
-                                                     colour_range = rev(sequential_hcl(palette = "Light Gray", n =6)),
+                                                     colour_range = rev(colorspace::sequential_hcl(palette = "Light Gray", n =6)),
                                                      cell_size = 20,
                                                      opacity = 0.05)
                     }
@@ -350,10 +359,12 @@ server <- function(input, output, session) {
             output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
                 withProgress(message = paste(i, "plots"), value = 0, {
                     incProgress(1/1, detail = "Subsetting")
+
                     ret <- trackeRapp:::plot_workouts(data = data,
                                                       what = i,
                                                       options = opts,
                                                       summary_type = "total")
+
                     incProgress(1/1, detail = "Plotting")
                     ret
                 })

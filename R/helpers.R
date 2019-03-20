@@ -14,6 +14,8 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "distance" = "distance",
                           "duration" = "duration",
                           "avgPower" = "power",
+                          "avgAltitude" = "altitude",
+                          "avgTemperature" = "temperature",
                           "avgCadenceRunning" = "cadence_running",
                           "avgHeartRate" = "heart_rate",
                           "avgCadenceCycling" = "cadence_cycling",
@@ -31,6 +33,8 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "duration" = paste0("Duration \n[", prettyUnit, "]"),
                           "avgSpeed" = paste0("Average Speed \n[", prettyUnit, "]"),
                           "avgPace" = paste0("Average Pace \n[", prettyUnit, "]"),
+                          "avgAltitude" = paste0("Average Altitude \n[", prettyUnit, "]"),
+                          "avgTemperature" = paste0("Average Temperature \n[", prettyUnit, "]"),
                           "avgCadenceRunning" = paste0("Cadence Running \n[", prettyUnit, "]"),
                           "avgCadenceCycling" = paste0("Cadence Cycling \n[", prettyUnit, "]"),
                           "avgPower" = paste0("Average Power \n[", prettyUnit, "]"),
@@ -44,6 +48,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "cadence_running" = paste0("Cadence Running \n[", prettyUnit, "]"),
                           "heart_rate" = paste0("Heart Rate \n[", prettyUnit, "]"),
                           "altitude" = paste0("Altitude \n[", prettyUnit, "]"),
+                          "temperature" = paste0("Temperature \n[", prettyUnit, "]"),
                           "speed" = paste0("Speed \n[", prettyUnit, "]"),
                           "power" = paste0("Power \n[", prettyUnit, "]"))
         }
@@ -59,6 +64,8 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "avgCadenceCycling" = prettyUnit,
                           "avgPower" = prettyUnit,
                           "avgHeartRate" = prettyUnit,
+                          "avgAltitude" = prettyUnit,
+                          "avgTemperature" = prettyUnit,
                           "wrRatio" = "")
         }
         else {
@@ -68,6 +75,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "cadence_cycling" = prettyUnit,
                           "heart_rate" = prettyUnit,
                           "altitude" = prettyUnit,
+                          "temperature" = prettyUnit,
                           "speed" = prettyUnit,
                           "power" = prettyUnit)
         }
@@ -83,6 +91,11 @@ create_icon <- function(feature) {
                    "distance" = "area-chart",
                    "duration" = "clock-o",
                    "avgSpeed" = "line-chart",
+                   "avgAltitude" = "arrows-v",
+                   "avgTemperature" = "temperature",
+                   "nsessions_cycling" = "bicyle",
+                   "nsessions_running" = "walking",
+                   "nsessions_swimming" = "swimmer",
                    "avgPace" = "tachometer",
                    "avgCadenceRunning" = "tachometer",
                    "avgCadenceCycling" = "tachometer",
@@ -144,7 +157,9 @@ summary_view_features <- function() {
       "Average cadence cycling" = "avgCadenceCycling",
       "Average power" = "avgPower",
       "Average heart rate" = "avgHeartRate",
-      "Work to rest ratio" = "wrRatio")
+      "Work to rest ratio" = "wrRatio",
+      "Average altitude" = "avgAltitude",
+      "Average temperature" = "avgTemperature")
 }
 
 ## Generate metrics to test if they have data
@@ -155,7 +170,8 @@ workout_view_features <- function() {
       "Cadence running" = "cadence_running",
       "Cadence cycling" = "cadence_cycling",
       "Power" = "power",
-      "Altitude" = "altitude")
+      "Altitude" = "altitude",
+      "Temperature" = "temperature")
 }
 
 ## Process \code{trackeRdata} object by setting thresholds to remove wrong values, change units, set a moving threshold and test which variables contain data
@@ -170,10 +186,12 @@ process_dataset <- function(data) {
     data$summary <- summary(data$object, movingThreshold = 0.4)
     data$summary <- change_units(data$summary, variable = "duration", unit = "h")
 
+
     ## Test if there is data in each feature in a trackeRdataSummary object
     data$has_data <- lapply(data$summary, function(session_summaries) {
         !all(is.na(session_summaries) | session_summaries == 0)
     })
+
 }
 
 ## Update map based on current selection
@@ -284,7 +302,9 @@ convert_to_name <- function(what) {
            "avgCadenceRunning" = "Cadence Running",
            "avgCadenceCycling" = "Cadence Cycling",
            "avgPower" = "Average Power",
+           "avgAltitude" = "Average Altitude",
            "avgHeartRate" = "Average Heart Rate",
+           "avgTemperature" = "Average Temperature",
            "wrRatio" = "work-to-rest ratio")
 }
 
@@ -311,8 +331,22 @@ render_summary_box <- function(short_name, long_name, data) {
     opts <- trops()
     box_text <- function(what, subtitle, icon, data) {
         value <- reactive({
-            value <- data$summary[data$selected_sessions][[what]]
-            value <- round(mean(value[is.finite(value)], na.rm = TRUE), 1)
+            if (what == "nsessions_running") {
+                sports <- data$summary[data$selected_sessions][["sport"]]
+                value <- sum(sports == "running")
+            }
+            if (what == "nsessions_cycling") {
+                sports <- data$summary[data$selected_sessions][["sport"]]
+                value <- sum(sports == "cycling")
+            }
+            if (what == "nsessions_swimming") {
+                sports <- data$summary[data$selected_sessions][["sport"]]
+                value <- sum(sports == "swimming")
+            }
+            if (!(what %in% c("nsessions_swimming", "nsessions_running", "nsessions_cycling"))) {
+                value <- data$summary[data$selected_sessions][[what]]
+                value <- round(mean(value[is.finite(value)], na.rm = TRUE), 1)
+            }
             if (is.na(value)) {
                 "not available"
             }
