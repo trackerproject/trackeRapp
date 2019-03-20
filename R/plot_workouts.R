@@ -32,7 +32,7 @@ plot_workouts <- function(data,
     ## subset
     so <- so[sessions]
 
-    feature <- lab_sum(feature = what, data = so, whole_text = FALSE)
+    feature <- lab_sum(feature = what, data = so, whole_text = TRUE)
     units_text <- lab_sum(feature = what, data = so, whole_text = FALSE)
 
     nsessions <- length(unique(so$session))
@@ -109,15 +109,16 @@ plot_workouts <- function(data,
 
     low_factor <- opts$summart_plots_yaxis_min_factor
     upp_factor <- opts$summart_plots_yaxis_max_factor
-
     range_y <- function(feature, data) {
-        upp <- max(so$value, na.rm = TRUE) * upp_factor
+        upp <- max(so$value, na.rm = TRUE)
+        upp <- ifelse(upp > 0, upp * upp_factor, upp * low_factor)
         if (feature == 'avgHeartRate') {
             low <- 50
         }
         else {
             if (feature %in% c('avgSpeed', 'avgPace', 'avgCadenceCycling', 'avgCadenceRunning', 'avgTemperature', 'avgAltitude')) {
-                low <- min(so$value, na.rm = TRUE) * low_factor
+                low <- min(so$value, na.rm = TRUE)
+                low <- ifelse(low > 0, low * low_factor, low * upp_factor)
             }
             else {
                 low <- 0
@@ -127,10 +128,11 @@ plot_workouts <- function(data,
     }
 
     ## Axis lists
-    y <- list(title = feature,
+    y <- list(title = units_text,
               range = range_y(what, so))
     x <- list(title = "",
               range = range_x)
+
 
     layout(p,
            dragmode = "select", showlegend = TRUE, yaxis = y, legend = list(y = 1.1, orientation = "h"),
