@@ -208,8 +208,10 @@ server <- function(input, output, session) {
     observeEvent(input$updateUnits, {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
-        data$limits0 <- data$limits <- trackeR::compute_limits(data$object,
-                                                               a = opts$quantile_for_limits)
+        data$limits <- reactive({
+            trackeR::compute_limits(data$object,
+                                    a = opts$quantile_for_limits)
+        })
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         removeModal()
     })
@@ -228,8 +230,8 @@ server <- function(input, output, session) {
     ## Session summaries page
     observeEvent(input$createDashboard, {
 
-        data$limits0 <- trackeR::compute_limits(data$object,
-                                                a = opts$quantile_for_limits)
+        ## data$limits0 <- trackeR::compute_limits(data$object,
+        ##                                         a = opts$quantile_for_limits)
 
         output$timeline_plot <- plotly::renderPlotly({
             withProgress(message = 'Timeline', value = 0, {
@@ -396,13 +398,10 @@ server <- function(input, output, session) {
     })
 
     observeEvent(data$selected_sessions, {
-        if (isTRUE(length(data$selected_sessions) == 0)) {
-            data$limits <- data$limits0
-        }
-        else {
-            data$limits <- trackeR::compute_limits(data$object[data$selected_sessions],
-                                                   a = opts$quantile_for_limits)
-        }
+        data$limits <- reactive({
+            trackeR::compute_limits(data$object[data$selected_sessions],
+                                    a = opts$quantile_for_limits)
+        })
     })
 
     ## Workouts analysis
@@ -426,7 +425,7 @@ server <- function(input, output, session) {
 
         ## Render actual plot
         breaks <- reactive({
-            trackeR::compute_breaks(object = data$object, limits = data$limits,
+            trackeR::compute_breaks(object = data$object, limits = data$limits(),
                                     n_breaks = as.numeric(input$n_zones),
                                     what = input$zonesMetricsPlot)
         })
@@ -478,7 +477,7 @@ server <- function(input, output, session) {
                                             threshold = FALSE, smooth = TRUE,
                                             n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
                                             desampling = opts$thin,
-                                            y_axis_range = data$limits[[i]])
+                                            y_axis_range = data$limits()[[i]])
                     incProgress(1/1, detail = "Plotting")
                     ret
                 })
@@ -507,7 +506,7 @@ server <- function(input, output, session) {
         concentration_profiles <- reactive({
             trackeR::concentration_profile(data$object,
                                            what = metrics[have_data_metrics_selected()],
-                                           limits = data$limits)
+                                           limits = data$limits())
         })
 
 

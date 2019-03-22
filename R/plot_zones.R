@@ -22,14 +22,17 @@ plot_zones <- function(x, session, what = c("heart_rate"),
                n_zones = n_zones, parallel = parallel)
     dat <- do.call("rbind", x)
     dat$sports <- rep(sports, each = length(breaks) * n_zones)
-    dat$col <- character(nrow(dat))
-    dat$col[dat$sport == "running"] <- colorRampPalette(opts$zones_colours)
+
+    col <- rep(0, length(sports))
+    for (sp in c("running", "cycling", "swimming")) {
+        cols <- colorRampPalette(opts$zones_colours[[sp]])(sum(sports == sp))
+        col[sports == sp] <- cols
+    }
 
     dat$zoneF <- factor(paste0("[", paste(dat$lower, dat$upper, sep = "-"), ")"),
-                        levels = unique(paste0("[", paste(
-                                                        dat$lower, dat$upper,
-                                                        sep = "-"
-                                                    ), ")")), ordered = TRUE)
+                        levels = unique(paste0("[", paste(dat$lower, dat$upper,
+                                                          sep = "-"), ")")),
+                        ordered = TRUE)
     dat$Session <- paste("Session", sprintf(paste0("%0", nchar(max(dat$session)), "d"),
                                             dat$session))
 
@@ -45,7 +48,8 @@ plot_zones <- function(x, session, what = c("heart_rate"),
         feature_zones <- dat[dat$variable == feature, ]
         p <- plot_ly(feature_zones,
                      x = ~ zoneF, y = ~ percent,
-                     color = ~ Session, colors = pal[feature_zones$session], legendgroup = ~ Session, hoverinfo = "text",
+                     color = ~ Session, colors = col,#[feature_zones$session],
+                     legendgroup = ~ Session, hoverinfo = "text",
                      text = ~ paste0("Proportion of session: ", round(percent, 1), "%", "\n", Session)) %>%
             add_bars() %>%
             layout(xaxis = x, yaxis = y, hovermode = "closest",

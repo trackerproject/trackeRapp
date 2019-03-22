@@ -133,7 +133,9 @@ trops <- function() {
         summary_plots_selected_colour_ride = "#CEA550",
         summart_plots_yaxis_max_factor = 1.2,
         summart_plots_yaxis_min_factor = 0.8,
-        zones_colours = c("#6fc1f1", "#095b8b"),
+        zones_colours = list(swimming = c("#9AE5FF", "#347FB8"),
+                             running = c("#5DF5BD", "#008F57"),
+                             cycling = c("#FFD883", "#9B721D")),
         workouts_background_colour = "black",
         workouts_changepoint_colour = "#0073b7", ## "grey"
         workouts_smoother_colour = "#0073b7",
