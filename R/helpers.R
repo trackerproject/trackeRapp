@@ -230,7 +230,8 @@ update_map <- function(session, data, longitude, latitude) {
 ## @param output \code{shiny} object.
 ## @param session \code{shiny} object.
 ## @param choices vector. See \code{\link{summary_view_features}}.
-generate_objects <- function(data, output, session, choices) {
+generate_objects <- function(data, output, session, choices, options = NULL) {
+    opts <- if (is.null(options)) trops() else options
     process_dataset(data)
     output$download_data <- downloadHandler(filename = paste0("trackeRapp_data", Sys.Date(), ".rds"),
                                             content = function(file) saveRDS(data$object, file))
@@ -243,7 +244,7 @@ generate_objects <- function(data, output, session, choices) {
     identified_sports <- sports_options %in% unique(get_sport(data$object))
     data$sports <- sports_options[identified_sports]
     data$identified_sports <- sports_options[identified_sports]
-    data$limits <- compute_limits(data$object, a = 0.1)
+    data$limits <- compute_limits(data$object, a = opts$quantile_for_limits)
     data$is_location_data <- sapply(data$object, function(x) {
         size <- nrow(x)
         x_sample <- sample(x[, 'longitude'], round(size / 1000))

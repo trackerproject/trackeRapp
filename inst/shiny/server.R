@@ -340,7 +340,7 @@ server <- function(input, output, session) {
                         if (nrow(deselected_data)) {
                             p <- mapdeck::add_path(p,
                                                    data = deselected_data,
-                                                   stroke_colour = paste0(opts$summary_plots_deselected_colour, "40"),
+                                                   stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),
                                                    stroke_width = opts$mapdeck_width,
                                                    layer_id = "deselection_path")
                         }
