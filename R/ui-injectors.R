@@ -31,10 +31,11 @@ create_summary_boxes <- function() {
                          valueBoxOutput("nsessions_swimming_box", width = 4)),
                      fluidRow(
                          valueBoxOutput("avgDistance_box", width = 4),
-                         valueBoxOutput("avgDuration_box", width = 4)),
+                         valueBoxOutput("avgDuration_box", width = 4),
+                         valueBoxOutput("avgPace_box", width = 4)),
                      fluidRow(
-                         valueBoxOutput("avgPace_box", width = 4),
                          valueBoxOutput("avgHeartRate_box", width = 4),
+                         valueBoxOutput("avgTemperature_box", width = 4),
                          valueBoxOutput("avgAltitude_box", width = 4))
                      )))
 }
@@ -376,3 +377,4 @@ show_change_unit_window <- function(data) {
         footer = tagList(modalButton("Cancel"),
                          actionButton("updateUnits", "Apply"))))
 }
+

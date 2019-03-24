@@ -283,6 +283,8 @@ server <- function(input, output, session) {
                                                               "Average pace", data)
         output$avgAltitude_box <- trackeRapp:::render_summary_box("avgAltitude",
                                                                   "Average altitude", data)
+        output$avgTemperature_box <- trackeRapp:::render_summary_box("avgTemperature",
+                                                                     "Average Temperature", data)
 
 
         ## Close sidebar
@@ -302,6 +304,13 @@ server <- function(input, output, session) {
                 mapdeck::mapdeck(token = mapbox_key,
                                  style = mapdeck::mapdeck_style(opts$mapdeck_style))
             })
+
+            ## Selecting from the map
+            ## observeEvent(input$map_path_click, {
+            ##     js <- input$map_path_click
+            ##     lind <- jsonlite::fromJSON(js)$index
+            ##     cat(lind, "\n")
+            ## })
 
             ## Update map based on current selection
             observeEvent(data$selected_sessions, {
