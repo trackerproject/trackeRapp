@@ -44,6 +44,10 @@ trops <- function() {
      background-color: #d2d6de !important;
     }
 
+    .logo {
+     background-color: #fff !important;
+    }
+
     #workout_view_plot {
      overflow-x:scroll;
      overflow-y:hidden;
