@@ -51,6 +51,9 @@ server <- function(input, output, session) {
     choices <- trackeRapp:::summary_view_features()
     metrics <- trackeRapp:::workout_view_features()
 
+    ## Check if there is internet connection
+    has_internet_connection <- curl::has_internet()
+
     ##  Upload data
     observeEvent(input$uploadButton, {
 
@@ -205,7 +208,10 @@ server <- function(input, output, session) {
     observeEvent(input$updateUnits, {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
-        data$limits0 <- data$limits <- trackeR::compute_limits(data$object, a = 0.1)
+        data$limits <- reactive({
+            trackeR::compute_limits(data$object,
+                                    a = opts$quantile_for_limits)
+        })
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         removeModal()
     })
@@ -223,11 +229,15 @@ server <- function(input, output, session) {
 
     ## Session summaries page
     observeEvent(input$createDashboard, {
-        shinyjs::addClass(selector = "body", class = "sidebar-collapse")
+
+        ## data$limits0 <- trackeR::compute_limits(data$object,
+        ##                                         a = opts$quantile_for_limits)
+
         output$timeline_plot <- plotly::renderPlotly({
             withProgress(message = 'Timeline', value = 0, {
                 if (!is.null(data$summary)) {
-                    ret <- trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions)
+                    ret <- trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions,
+                                                      options = opts)
                 }
                 incProgress(1/1, detail = "Plotting")
                 ret
@@ -253,10 +263,16 @@ server <- function(input, output, session) {
         ## Summary table
         trackeRapp:::create_summary_timeline_boxes()
 
-        output$summary <- trackeRapp:::render_summary_table(data, input)
+        output$summary <- trackeRapp:::render_summary_table(data, input, options = opts)
 
         ## Summary boxes
         trackeRapp:::create_summary_boxes()
+        output$nsessions_cycling_box <- trackeRapp:::render_summary_box("nsessions_cycling",
+                                                                        "rides", data)
+        output$nsessions_running_box <- trackeRapp:::render_summary_box("nsessions_running",
+                                                                        "runs", data)
+        output$nsessions_swimming_box <- trackeRapp:::render_summary_box("nsessions_swimming",
+                                                                         "swims", data)
         output$avgDistance_box <- trackeRapp:::render_summary_box("distance",
                                                                   "Average distance", data)
         output$avgDuration_box <- trackeRapp:::render_summary_box("duration",
@@ -265,13 +281,18 @@ server <- function(input, output, session) {
                                                                    "Average heart rate", data)
         output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
                                                               "Average pace", data)
+        output$avgAltitude_box <- trackeRapp:::render_summary_box("avgAltitude",
+                                                                  "Average altitude", data)
+        output$avgTemperature_box <- trackeRapp:::render_summary_box("avgTemperature",
+                                                                     "Average Temperature", data)
 
-        ## Map
-        ## Check if there is internet connection
-        has_internet_connection <- curl::has_internet()
+
+        ## Close sidebar
+        shinyjs::addClass(selector = "body", class = "sidebar-collapse")
+
+        ## Map (move to a plot_map function)
         ## do not generate map if no location data for any of the sessions
         if ((any(data$is_location_data)) & (has_internet_connection)) {
-
             trackeRapp:::create_map()
 
             preped_route_map <- reactive({
@@ -280,60 +301,66 @@ server <- function(input, output, session) {
             })
 
             output$map <- mapdeck::renderMapdeck({
-                withProgress(message = 'Map', value = 0, {
-                    incProgress(1/2, detail = "Preparing routes")
-                    ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-                    plot_df <- preped_route_map()
-                    plot_df$tooltip <- paste(plot_df$tooltip)
-                    ret <- mapdeck::mapdeck(token = mapbox_key,
-                                            style = mapdeck::mapdeck_style(opts$mapdeck_style))
-                    incProgress(1/1, detail = "Mapping")
-                    ret
-                })
+                mapdeck::mapdeck(token = mapbox_key,
+                                 style = mapdeck::mapdeck_style(opts$mapdeck_style))
             })
+
+            ## Selecting from the map
+            ## observeEvent(input$map_path_click, {
+            ##     js <- input$map_path_click
+            ##     lind <- jsonlite::fromJSON(js)$index
+            ##     cat(lind, "\n")
+            ## })
 
             ## Update map based on current selection
             observeEvent(data$selected_sessions, {
-                selected <- preped_route_map()$session %in% data$selected_sessions
-                selected_data <- preped_route_map()[selected, ]
-                if (!nrow(selected_data)) {
-                    mapdeck::mapdeck_update(map_id = "map", data = selected_data) %>%
-                        mapdeck::clear_path("selection_path")
-                }
-                else {
-                    deselected_data <- preped_route_map()[!selected, ]
-                    centroids <- sf::st_centroid(selected_data)
-                    ## Compute centroids and distances
-                    ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-                    selected_data$tooltip <- paste(selected_data$tooltip)
-                    p <- mapdeck::mapdeck_update(map_id = "map", data = selected_data)
-                    p <- mapdeck::clear_path(p, "selection_path")
-                    if (nrow(deselected_data)) {
-                        p <- mapdeck::add_path(p,
-                                         data = deselected_data,
-                                         stroke_colour = paste0(opts$summary_plots_deselected_colour, "E6"),
-                                         stroke_width = opts$mapdeck_width,
-                                         layer_id = "deselection_path")
+                withProgress(message = 'Map', value = 0, {
+                    incProgress(1/2, detail = "Preparing routes")
+                    selected <- preped_route_map()$session %in% data$selected_sessions
+                    selected_data <- preped_route_map()[selected, ]
+                    if (!nrow(selected_data)) {
+                        incProgress(1/1, detail = "Mapping")
+                        mapdeck::mapdeck_update(map_id = "map", data = selected_data) %>%
+                            mapdeck::clear_path("selection_path")
                     }
-                    p <- mapdeck::add_path(p, stroke_colour = paste0(opts$summary_plots_selected_colour, "E6"),
-                                           stroke_width = opts$mapdeck_width,
-                                           tooltip = "tooltip",
-                                           layer_id = "selection_path",
-                                           update_view = TRUE,
-                                           focus_layer = TRUE)
-                    p <- mapdeck::add_screengrid(p, data = centroids,
-                                                 colour_range = rev(colorspace::sequential_hcl(6, l = c(20, 70))),
-                                                 cell_size = 20,
-                                                 opacity = 0.05)
-                }
-            }, priority = -1)
+                    else {
+                        selected_data$col <- ifelse(selected_data$sport == "running",
+                                                    opts$summary_plots_selected_colour_run,
+                                             ifelse(selected_data$sport == "cycling",
+                                                    opts$summary_plots_selected_colour_ride,
+                                                    opts$summary_plots_selected_colour_swim))
+                        deselected_data <- preped_route_map()[!selected, ]
+                        ## Compute centroids for histogram
+                        centroids <- sf::st_centroid(selected_data)
+                        ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
+                        selected_data$tooltip <- paste(selected_data$tooltip)
+                        incProgress(1/1, detail = "Mapping")
+                        p <- mapdeck::mapdeck_update(map_id = "map", data = selected_data)
+                        p <- mapdeck::clear_path(p, "selection_path")
+                        if (nrow(deselected_data)) {
+                            p <- mapdeck::add_path(p,
+                                                   data = deselected_data,
+                                                   stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),
+                                                   stroke_width = opts$mapdeck_width,
+                                                   layer_id = "deselection_path")
+                        }
+                        p <- mapdeck::add_path(p,
+                                               stroke_colour = "col",
+                                               stroke_width = opts$mapdeck_width * 2,
+                                               tooltip = "tooltip",
+                                               layer_id = "selection_path",
+                                               update_view = TRUE,
+                                               focus_layer = TRUE)
+                        p <- mapdeck::add_screengrid(p, data = centroids,
+                                                     colour_range = rev(colorspace::sequential_hcl(palette = "Light Gray", n =6)),
+                                                     cell_size = 20,
+                                                     opacity = 0.05)
+                    }
+                })
+            }, priority = -3)
         }
 
         ## Sessions summaries plots
-        plot_dataframe <- reactive({
-            trackeR:::fortify_trackeRdataSummary(data$summary, melt = TRUE)
-        })
-
         ## Generate conditional plot for each metric irrespective of whether data available
         for (metric in c(choices)) {
             trackeRapp:::create_workout_plots(metric)
@@ -343,13 +370,12 @@ server <- function(input, output, session) {
             output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
                 withProgress(message = paste(i, "plots"), value = 0, {
                     incProgress(1/1, detail = "Subsetting")
-                    cdat <- plot_dataframe()
-                    sessions_to_plot <- data$summary$session
-                    ret <- trackeRapp:::plot_workouts(sumX = data$summary[sessions_to_plot],
+
+                    ret <- trackeRapp:::plot_workouts(data = data,
                                                       what = i,
-                                                      dat =  cdat,
-                                                      sessions = data$selected_sessions,
-                                                      sports = trackeR::get_sport(data$object)[sessions_to_plot])
+                                                      options = opts,
+                                                      summary_type = "total")
+
                     incProgress(1/1, detail = "Plotting")
                     ret
                 })
@@ -381,12 +407,10 @@ server <- function(input, output, session) {
     })
 
     observeEvent(data$selected_sessions, {
-        if (isTRUE(length(data$selected_sessions) == 0)) {
-            data$limits <- data$limits0
-        }
-        else {
-            data$limits <- trackeR::compute_limits(data$object[data$selected_sessions], a = 0.1)
-        }
+        data$limits <- reactive({
+            trackeR::compute_limits(data$object[data$selected_sessions],
+                                    a = opts$quantile_for_limits)
+        })
     })
 
     ## Workouts analysis
@@ -410,7 +434,7 @@ server <- function(input, output, session) {
 
         ## Render actual plot
         breaks <- reactive({
-            trackeR::compute_breaks(object = data$object, limits = data$limits,
+            trackeR::compute_breaks(object = data$object, limits = data$limits(),
                                     n_breaks = as.numeric(input$n_zones),
                                     what = input$zonesMetricsPlot)
         })
@@ -461,7 +485,8 @@ server <- function(input, output, session) {
                                             sumX = data$summary, changepoints = fit_changepoint,
                                             threshold = FALSE, smooth = TRUE,
                                             n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
-                                            desampling = 1, y_axis_range = data$limits[[i]])
+                                            desampling = opts$thin,
+                                            y_axis_range = data$limits()[[i]])
                     incProgress(1/1, detail = "Plotting")
                     ret
                 })
@@ -490,19 +515,23 @@ server <- function(input, output, session) {
         concentration_profiles <- reactive({
             trackeR::concentration_profile(data$object,
                                            what = metrics[have_data_metrics_selected()],
-                                           limits = data$limits)
+                                           limits = data$limits())
         })
+
 
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
             withProgress(message = 'Concentration profiles', value = 0, {
                 incProgress(1/2, detail = "Computing profiles")
+
                 cps <- concentration_profiles()
+
                 ret <- trackeRapp:::plot_concentration_profiles(
                                         x = data$object,
                                         session = data$selected_sessions,
                                         what = input$profileMetricsPlot,
-                                        profiles_calculated = cps)
+                                        profiles_calculated = cps,
+                                        options = opts)
                 incProgress(1/1, detail = "Plotting")
                 ret
             })

@@ -16,6 +16,7 @@ create_map <- function() {
                              mapdeck::mapdeckOutput(outputId = "map"))))))
 }
 
+
 ## Insert summary boxes
 create_summary_boxes <- function() {
     insertUI(immediate = TRUE,
@@ -25,11 +26,20 @@ create_summary_boxes <- function() {
                  condition = "output.cond == true",
                  div(class = "main_plots",
                      fluidRow(
-                         valueBoxOutput("avgDistance_box", width = 3),
-                         valueBoxOutput("avgDuration_box", width = 3),
-                         valueBoxOutput("avgPace_box", width = 3),
-                         valueBoxOutput("avgHeartRate_box", width = 3)))))
+                         valueBoxOutput("nsessions_running_box", width = 4),
+                         valueBoxOutput("nsessions_cycling_box", width = 4),
+                         valueBoxOutput("nsessions_swimming_box", width = 4)),
+                     fluidRow(
+                         valueBoxOutput("avgDistance_box", width = 4),
+                         valueBoxOutput("avgDuration_box", width = 4),
+                         valueBoxOutput("avgPace_box", width = 4)),
+                     fluidRow(
+                         valueBoxOutput("avgHeartRate_box", width = 4),
+                         valueBoxOutput("avgTemperature_box", width = 4),
+                         valueBoxOutput("avgAltitude_box", width = 4))
+                     )))
 }
+
 
 ## Create workout plots
 ## @param feature A character. The metric that is plotted, selected from \code{\link{summary_view_features}}.
@@ -43,6 +53,8 @@ create_workout_plots <- function(feature) {
                     "avgCadenceCycling" = "Average Cadence Cycling",
                     "avgPower" = "Average Power",
                     "avgHeartRate" = "Average Heart Rate",
+                    "avgTemperature" = "Average Temperature",
+                    "avgAltitude" = "Average Altitude",
                     "wrRatio" = "Work-to-rest Ratio")
     insertUI(selector = ".content",
              where = "beforeEnd",
@@ -74,13 +86,16 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                         collapsible = TRUE,
                         collapsed = collapsed,
                         title = tagList(icon("gear"),
-                                        switch(id, "pace" = "Pace",
+                                        switch(id,
+                                               "pace" = "Pace",
                                                "heart_rate" = "Heart Rate",
                                                "altitude" = "Altitude",
                                                "power" = "Power",
                                                "speed" = "Speed",
                                                "cadence_running" = "Cadence Running",
-                                               "cadence_cycling" = "Cadence Cycling")),
+                                               "cadence_cycling" = "Cadence Cycling",
+                                               "altitude" = "Altitude",
+                                               "temperature" = "Temperature")),
                         dropdownButton(
                             circle = TRUE,
                             up = TRUE,
@@ -362,3 +377,4 @@ show_change_unit_window <- function(data) {
         footer = tagList(modalButton("Cancel"),
                          actionButton("updateUnits", "Apply"))))
 }
+

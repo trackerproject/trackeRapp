@@ -24,8 +24,28 @@ trops <- function() {
      color: #333; /* from .btn-default in css */
     }
 
-    #summary tr.selected td, #summary td.selected {
-     background-color: #3c8dbc !important;
+    #summary tr.selected.running td, #summary td.selected.running {
+     background-color: #2AC28A !important;
+    }
+
+    #summary tr.selected.cycling td, #summary td.selected.cycling {
+     background-color: #CEA550 !important;
+    }
+
+    #summary tr.selected.swimming td, #summary td.selected.swimming {
+     background-color: #67B2EB !important;
+    }
+
+    .small-box.bg-blue {
+     background-color: #2AC28A !important;
+    }
+
+    .small-box.bg-navy {
+     background-color: #d2d6de !important;
+    }
+
+    .logo {
+     background-color: #fff !important;
     }
 
     #workout_view_plot {
@@ -79,6 +99,24 @@ trops <- function() {
      };
      shinyjs.reset_page = function() { location.reload(); };
      shinyjs.no_sports = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); };
+   "
+
+    dt_callback_js <-
+    "
+     function(){
+      $('tr').each(function(){
+       var col_val = $(this).find('td:eq(5)').text();
+        if (col_val == 'running'){
+         $(this).addClass('running');
+        };
+        if (col_val == 'cycling'){
+         $(this).addClass('cycling');
+        };
+        if (col_val == 'swimming'){
+          $(this).addClass('swimming');
+        }
+      });
+    }
     "
 
     list(
@@ -88,11 +126,20 @@ trops <- function() {
         ## lime, orange, fuchsia, purple, maroon, black.
         custom_css = custom_css,
         custom_js = custom_js,
+        dt_callback_js = dt_callback_js,
         summary_box_na_colour = "navy", ## same as #001f3f
         summary_box_ok_colour = "blue", # light-blue: #3c8dbc blue: #0073b7
         summary_plots_selected_colour = "#0073b7",
         summary_plots_deselected_colour = "#d2d6de",
-        zones_colours = c("#6fc1f1", "#095b8b"),
+        ## Pallete harmonic with h1 = 60, h2 = 240, c = 65, l = 70
+        summary_plots_selected_colour_swim = "#67B2EB",
+        summary_plots_selected_colour_run = "#2AC28A",
+        summary_plots_selected_colour_ride = "#CEA550",
+        summart_plots_yaxis_max_factor = 1.2,
+        summart_plots_yaxis_min_factor = 0.8,
+        zones_colours = list(swimming = c("#9AE5FF", "#347FB8"),
+                             running = c("#5DF5BD", "#008F57"),
+                             cycling = c("#FFD883", "#9B721D")),
         workouts_background_colour = "black",
         workouts_changepoint_colour = "#0073b7", ## "grey"
         workouts_smoother_colour = "#0073b7",
@@ -100,11 +147,13 @@ trops <- function() {
         mapdeck_highlight_radius = 2000,
         mapdeck_width = 5,
         coordinates_keep = 0.2,
+        thin = 0.5,
         workout_view_rel_width = 60,
         workout_view_rel_height = 30,
         dropdown_button_size = "sm", ## see ?shinyWidget::dropdownButton
         default_summary_plots = c("distance", "duration", "avgPace"),
-        threshold = FALSE
+        threshold = FALSE,
+        quantile_for_limits = 0.05
     )
 }
 

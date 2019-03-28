@@ -7,7 +7,7 @@ ui <- shinydashboard::dashboardPage(
   skin = opts$skin,
   shinydashboard::dashboardHeader(
                       title = span(tagList(#icon("dashboard"),
-                                           img(src = "text_trackeRapp.svg", width = "60%")))),
+                                           img(src = "text_trackeRapp.svg", height = "60%")))),
                       ## title = span(tagList(img(src = "hex_trackeRapp.svg", width = "50"), "trackeRapp"))),
   shinydashboard::dashboardSidebar(
                       tags$style(HTML(opts$custom_css)),
