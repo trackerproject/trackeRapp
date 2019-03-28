@@ -433,16 +433,14 @@ server <- function(input, output, session) {
         })
 
         ## Render actual plot
-        breaks <- reactive({
-            trackeR::compute_breaks(object = data$object, limits = data$limits(),
-                                    n_breaks = as.numeric(input$n_zones),
-                                    what = input$zonesMetricsPlot)
-        })
-
         output$zones_plot <- plotly::renderPlotly({
             withProgress(message = 'Zones plots', value = 0, {
                 incProgress(1/2, detail = "Computing breaks")
-                br <- breaks()
+                br <- reactive({
+                    trackeR::compute_breaks(object = data$object, limits = data$limits(),
+                                            n_breaks = as.numeric(input$n_zones),
+                                            what = input$zonesMetricsPlot)
+                })()
                 ret <- trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
                                                what = input$zonesMetricsPlot, breaks = br,
                                                n_zones = as.numeric(input$n_zones))
