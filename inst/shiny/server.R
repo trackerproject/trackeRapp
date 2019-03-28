@@ -510,20 +510,16 @@ server <- function(input, output, session) {
             paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
 
-        concentration_profiles <- reactive({
-            trackeR::concentration_profile(data$object,
-                                           what = metrics[have_data_metrics_selected()],
-                                           limits = data$limits())
-        })
-
-
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
-            withProgress(message = 'Concentration profiles', value = 0, {
-                incProgress(1/2, detail = "Computing profiles")
-
+            withProgress(message = 'Training concentration', value = 0, {
+                incProgress(1/2, detail = "Computing concentration")
+                concentration_profiles <- reactive({
+                    trackeR::concentration_profile(data$object,
+                                                   what = metrics[have_data_metrics_selected()],
+                                                   limits = data$limits())
+                })
                 cps <- concentration_profiles()
-
                 ret <- trackeRapp:::plot_concentration_profiles(
                                         x = data$object,
                                         session = data$selected_sessions,
