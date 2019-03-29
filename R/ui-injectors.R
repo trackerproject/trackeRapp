@@ -235,7 +235,7 @@ create_zones_box <- function(inputId, plotId, choices) {
                                                   multiple = TRUE,
                                                   selected = c("speed"))),
                             column(2, pickerInput(inputId = "n_zones",
-                                                  label = "Select number of zones:",
+                                                  label = "Number of zones:",
                                                   multiple = FALSE,
                                                   choices = c("2" = 2,
                                                               "3" = 3,

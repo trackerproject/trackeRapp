@@ -13,9 +13,8 @@ plot_concentration_profiles <- function(x,
 
     opts <- if (is.null(options)) trops() else options
 
-    if (isTRUE(length(session) == 0)) {
+    if (isTRUE(length(session) == 0) | is.null(profiles_calculated)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
-
     }
 
     if (is.null(what)) {

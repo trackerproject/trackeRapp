@@ -2,7 +2,20 @@
 opts <- trackeRapp:::trops()
 
 ##   Interface when trackeRapp is first loaded
-ui <- shinydashboard::dashboardPage(
+ui <- tagList(
+    tags$style("html,body{background-color: white;}
+                .container{
+                    width: 100%;
+                    margin: 0 auto;
+                    padding: 0;
+                }
+               @media screen and (min-width: 1024px){
+                .container{
+                    width: 1024px;
+                }
+               }"),
+               tags$div(class = "container",
+ shinydashboard::dashboardPage(
   title = "trackeRapp",
   skin = opts$skin,
   shinydashboard::dashboardHeader(
@@ -90,6 +103,6 @@ ui <- shinydashboard::dashboardPage(
                       shinyjs::extendShinyjs(text = opts$custom_js),
                       ## A hack to load the right js
                       mapdeck::mapdeckOutput(outputId = "dummy_map")
-                      ))
+                      ))))
 
 

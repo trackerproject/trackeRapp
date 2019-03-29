@@ -148,6 +148,7 @@ server <- function(input, output, session) {
 
     observeEvent(input$all_sports, {
         data$sports <- c("running", "cycling", "swimming")
+        data$dummy <- data$dummy + 1
     })
 
     observeEvent(input$no_sports, {
@@ -191,7 +192,7 @@ server <- function(input, output, session) {
             trackeRapp:::generate_selected_sessions_object(data, input,
                                                            table_selection = TRUE)
         }
-    }, ignoreNULL = FALSE)
+    }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
     ##  Uploading sample dataset
     observeEvent(input$uploadSampleDataset, {
@@ -297,10 +298,41 @@ server <- function(input, output, session) {
                                  style = mapdeck::mapdeck_style(opts$mapdeck_style))
             })
 
-            all_data <- reactive({
+            selected_data <- reactive({
                 sessions <- seq_along(data$object)[data$is_location_data]
-                trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
-            })()
+                sessions <- sessions[sessions %in% data$selected_sessions]
+                if (length(sessions)) {
+                    out <- trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
+                    out$col <- ifelse(out$sport == "running",
+                                        opts$summary_plots_selected_colour_run,
+                                 ifelse(out$sport == "cycling",
+                                        opts$summary_plots_selected_colour_ride,
+                                        opts$summary_plots_selected_colour_swim))
+                    out$tooltip <- paste(out$tooltip)
+                    out
+                }
+                else {
+                    NULL
+                }
+            })
+
+            deselected_data <- reactive({
+                sessions <- seq_along(data$object)[data$is_location_data]
+                sessions <- sessions[!(sessions %in% data$selected_sessions)]
+                if (length(sessions)) {
+                    out <- trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
+                    out$col <- ifelse(out$sport == "running",
+                                        opts$summary_plots_selected_colour_run,
+                                 ifelse(out$sport == "cycling",
+                                        opts$summary_plots_selected_colour_ride,
+                                    opts$summary_plots_selected_colour_swim))
+                    out$tooltip <- paste(out$tooltip)
+                    out
+                }
+                else {
+                    NULL
+                }
+            })
 
             ## Selecting from the map
             ## observeEvent(input$map_path_click, {
@@ -316,46 +348,38 @@ server <- function(input, output, session) {
                 ## print(pryr:::object_size(data))
 
                 withProgress(message = 'Map', value = 0, {
+                    sel <- selected_data()
+                    des <- deselected_data()
                     incProgress(1/2, detail = "Preparing routes")
-                    selected <- all_data$session %in% data$selected_sessions
-                    selected_data <- all_data[selected, ]
-                    if (!nrow(selected_data)) {
-                        incProgress(1/1, detail = "Mapping")
-                        mapdeck::mapdeck_update(map_id = "map", data = selected_data) %>%
-                            mapdeck::clear_path("selection_path")
-                    }
-                    else {
-                        selected_data$col <- ifelse(selected_data$sport == "running",
-                                                    opts$summary_plots_selected_colour_run,
-                                             ifelse(selected_data$sport == "cycling",
-                                                    opts$summary_plots_selected_colour_ride,
-                                                    opts$summary_plots_selected_colour_swim))
-                        deselected_data <- all_data[!selected, ]
-                        ## Compute centroids for histogram
-                        centroids <- sf::st_centroid(selected_data)
-                        ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-                        selected_data$tooltip <- paste(selected_data$tooltip)
-                        incProgress(1/1, detail = "Mapping")
-                        p <- mapdeck::mapdeck_update(map_id = "map", data = selected_data)
+                    ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
+
+                    incProgress(1/1, detail = "Mapping")
+                    if (!is.null(sel)) {
+                        p <- mapdeck::mapdeck_update(map_id = "map")
                         p <- mapdeck::clear_path(p, "selection_path")
-                        if (nrow(deselected_data)) {
-                            p <- mapdeck::add_path(p,
-                                                   data = deselected_data,
-                                                   stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),
-                                                   stroke_width = opts$mapdeck_width,
-                                                   layer_id = "deselection_path")
-                        }
                         p <- mapdeck::add_path(p,
+                                               data = sel,
                                                stroke_colour = "col",
                                                stroke_width = opts$mapdeck_width * 2,
                                                tooltip = "tooltip",
                                                layer_id = "selection_path",
                                                update_view = TRUE,
                                                focus_layer = TRUE)
-                        p <- mapdeck::add_screengrid(p, data = centroids,
+                        centroids <- sf::st_centroid(sel)
+                        p <- mapdeck::add_screengrid(p,
+                                                     data = centroids,
                                                      colour_range = rev(colorspace::sequential_hcl(palette = "Light Gray", n =6)),
                                                      cell_size = 20,
                                                      opacity = 0.05)
+                    }
+                    if (!is.null(des)) {
+                        p <- mapdeck::mapdeck_update(map_id = "map")
+                        p <- mapdeck::clear_path(p, "deselection_path")
+                        p <- mapdeck::add_path(p,
+                                               data = des,
+                                               stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),
+                                               stroke_width = opts$mapdeck_width,
+                                               layer_id = "deselection_path")
                     }
                 })
             }, priority = -3)
@@ -514,19 +538,26 @@ server <- function(input, output, session) {
             req(input$profileMetricsPlot)
             plotly::plotlyOutput("conc_profiles_plots",
                                  width = "auto",
-                                 ## height = "auto")
                                  height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
+
+
+        wh <- metrics[have_data_metrics_selected()]
+        if (length(wh)) {
+            conc_profiles <- trackeR::concentration_profile(data$object,
+                                                            what = wh,
+                                                            limits = data$limits0)
+        }
+        else {
+           conc_profiles <-  NULL
+        }
 
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
             withProgress(message = 'Training concentration', value = 0, {
-                incProgress(1/2, detail = "Computing concentration")
+                incProgress(1/2, detail = "Plotting")
                 ## Compute concentration for static limits on all data and
                 ## then simply plot with reactive limits
-                conc_profiles <- trackeR::concentration_profile(data$object,
-                                                                what = metrics[have_data_metrics_selected()],
-                                                                limits = data$limits0)
                 ret <- trackeRapp:::plot_concentration_profiles(
                                         x = data$object,
                                         session = data$selected_sessions,
