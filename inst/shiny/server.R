@@ -419,8 +419,16 @@ server <- function(input, output, session) {
 
     ## Test which metrics have data
     metric_is_available <- reactive({
+        ## oo <- !sapply(metrics, function(metric) {
+        ##     out <- all(sapply(data$object[data$selected_sessions], function(x) {
+        ##         cat(".")
+        ##         all((is.na(x[, metric])) | (x[, metric] == 0))
+        ##     }))
+        ##     cat("\n")
+        ##     out
+        ## })
         if (length(data$selected_sessions)) {
-            out <- colMeans(data$has_metrics[data$selected_sessions, metrics]) == 1
+            out <- colMeans(data$has_metrics[data$selected_sessions, metrics]) > 0
         }
         else {
             out <- logical(length(metrics))
@@ -472,7 +480,7 @@ server <- function(input, output, session) {
         ## Render actual plot
         output$zones_plot <- plotly::renderPlotly({
             withProgress(message = 'Zones plots', value = 0, {
-                incProgress(1/2, detail = "Computing breaks")
+                incProgress(1/2, detail = "Computing")
                 breaks <- br()
                 ret <- trackeRapp:::plot_zones(x = data$object,
                                                session = data$selected_sessions,
@@ -562,7 +570,7 @@ server <- function(input, output, session) {
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
             withProgress(message = 'Training concentration', value = 0, {
-                incProgress(1/2, detail = "Plotting")
+                incProgress(1/2, detail = "Computing")
                 ## Compute concentration for static limits on all data and
                 ## then simply plot with reactive limits
                 ret <- trackeRapp:::plot_concentration_profiles(
@@ -579,12 +587,12 @@ server <- function(input, output, session) {
 
         ## Update metrics available each time different sessions selected
         observeEvent(data$selected_sessions, {
-            shinyWidgets::updatePickerInput(session = session, inputId = "profileMetricsPlot",
-                                            choices =  metrics[metric_is_available()],
-                                            selected = 'speed')
             shinyWidgets::updatePickerInput(session = session, inputId = "zonesMetricsPlot",
                                             choices =  metrics[metric_is_available()],
-                                            selected = 'speed')
+                                            selected = c("speed"))
+            shinyWidgets::updatePickerInput(session = session, inputId = "profileMetricsPlot",
+                                            choices =  metrics[metric_is_available()],
+                                            selected = c("speed"))
         }, ignoreInit = TRUE)
 
     }, once = TRUE)
