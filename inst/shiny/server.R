@@ -85,6 +85,9 @@ server <- function(input, output, session) {
             previous_file_paths$processed <- input$processedDataPath$datapath
             ## Process uploaded data
             ## Remove duplicate sessions and create trackeRdata object from both raw and processed data
+
+            ## FIXME: If processed_data is NULL show modal that container file has now data and reset
+
             data$object <- sort(unique(trackeR:::c.trackeRdata(processed_data, raw_data,
                                                                data$object)), decreasing = FALSE)
             ## Threshold?
@@ -206,10 +209,6 @@ server <- function(input, output, session) {
 
     observeEvent(input$updateUnits, {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
-        ## data$limits <- reactive({
-        ##     trackeR::compute_limits(data$object,
-        ##                              a = opts$quantile_for_limits)
-        ## })
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
          DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         removeModal()
@@ -241,9 +240,8 @@ server <- function(input, output, session) {
         })
 
         ## Re-render all plots
-        metrics_available <- reactive({c(choices[sapply(choices, function(x)
-            data$has_data[[x]]
-            )])
+        metrics_available <- reactive({
+            c(choices[sapply(choices, function(x) data$has_data[[x]] )])
         })
 
         data$limits0 <- trackeR::compute_limits(data$object,
@@ -294,15 +292,15 @@ server <- function(input, output, session) {
         if ((any(data$is_location_data)) & (has_internet_connection)) {
             trackeRapp:::create_map()
 
-            all_data <- reactive({
-                sessions <- seq_along(data$object)[data$is_location_data]
-                trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
-            })()
-
             output$map <- mapdeck::renderMapdeck({
                 mapdeck::mapdeck(token = mapbox_key,
                                  style = mapdeck::mapdeck_style(opts$mapdeck_style))
             })
+
+            all_data <- reactive({
+                sessions <- seq_along(data$object)[data$is_location_data]
+                trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
+            })()
 
             ## Selecting from the map
             ## observeEvent(input$map_path_click, {
@@ -435,16 +433,24 @@ server <- function(input, output, session) {
                                  height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vh"))
         })
 
+
+        br <- reactive({
+            lims <- data$limits()
+            trackeR::compute_breaks(object = data$object,
+                                    limits = lims,
+                                    n_breaks = as.numeric(input$n_zones),
+                                    what = input$zonesMetricsPlot)
+        })
+
         ## Render actual plot
         output$zones_plot <- plotly::renderPlotly({
             withProgress(message = 'Zones plots', value = 0, {
                 incProgress(1/2, detail = "Computing breaks")
+                breaks <- br()
                 ret <- trackeRapp:::plot_zones(x = data$object,
                                                session = data$selected_sessions,
                                                what = input$zonesMetricsPlot,
-                                               breaks = trackeR::compute_breaks(object = data$object, limits = data$limits(),
-                                                                                n_breaks = as.numeric(input$n_zones),
-                                                                                what = input$zonesMetricsPlot),
+                                               breaks = breaks,
                                                n_zones = as.numeric(input$n_zones))
                 incProgress(2/2, detail = "Plotting")
                 ret
@@ -512,14 +518,15 @@ server <- function(input, output, session) {
                                  height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
 
-        conc_profiles <- trackeR::concentration_profile(data$object,
-                                                        what = metrics[have_data_metrics_selected()],
-                                                        limits = data$limits0)
-
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
             withProgress(message = 'Training concentration', value = 0, {
                 incProgress(1/2, detail = "Computing concentration")
+                ## Compute concentration for static limits on all data and
+                ## then simply plot with reactive limits
+                conc_profiles <- trackeR::concentration_profile(data$object,
+                                                                what = metrics[have_data_metrics_selected()],
+                                                                limits = data$limits0)
                 ret <- trackeRapp:::plot_concentration_profiles(
                                         x = data$object,
                                         session = data$selected_sessions,
