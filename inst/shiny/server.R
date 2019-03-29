@@ -23,7 +23,6 @@ if (isTRUE(live_version)) {
 opts <- trackeRapp:::trops()
 
 ## Set token for Mapbox
-## Sys.setenv("MAPBOX_TOKEN" = "pk.eyJ1IjoicnVnZWVyIiwiYSI6ImNqOTduN2phMTBmYXkyd29yNjR1amU2cjUifQ.IhNRZRmy1mlbLloz-p6vbw")
 mapbox_key <- "pk.eyJ1IjoicnVnZWVyIiwiYSI6ImNqOTduN2phMTBmYXkyd29yNjR1amU2cjUifQ.IhNRZRmy1mlbLloz-p6vbw"
 ## Set the maximum file size to upload
 options(shiny.maxRequestSize = 30 * 1024^3)
@@ -207,12 +206,12 @@ server <- function(input, output, session) {
 
     observeEvent(input$updateUnits, {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
+        ## data$limits <- reactive({
+        ##     trackeR::compute_limits(data$object,
+        ##                              a = opts$quantile_for_limits)
+        ## })
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
-        data$limits <- reactive({
-            trackeR::compute_limits(data$object,
-                                    a = opts$quantile_for_limits)
-        })
-        DT::selectRows(proxy = proxy, selected = data$selected_sessions)
+         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         removeModal()
     })
 
@@ -230,9 +229,6 @@ server <- function(input, output, session) {
     ## Session summaries page
     observeEvent(input$createDashboard, {
 
-        ## data$limits0 <- trackeR::compute_limits(data$object,
-        ##                                         a = opts$quantile_for_limits)
-
         output$timeline_plot <- plotly::renderPlotly({
             withProgress(message = 'Timeline', value = 0, {
                 if (!is.null(data$summary)) {
@@ -249,6 +245,9 @@ server <- function(input, output, session) {
             data$has_data[[x]]
             )])
         })
+
+        data$limits0 <- trackeR::compute_limits(data$object,
+                                                a = opts$quantile_for_limits)
 
         trackeRapp:::create_option_box(sport_options = data$identified_sports,
                                        metrics_available = metrics_available())
@@ -295,10 +294,10 @@ server <- function(input, output, session) {
         if ((any(data$is_location_data)) & (has_internet_connection)) {
             trackeRapp:::create_map()
 
-            preped_route_map <- reactive({
+            all_data <- reactive({
                 sessions <- seq_along(data$object)[data$is_location_data]
                 trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
-            })
+            })()
 
             output$map <- mapdeck::renderMapdeck({
                 mapdeck::mapdeck(token = mapbox_key,
@@ -314,10 +313,14 @@ server <- function(input, output, session) {
 
             ## Update map based on current selection
             observeEvent(data$selected_sessions, {
+
+                ## Profile memory usage
+                ## print(pryr:::object_size(data))
+
                 withProgress(message = 'Map', value = 0, {
                     incProgress(1/2, detail = "Preparing routes")
-                    selected <- preped_route_map()$session %in% data$selected_sessions
-                    selected_data <- preped_route_map()[selected, ]
+                    selected <- all_data$session %in% data$selected_sessions
+                    selected_data <- all_data[selected, ]
                     if (!nrow(selected_data)) {
                         incProgress(1/1, detail = "Mapping")
                         mapdeck::mapdeck_update(map_id = "map", data = selected_data) %>%
@@ -329,7 +332,7 @@ server <- function(input, output, session) {
                                              ifelse(selected_data$sport == "cycling",
                                                     opts$summary_plots_selected_colour_ride,
                                                     opts$summary_plots_selected_colour_swim))
-                        deselected_data <- preped_route_map()[!selected, ]
+                        deselected_data <- all_data[!selected, ]
                         ## Compute centroids for histogram
                         centroids <- sf::st_centroid(selected_data)
                         ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
@@ -436,13 +439,12 @@ server <- function(input, output, session) {
         output$zones_plot <- plotly::renderPlotly({
             withProgress(message = 'Zones plots', value = 0, {
                 incProgress(1/2, detail = "Computing breaks")
-                br <- reactive({
-                    trackeR::compute_breaks(object = data$object, limits = data$limits(),
-                                            n_breaks = as.numeric(input$n_zones),
-                                            what = input$zonesMetricsPlot)
-                })()
-                ret <- trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
-                                               what = input$zonesMetricsPlot, breaks = br,
+                ret <- trackeRapp:::plot_zones(x = data$object,
+                                               session = data$selected_sessions,
+                                               what = input$zonesMetricsPlot,
+                                               breaks = trackeR::compute_breaks(object = data$object, limits = data$limits(),
+                                                                                n_breaks = as.numeric(input$n_zones),
+                                                                                what = input$zonesMetricsPlot),
                                                n_zones = as.numeric(input$n_zones))
                 incProgress(2/2, detail = "Plotting")
                 ret
@@ -507,24 +509,23 @@ server <- function(input, output, session) {
             plotly::plotlyOutput("conc_profiles_plots",
                                  width = "auto",
                                  ## height = "auto")
-            paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
+                                 height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
+
+        conc_profiles <- trackeR::concentration_profile(data$object,
+                                                        what = metrics[have_data_metrics_selected()],
+                                                        limits = data$limits0)
 
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
             withProgress(message = 'Training concentration', value = 0, {
                 incProgress(1/2, detail = "Computing concentration")
-                concentration_profiles <- reactive({
-                    trackeR::concentration_profile(data$object,
-                                                   what = metrics[have_data_metrics_selected()],
-                                                   limits = data$limits())
-                })
-                cps <- concentration_profiles()
                 ret <- trackeRapp:::plot_concentration_profiles(
                                         x = data$object,
                                         session = data$selected_sessions,
                                         what = input$profileMetricsPlot,
-                                        profiles_calculated = cps,
+                                        profiles_calculated = conc_profiles,
+                                        limits = data$limits(),
                                         options = opts)
                 incProgress(1/1, detail = "Plotting")
                 ret

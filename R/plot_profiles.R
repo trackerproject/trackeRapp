@@ -8,6 +8,7 @@ plot_concentration_profiles <- function(x,
                                         session,
                                         profiles_calculated,
                                         what = c("speed"),
+                                        limits = NULL,
                                         options = NULL) {
 
     opts <- if (is.null(options)) trops() else options
@@ -44,7 +45,9 @@ plot_concentration_profiles <- function(x,
     legend_status <- FALSE
     for (feature in what) {
         y <- list(title = "dtime", tickangle = 0)
-        x <- list(title = lab_data(feature, units), tickangle = 0)
+        x <- list(title = lab_data(feature, units),
+                  range = limits[[feature]],
+                  tickangle = 0)
         var_units <- lab_sum(feature = feature, data = tracker_object,
                              whole_text = FALSE, transform_feature = FALSE)
         feature_profile <- df[df$Profile == feature, ]
