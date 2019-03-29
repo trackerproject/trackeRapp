@@ -41,7 +41,8 @@ server <- function(input, output, session) {
                            object = NULL,
                            selected_sessions = NULL,
                            has_data = NULL,
-                           dummy = 0)
+                           dummy = 0,
+                           has_metrics = NULL)
 
     ## Store the previous value to let user upload new data constantly
     previous_file_paths <- reactiveValues(processed = 'NULL')
@@ -55,10 +56,8 @@ server <- function(input, output, session) {
 
     ##  Upload data
     observeEvent(input$uploadButton, {
-
         no_raw_directory_selected <- is.null(input$rawDataDirectory$datapath)
         no_processed_file_selected <- is.null(input$processedDataPath$datapath)
-
         if (no_raw_directory_selected & no_processed_file_selected) {
             trackeRapp:::show_warning_no_data_selected()
         }
@@ -85,11 +84,10 @@ server <- function(input, output, session) {
             previous_file_paths$processed <- input$processedDataPath$datapath
             ## Process uploaded data
             ## Remove duplicate sessions and create trackeRdata object from both raw and processed data
-
             ## FIXME: If processed_data is NULL show modal that container file has now data and reset
-
             data$object <- sort(unique(trackeR:::c.trackeRdata(processed_data, raw_data,
                                                                data$object)), decreasing = FALSE)
+
             ## Threshold?
             if (opts$threshold) {
                 th <- trackeR::generate_thresholds()
@@ -244,9 +242,6 @@ server <- function(input, output, session) {
         metrics_available <- reactive({
             c(choices[sapply(choices, function(x) data$has_data[[x]] )])
         })
-
-        data$limits0 <- trackeR::compute_limits(data$object,
-                                                a = opts$quantile_for_limits)
 
         trackeRapp:::create_option_box(sport_options = data$identified_sports,
                                        metrics_available = metrics_available())
@@ -423,18 +418,26 @@ server <- function(input, output, session) {
     }, once = TRUE)
 
     ## Test which metrics have data
-    have_data_metrics_selected <- reactive({
-        !sapply(metrics, function(metric) {
-            all(sapply(data$object[data$selected_sessions], {
-                function(x) all((is.na(x[, metric])) | (x[, metric] == 0))
-            }))
-        })
+    metric_is_available <- reactive({
+        if (length(data$selected_sessions)) {
+            out <- colMeans(data$has_metrics[data$selected_sessions, metrics]) == 1
+        }
+        else {
+            out <- logical(length(metrics))
+        }
+        names(out) <- names(metrics)
+        out
     })
 
     observeEvent(data$selected_sessions, {
         data$limits <- reactive({
-            trackeR::compute_limits(data$object[data$selected_sessions],
-                                    a = opts$quantile_for_limits)
+            if (length(data$selected_sessions)) {
+                trackeR::compute_limits(data$object[data$selected_sessions],
+                                        a = opts$quantile_for_limits)
+            }
+            else {
+                NULL
+            }
         })
     })
 
@@ -446,7 +449,7 @@ server <- function(input, output, session) {
         ##  Time in zones
         trackeRapp:::create_zones_box(inputId = "zonesMetricsPlot",
                                       plotId = "zonesPlotUi",
-                                      choices = metrics[have_data_metrics_selected()])
+                                      choices = metrics[metric_is_available()])
 
         ## Render UI for time in zones plot
         output$zonesPlotUi <- renderUI({
@@ -522,7 +525,7 @@ server <- function(input, output, session) {
                 })
             })
             output[[i]] <- reactive({
-                !isTRUE((i %in% metrics[have_data_metrics_selected()]) & data$show_individual_sessions)
+                !isTRUE((i %in% metrics[metric_is_available()]) & data$show_individual_sessions)
             })
             outputOptions(output, i, suspendWhenHidden = FALSE)
         })
@@ -531,7 +534,7 @@ server <- function(input, output, session) {
         trackeRapp:::create_profiles_box(
                          inputId = "profileMetricsPlot",
                          plotId = "concentration_profiles",
-                         choices = metrics[have_data_metrics_selected()],
+                         choices = metrics[metric_is_available()],
                          collapsed = TRUE)
         ## Render UI for concentration profiles
         output$concentration_profiles <- renderUI({
@@ -542,15 +545,19 @@ server <- function(input, output, session) {
         })
 
 
-        wh <- metrics[have_data_metrics_selected()]
-        if (length(wh)) {
-            conc_profiles <- trackeR::concentration_profile(data$object,
-                                                            what = wh,
-                                                            limits = data$limits0)
-        }
-        else {
-           conc_profiles <-  NULL
-        }
+
+        conc_profiles <- reactive({
+            wh <- metrics[metric_is_available()]
+            if (length(wh)) {
+                lims <- data$limits()
+                trackeR::concentration_profile(data$object,
+                                               what = wh,
+                                               limits = lims)
+            }
+            else {
+                NULL
+            }
+        })
 
         ## Render actual plot
         output$conc_profiles_plots <- plotly::renderPlotly({
@@ -562,7 +569,7 @@ server <- function(input, output, session) {
                                         x = data$object,
                                         session = data$selected_sessions,
                                         what = input$profileMetricsPlot,
-                                        profiles_calculated = conc_profiles,
+                                        profiles_calculated = conc_profiles(),
                                         limits = data$limits(),
                                         options = opts)
                 incProgress(1/1, detail = "Plotting")
@@ -573,10 +580,10 @@ server <- function(input, output, session) {
         ## Update metrics available each time different sessions selected
         observeEvent(data$selected_sessions, {
             shinyWidgets::updatePickerInput(session = session, inputId = "profileMetricsPlot",
-                                            choices =  metrics[have_data_metrics_selected()],
+                                            choices =  metrics[metric_is_available()],
                                             selected = 'speed')
             shinyWidgets::updatePickerInput(session = session, inputId = "zonesMetricsPlot",
-                                            choices =  metrics[have_data_metrics_selected()],
+                                            choices =  metrics[metric_is_available()],
                                             selected = 'speed')
         }, ignoreInit = TRUE)
 

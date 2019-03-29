@@ -244,14 +244,12 @@ generate_objects <- function(data, output, session, choices, options = NULL) {
     identified_sports <- sports_options %in% unique(get_sport(data$object))
     data$sports <- sports_options[identified_sports]
     data$identified_sports <- sports_options[identified_sports]
-    data$limits <- compute_limits(data$object, a = opts$quantile_for_limits)
+    data$has_metrics <- do.call("rbind", lapply(data$object, function(x) colMeans(is.na(x)) < 1))
     data$is_location_data <- sapply(data$object, function(x) {
         size <- nrow(x)
         x_sample <- sample(x[, 'longitude'], round(size / 1000))
         !all((is.na(x_sample)) | (x_sample == 0))
     })
-    data$sessions_map <- rep(seq_along(data$object)[data$is_location_data],
-                             times = 1, each = 2)
     data$dummy <- data$dummy + 1
 }
 

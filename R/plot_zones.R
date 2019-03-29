@@ -10,7 +10,7 @@ plot_zones <- function(x, session, what = c("heart_rate"),
                        n_zones, parallel = TRUE, breaks,
                        options = NULL) {
     opts <- if (is.null(options)) trops() else options
-    if (isTRUE(length(session) == 0)) {
+    if (isTRUE(length(session) == 0) | is.null(breaks)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
     }
     if (is.null(what)) {
