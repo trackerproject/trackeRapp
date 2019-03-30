@@ -43,6 +43,7 @@ plot_zones <- function(x, session, what = c("heart_rate"),
     individual_plots <- list()
     legend_status <- FALSE
     for (feature in what) {
+        time_unit <- units(x[[feature]]$time)
         y <- list(title = "% of time")
         x <- list(title = lab_data(feature, units))
         feature_zones <- dat[dat$variable == feature, ]
@@ -50,7 +51,10 @@ plot_zones <- function(x, session, what = c("heart_rate"),
                      x = ~ zoneF, y = ~ percent,
                      color = ~ Session, colors = col,#[feature_zones$session],
                      legendgroup = ~ Session, hoverinfo = "text",
-                     text = ~ paste0("Proportion of session: ", round(percent, 1), "%", "\n", Session)) %>%
+                     text = ~ paste0(
+                               Session, "\n",
+                               round(time, 1), " ", time_unit, " in zone\n",
+                               round(percent, 1), "% of session\n")) %>%
             add_bars() %>%
             layout(xaxis = x, yaxis = y, hovermode = "closest",
                    plot_bgcolor = "rgba(0, 0, 0, 0)",
