@@ -421,7 +421,7 @@ server <- function(input, output, session) {
     ## Test which metrics have data
     metric_is_available <- reactive({
         if (length(data$selected_sessions)) {
-            out <- colMeans(data$has_metrics[data$selected_sessions, metrics]) > 0
+            out <- colMeans(data$has_metrics[data$selected_sessions, metrics, drop = FALSE]) > 0
         }
         else {
             out <- logical(length(metrics))
@@ -576,12 +576,17 @@ server <- function(input, output, session) {
 
         ## Update metrics available each time different sessions selected
         observeEvent(data$selected_sessions, {
+            has_sessions <- isTRUE(length(data$selected_sessions) > 0)
+            has_profile_metrics <- isTRUE(length(input$profileMetricsPlot) > 0)
+            has_zone_metrics <- isTRUE(length(input$zonesMetricsPlot) > 0)
+            profile_metrics <- if (has_sessions & !has_profile_metrics) "speed" else input$profileMetricsPlot
+            zone_metrics <- if (has_sessions & !has_zone_metrics) "speed" else input$zonesMetricsPlot
             shinyWidgets::updatePickerInput(session = session, inputId = "zonesMetricsPlot",
                                             choices =  metrics[metric_is_available()],
-                                            selected = c("speed"))
+                                            selected = zone_metrics)
             shinyWidgets::updatePickerInput(session = session, inputId = "profileMetricsPlot",
                                             choices =  metrics[metric_is_available()],
-                                            selected = c("speed"))
+                                            selected = profile_metrics)
         }, ignoreInit = TRUE)
 
     }, once = TRUE)
