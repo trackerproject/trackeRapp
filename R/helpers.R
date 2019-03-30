@@ -244,6 +244,7 @@ generate_objects <- function(data, output, session, choices, options = NULL) {
     identified_sports <- sports_options %in% unique(get_sport(data$object))
     data$sports <- sports_options[identified_sports]
     data$identified_sports <- sports_options[identified_sports]
+    data$limits0 <- trackeR::compute_limits(data$object, a = opts$quantile_for_limits)
     data$has_metrics <- do.call("rbind", lapply(data$object, function(x) colMeans(is.na(x)) < 1))
     data$is_location_data <- sapply(data$object, function(x) {
         size <- nrow(x)
