@@ -376,9 +376,9 @@ server <- function(input, output, session) {
                         centroids <- sf::st_centroid(sel)
                         p <- mapdeck::add_screengrid(p,
                                                      data = centroids,
-                                                     colour_range = rev(colorspace::sequential_hcl(palette = "Light Gray", n =6)),
+                                                     colour_range = rev(colorspace::sequential_hcl(h = 10, power = 1, c = 65, l = 70, n = 6)),
                                                      cell_size = 20,
-                                                     opacity = 0.05)
+                                                     opacity = 0.1)
                     }
                 })
             }, priority = -3)
