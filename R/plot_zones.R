@@ -39,14 +39,13 @@ plot_zones <- function(x, session, what = c("heart_rate"),
     dat$timeN <- as.numeric(dat$time)
     ## facets
     units <- getUnits(x)
-
     individual_plots <- list()
     legend_status <- FALSE
     for (feature in what) {
-        time_unit <- units(x[[feature]]$time)
         y <- list(title = "% of time")
         x <- list(title = lab_data(feature, units))
         feature_zones <- dat[dat$variable == feature, ]
+        time_unit <- units(feature_zones$time)
         p <- plot_ly(feature_zones,
                      x = ~ zoneF, y = ~ percent,
                      color = ~ Session, colors = col,#[feature_zones$session],
