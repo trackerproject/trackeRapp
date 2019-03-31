@@ -199,7 +199,7 @@ create_profiles_box <- function(inputId, plotId, choices, collapsed = FALSE) {
                         width = 12,
                         collapsible = TRUE,
                         collapsed = collapsed,
-                        title = tagList(icon("gear"), "Training concentration"),
+                        title = tagList(icon("gear"), "Workout concentration"),
                         fluidRow(
                             column(2, pickerInput(inputId = inputId,
                                                   label = "Features",

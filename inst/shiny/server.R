@@ -393,8 +393,7 @@ server <- function(input, output, session) {
         sapply(c(summary_features), function(i) {
             output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
                 withProgress(message = paste(i, "plots"), value = 0, {
-                    incProgress(1/1, detail = "Subsetting")
-
+                    incProgress(1/2, detail = "Subsetting")
                     ret <- trackeRapp:::plot_workouts(data = data,
                                                       what = i,
                                                       options = opts,

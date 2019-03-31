@@ -354,9 +354,12 @@ render_summary_box <- function(short_name, long_name, data) {
                 paste0(value, " ", unique(lab_sum(what, data$summary, FALSE)))
             }
         })
-        color <- ifelse(value() == "not available",
-                        opts$summary_box_na_colour,
+        color <- switch(what,
+                        "nsessions_cycling" = opts$summary_box_ride_colour,
+                        "nsessions_swimming" = opts$summary_box_swim_colour,
+                        "nsessions_running" = opts$summary_box_run_colour,
                         opts$summary_box_ok_colour)
+        color <- ifelse(value() == "not available", opts$summary_box_na_colour, color)
         valueBox(value(), subtitle, icon, color = color)
     }
     renderValueBox({
