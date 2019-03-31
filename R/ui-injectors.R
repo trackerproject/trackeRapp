@@ -253,7 +253,7 @@ create_zones_box <- function(inputId, plotId, choices) {
 ## Create a return button from selected workouts plot
 ## @param sport_options A vector of sports identified from the uploaded sessions.
 ## @param metrics_available A vector of metrics that are found in the dataset.
-create_option_box <- function(sport_options, metrics_available) {
+create_option_box <- function(sport_options, summary_features_available, workout_features_available) {
     insertUI(
         immediate = TRUE,
         selector = ".content",
@@ -290,12 +290,13 @@ create_option_box <- function(sport_options, metrics_available) {
                                         icon = icon("swimmer")))),
                          br(),
                          fluidRow(
-                             column(3, conditionalPanel(
-                                           condition = "output.cond == false",
-                                           actionButton(
-                                               inputId = "return_to_main_page",
-                                               label = "Summary view",
-                                               icon = icon("search-minus"))),
+                             column(3,
+                                    conditionalPanel(
+                                        condition = "output.cond == false",
+                                        actionButton(
+                                            inputId = "return_to_main_page",
+                                            label = "Summary view",
+                                            icon = icon("search-minus"))),
                                     conditionalPanel(
                                         condition = "output.cond == true",
                                         actionButton(inputId = "plotSelectedWorkouts",
@@ -305,10 +306,20 @@ create_option_box <- function(sport_options, metrics_available) {
                                                     label = "Change units",
                                                     icon = icon("balance-scale"))),
                              column(6,
-                                    pickerInput(inputId = "metricsSelected",
-                                                choices = metrics_available,
-                                                options = list(`actions-box` = TRUE),
-                                                multiple = TRUE, selected = trops()$default_summary_plots)))))))
+                                    conditionalPanel(
+                                        condition = "output.cond == true",
+                                        pickerInput(inputId = "metricsSelected",
+                                                    choices = summary_features_available,
+                                                    options = list(`actions-box` = TRUE),
+                                                    multiple = TRUE, selected = trops()$default_summary_plots)),
+                                    conditionalPanel(
+                                        condition = "output.cond == false",
+                                        pickerInput(inputId = "workout_features_selected",
+                                                    choices = workout_features_available,
+                                                    options = list(`actions-box` = TRUE),
+                                                    multiple = TRUE,
+                                                    selected = trops()$default_workout_plots))
+                                       ))))))
 }
 
 
