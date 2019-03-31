@@ -105,7 +105,7 @@ trops <- function() {
     "
      function(){
       $('tr').each(function(){
-       var col_val = $(this).find('td:eq(5)').text();
+       var col_val = $(this).find('td:eq(6)').text();
         if (col_val == 'running'){
          $(this).addClass('running');
         };

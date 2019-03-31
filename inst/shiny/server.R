@@ -350,6 +350,17 @@ server <- function(input, output, session) {
                     ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
 
                     incProgress(1/1, detail = "Mapping")
+                    if (!is.null(des)) {
+                        p <- mapdeck::mapdeck_update(map_id = "map")
+                        p <- mapdeck::clear_path(p, "deselection_path")
+                        p <- mapdeck::add_path(p,
+                                               data = des,
+                                               stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),
+                                               stroke_width = opts$mapdeck_width,
+                                               layer_id = "deselection_path",
+                                               update_view = FALSE,
+                                               focus_layer = FALSE)
+                    }
                     if (!is.null(sel)) {
                         p <- mapdeck::mapdeck_update(map_id = "map")
                         p <- mapdeck::clear_path(p, "selection_path")
@@ -367,15 +378,6 @@ server <- function(input, output, session) {
                                                      colour_range = rev(colorspace::sequential_hcl(palette = "Light Gray", n =6)),
                                                      cell_size = 20,
                                                      opacity = 0.05)
-                    }
-                    if (!is.null(des)) {
-                        p <- mapdeck::mapdeck_update(map_id = "map")
-                        p <- mapdeck::clear_path(p, "deselection_path")
-                        p <- mapdeck::add_path(p,
-                                               data = des,
-                                               stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),
-                                               stroke_width = opts$mapdeck_width,
-                                               layer_id = "deselection_path")
                     }
                 })
             }, priority = -3)

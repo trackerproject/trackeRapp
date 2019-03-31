@@ -404,8 +404,10 @@ render_summary_table <- function(data, input, options = NULL) {
     opts <- if (is.null(options)) trops() else options
     renderDT({
         dataSelected <- data.frame("Session" = data$summary[["session"]],
+                                   "Day" = format(data$summary[["sessionStart"]],
+                                                  format = "%a"),
                                    "Date" = format(data$summary[["sessionStart"]],
-                                                   format = "%a, %d %b %Y"),
+                                                   format = "%d %b %Y"),
                                    "Start" = format(data$summary[["sessionStart"]],
                                                     format = "%H:%M"),
                                    "End" = format(data$summary[["sessionEnd"]],
@@ -420,7 +422,7 @@ render_summary_table <- function(data, input, options = NULL) {
                          options = list(paging = FALSE, scrollY = "295px", info = FALSE,
                                         drawCallback = JS(opts$dt_callback_js)))
         formatStyle(out,
-                    c("Session", "Date", "Start", "End", "Duration", "Sport"),
+                    c("Session", "Day", "Date", "Start", "End", "Duration", "Sport"),
                     backgroundColor = opts$summary_plots_deselected_colour)
     })
 }

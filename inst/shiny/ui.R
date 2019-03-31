@@ -9,9 +9,9 @@ ui <- tagList(
                     margin: 0 auto;
                     padding: 0;
                 }
-               @media screen and (min-width: 1024px){
+               @media screen and (min-width: 1280px){
                 .container{
-                    width: 1024px;
+                    width: 1280px;
                 }
                }"),
                tags$div(class = "container",
