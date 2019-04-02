@@ -16,7 +16,6 @@ create_map <- function() {
                              mapdeck::mapdeckOutput(outputId = "map"))))))
 }
 
-
 ## Insert summary boxes
 create_summary_boxes <- function() {
     insertUI(immediate = TRUE,
