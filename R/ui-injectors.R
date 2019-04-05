@@ -54,6 +54,7 @@ create_workout_plots <- function(feature) {
                     "avgHeartRate" = "Average Heart Rate",
                     "avgTemperature" = "Average Temperature",
                     "avgAltitude" = "Average Altitude",
+                    "total_elevation_gain" = "Total elevation gain",
                     "wrRatio" = "Work-to-rest Ratio")
     insertUI(selector = ".content",
              where = "beforeEnd",
@@ -94,7 +95,8 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                                                "cadence_running" = "Cadence Running",
                                                "cadence_cycling" = "Cadence Cycling",
                                                "altitude" = "Altitude",
-                                               "temperature" = "Temperature")),
+                                               "temperature" = "Temperature",
+                                               "cumulative_elevation_gain" = "Cumulative elevation gain")),
                         dropdownButton(
                             circle = TRUE,
                             up = TRUE,

@@ -22,6 +22,8 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE, options = NULL
         p <- add_segments(p,
                           data = df, x = ~ start, xend = ~ end, y = ~ sday, yend = ~ eday,
                           color = I(opts$summary_plots_deselected_colour),
+                          size = I(3),
+                          alpha = 0.5,
                           hoverinfo = "text",
                           text = sprintf("Session: %s<br>Start: %s <br>End: %s",
                                          df$session, sumX$sessionStart, sumX$sessionEnd))
@@ -40,6 +42,7 @@ plot_timeline <- function(sumX, session, shiny=TRUE, plotly=TRUE, options = NULL
                               x = ~ start, xend = ~ end,
                               y = ~ sday, yend = ~ eday,
                               color = I(col),
+                              size = I(3),
                               hoverinfo = "text",
                               text = ~ sprintf("Session: %s<br>Start: %s <br>End: %s <br>Sport: %s",
                                                df$session[which(df$session %in% session)],

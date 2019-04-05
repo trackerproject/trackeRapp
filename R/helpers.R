@@ -19,12 +19,18 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "avgCadenceRunning" = "cadence_running",
                           "avgHeartRate" = "heart_rate",
                           "avgCadenceCycling" = "cadence_cycling",
+                          "total_elevation_gain" = "total_elevation_gain",
                           "wrRatio" = "work-to-rest \n ratio")
     }
     else {
         concept <- feature
     }
-    thisunit <- units$unit[units$variable == concept]
+    if (feature == "total_elevation_gain") {
+        thisunit <- units$unit[units$variable == "altitude"]
+    }
+    else {
+        thisunit <- units$unit[units$variable == concept]
+    }
     prettyUnit <- prettifyUnits(thisunit)
     if (whole_text) {
         if (transform_feature) {
@@ -38,6 +44,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "avgCadenceRunning" = paste0("Cadence Running \n[", prettyUnit, "]"),
                           "avgCadenceCycling" = paste0("Cadence Cycling \n[", prettyUnit, "]"),
                           "avgPower" = paste0("Average Power \n[", prettyUnit, "]"),
+                          "total_elevation_gain" = paste0("Total elevation gain \n[", prettyUnit, "]"),
                           "avgHeartRate" = paste0("Average Heart Rate \n[", prettyUnit, "]"),
                           "wrRatio" = "work-to-rest \n ratio")
         }
@@ -50,6 +57,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "altitude" = paste0("Altitude \n[", prettyUnit, "]"),
                           "temperature" = paste0("Temperature \n[", prettyUnit, "]"),
                           "speed" = paste0("Speed \n[", prettyUnit, "]"),
+                          "total_elevation_gain" = paste0("Total elevation gain \n[", prettyUnit, "]"),
                           "power" = paste0("Power \n[", prettyUnit, "]"))
         }
     }
@@ -66,6 +74,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "avgHeartRate" = prettyUnit,
                           "avgAltitude" = prettyUnit,
                           "avgTemperature" = prettyUnit,
+                          "total_elevation_gain" = prettyUnit,
                           "wrRatio" = "")
         }
         else {
@@ -77,6 +86,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "altitude" = prettyUnit,
                           "temperature" = prettyUnit,
                           "speed" = prettyUnit,
+                          "total_elevation_gain" = prettyUnit,
                           "power" = prettyUnit)
         }
     }
@@ -92,6 +102,7 @@ create_icon <- function(feature) {
                    "duration" = "clock-o",
                    "avgSpeed" = "line-chart",
                    "avgAltitude" = "arrows-v",
+                   "total_elevation_gain" = "arrows-v",
                    "avgTemperature" = "thermometer",
                    "nsessions_cycling" = "bicycle",
                    "nsessions_running" = "walking",
@@ -159,6 +170,7 @@ summary_view_features <- function() {
       "Average heart rate" = "avgHeartRate",
       "Work to rest ratio" = "wrRatio",
       "Average altitude" = "avgAltitude",
+      "Total elevation gain" = "total_elevation_gain",
       "Average temperature" = "avgTemperature")
 }
 
@@ -171,6 +183,7 @@ workout_view_features <- function() {
       "Cadence cycling" = "cadence_cycling",
       "Power" = "power",
       "Altitude" = "altitude",
+      "Cumulative elevation gain" = "cumulative_elevation_gain",
       "Temperature" = "temperature")
 }
 

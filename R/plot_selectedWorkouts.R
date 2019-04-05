@@ -29,6 +29,7 @@ plot_selected_workouts <- function(x,
                                    unit_reference_sport = NULL,
                                    moving_threshold = NULL,
                                    desampling = 1,
+                                   k = 200,
                                    y_axis_range = NULL,
                                    options = NULL) {
     opts <- if (is.null(options)) trops() else options
@@ -187,20 +188,41 @@ plot_selected_workouts <- function(x,
             a <- plot_ly(df_subset[sampled_rows, ],
                          x = ~ Index, y = ~ Value, hoverinfo = "none",
                          type = "scatter", mode = "lines",
-                         showlegend = FALSE, alpha = 0.2, color = I(col))#I(opts$workouts_background_colour))
+                         showlegend = FALSE, alpha = 0.2, color = I(col))
+            if (what == "cumulative_elevation_gain") {
+                a <- add_trace(a, x = ~ Index, y = I(0),
+                               type = 'scatter',
+                               mode = 'lines',
+                               fill = 'tonexty',
+                               fillcolor = col,
+                               line = list(color = 'transparent'),
+                               showlegend = FALSE)
+
+            }
             if (smooth) {
-                smoothed_model <- gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
-                smoothed_data <- predict.gam(smoothed_model, newdata = df_subset)
+                ## Using gam
+                ## smoothed_model <- gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
+                ## smoothed_data <- predict.gam(smoothed_model, newdata = df_subset)
+                ## Using smooth spline
+                ## smoothed_model <- smooth.spline(df_subset$numericDate, df_subset$Value)
+                ## smoothed_data <- predict(smoothed_model)$y
+                ## Using moving averages
+                smoothed_data <- rollmedian(zoo(x = df_subset$Value, order.by = df_subset$Index),
+                                          k = k, align = "center")
+
                 smoothed_values$minimum <- c(smoothed_values$minimum, min(smoothed_data))
                 smoothed_values$maximum <- c(smoothed_values$maximum, max(smoothed_data))
                 a <- a %>% add_lines(data = df_subset,
-                                     x = ~ Index, y = smoothed_data, hoverinfo = "text",
+                                     ## x = ~ Index, y = smoothed_data,
+                                     x = index(smoothed_data), y = coredata(smoothed_data),
+                                     hoverinfo = "text",
                                      text = paste(round(smoothed_data, 2), var_units),
-                                     color = I(col),#I(opts$workouts_smoother_colour),
+                                     color = I(col),
                                      showlegend = FALSE, alpha = 1)
             }
             a <- a %>% layout(annotations = annotations_list,
-                              xaxis = axis_list, yaxis = c(axis_list, list(range = y_axis_range)))
+                              xaxis = axis_list,
+                              yaxis = c(axis_list, list(range = y_axis_range)))
         }
         else {
             maximal_range <- c(-1, 1)

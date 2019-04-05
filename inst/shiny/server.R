@@ -562,8 +562,10 @@ server <- function(input, output, session) {
                     ret <- trackeRapp:::plot_selected_workouts(
                                             x = data$object, session = data$selected_sessions, what = i,
                                             sumX = data$summary, changepoints = fit_changepoint,
-                                            threshold = FALSE, smooth = TRUE,
+                                            threshold = FALSE,
+                                            smooth = i != "cumulative_elevation_gain",
                                             n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
+                                            k = 100,
                                             desampling = opts$thin,
                                             y_axis_range = data$limits()[[i]])
                     incProgress(1/1, detail = "Plotting")
