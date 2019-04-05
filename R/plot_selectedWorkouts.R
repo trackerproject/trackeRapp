@@ -184,22 +184,30 @@ plot_selected_workouts <- function(x,
                    ifelse(csport == "cycling",
                           opts$summary_plots_selected_colour_ride,
                           opts$summary_plots_selected_colour_swim))
-
-            a <- plot_ly(df_subset[sampled_rows, ],
-                         x = ~ Index, y = ~ Value, hoverinfo = "none",
-                         type = "scatter", mode = "lines",
-                         showlegend = FALSE, alpha = 0.2, color = I(col))
-            if (what == "cumulative_elevation_gain") {
-                a <- add_trace(a, x = ~ Index, y = I(0),
+            ceg <- what == "cumulative_elevation_gain"
+            if (ceg) {
+                hovertext <- paste(round(df_subset$Value, 2), var_units)
+                a <- plot_ly(df_subset[sampled_rows, ],
+                             x = ~ Index, y = ~ Value, hoverinfo = "text",
+                             text = hovertext[sampled_rows],
+                             type = "scatter", mode = "lines",
+                             showlegend = FALSE, alpha = 1, color = I(col))
+                a <- add_lines(a, x = ~ Index, y = I(0),
                                type = 'scatter',
                                mode = 'lines',
                                fill = 'tonexty',
-                               fillcolor = col,
-                               line = list(color = 'transparent'),
+                               fillcolor = I(col),
+                               hoverinfo = "none",
+                               alpha = 0.2,
                                showlegend = FALSE)
-
             }
-            if (smooth) {
+            else {
+                a <- plot_ly(df_subset[sampled_rows, ],
+                             x = ~ Index, y = ~ Value, hoverinfo = "none",
+                             type = "scatter", mode = "lines",
+                             showlegend = FALSE, alpha = 0.2, color = I(col))
+            }
+            if (smooth & !ceg) {
                 ## Using gam
                 ## smoothed_model <- gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
                 ## smoothed_data <- predict.gam(smoothed_model, newdata = df_subset)

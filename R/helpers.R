@@ -25,7 +25,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
     else {
         concept <- feature
     }
-    if (feature == "total_elevation_gain") {
+    if (feature == "total_elevation_gain" | feature == "cumulative_elevation_gain") {
         thisunit <- units$unit[units$variable == "altitude"]
     }
     else {
@@ -86,7 +86,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "altitude" = prettyUnit,
                           "temperature" = prettyUnit,
                           "speed" = prettyUnit,
-                          "total_elevation_gain" = prettyUnit,
+                          "cumulative_elevation_gain" = prettyUnit,
                           "power" = prettyUnit)
         }
     }

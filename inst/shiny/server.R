@@ -563,7 +563,7 @@ server <- function(input, output, session) {
                                             x = data$object, session = data$selected_sessions, what = i,
                                             sumX = data$summary, changepoints = fit_changepoint,
                                             threshold = FALSE,
-                                            smooth = i != "cumulative_elevation_gain",
+                                            smooth = TRUE,
                                             n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
                                             k = 100,
                                             desampling = opts$thin,
