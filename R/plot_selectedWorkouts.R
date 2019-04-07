@@ -18,6 +18,7 @@
 plot_selected_workouts <- function(x,
                                    session,
                                    what,
+                                   what2,
                                    sumX,
                                    threshold = TRUE,
                                    smooth = FALSE,
@@ -42,6 +43,10 @@ plot_selected_workouts <- function(x,
     if(what == 'altitude') {
         y_axis_range[[1]] <- y_axis_range[[1]] * 0.80
         y_axis_range[[2]] <- y_axis_range[[2]] * 1.2
+    }
+
+    if(what == 'pace') {
+        y_axis_range <- y_axis_range[c(2,1)]
     }
 
     sports <- get_sport(x)[session]
@@ -202,10 +207,14 @@ plot_selected_workouts <- function(x,
                                showlegend = FALSE)
             }
             else {
-                a <- plot_ly(df_subset[sampled_rows, ],
-                             x = ~ Index, y = ~ Value, hoverinfo = "none",
-                             type = "scatter", mode = "lines",
-                             showlegend = FALSE, alpha = 0.2, color = I(col))
+                a <- plot_ly()
+                ## a <- plot_ly(df_subset[sampled_rows, ],
+                ##              x = ~ Index, y = ~ Value,
+                ##              hoverinfo = "none",
+                ##              type = "scatter", mode = "lines",
+                ##              showlegend = FALSE,
+                ##              alpha = 0.2,
+                ##              color = I(col))
             }
             if (smooth & !ceg) {
                 ## Using gam

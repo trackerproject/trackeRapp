@@ -130,6 +130,9 @@ plot_workouts <- function(data,
     ## Axis lists
     y <- list(title = units_text,
               range = range_y(what, so))
+    if (what == "avgPace") {
+        y$range <- y$range[c(2,1)]
+    }
     x <- list(title = "",
               range = range_x)
 

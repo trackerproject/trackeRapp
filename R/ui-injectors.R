@@ -35,7 +35,8 @@ create_summary_boxes <- function() {
                      fluidRow(
                          valueBoxOutput("avgHeartRate_box", width = 4),
                          valueBoxOutput("avgTemperature_box", width = 4),
-                         valueBoxOutput("avgAltitude_box", width = 4))
+                         ## valueBoxOutput("avgAltitude_box", width = 4))
+                         valueBoxOutput("total_elevation_gain_box", width = 4))
                      )))
 }
 

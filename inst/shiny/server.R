@@ -276,8 +276,10 @@ server <- function(input, output, session) {
                                                                    "Average heart rate", data)
         output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
                                                               "Average pace", data)
-        output$avgAltitude_box <- trackeRapp:::render_summary_box("avgAltitude",
-                                                                  "Average altitude", data)
+        ## output$avgAltitude_box <- trackeRapp:::render_summary_box("avgAltitude",
+        ##                                                           "Average altitude", data)
+        output$total_elevation_gain_box <- trackeRapp:::render_summary_box("total_elevation_gain",
+                                                                           "Total elevation gain", data)
         output$avgTemperature_box <- trackeRapp:::render_summary_box("avgTemperature",
                                                                      "Average Temperature", data)
 

@@ -356,6 +356,16 @@ render_summary_box <- function(short_name, long_name, data) {
                 sports <- data$summary[data$selected_sessions][["sport"]]
                 value <- sum(sports == "swimming")
             }
+            if (what == "total_elevation_gain") {
+                value <- data$summary[data$selected_sessions][[what]]
+                value <- round(sum(value[is.finite(value)], na.rm = TRUE), 1)
+            }
+
+
+
+
+
+
             if (!(what %in% c("nsessions_swimming", "nsessions_running", "nsessions_cycling"))) {
                 value <- data$summary[data$selected_sessions][[what]]
                 value <- round(mean(value[is.finite(value)], na.rm = TRUE), 1)
