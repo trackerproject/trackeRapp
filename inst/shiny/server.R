@@ -562,8 +562,11 @@ server <- function(input, output, session) {
                         fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
                     }
                     ret <- trackeRapp:::plot_selected_workouts(
-                                            x = data$object, session = data$selected_sessions, what = i,
-                                            sumX = data$summary, changepoints = fit_changepoint,
+                                            x = data$object,
+                                            session = data$selected_sessions,
+                                            what = i,
+                                            sumX = data$summary,
+                                            changepoints = fit_changepoint,
                                             threshold = FALSE,
                                             smooth = TRUE,
                                             n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),

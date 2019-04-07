@@ -1,3 +1,11 @@
+get_workout_unit <- function(what, sport, units) {
+    if (what == "cumulative_elevation_gain") {
+        what <- "altitude"
+    }
+    thisunit <- units$unit[units$variable == what & units$sport == sport]
+    prettifyUnits(thisunit)
+}
+
 ## Generate a character of formatted units, either only the unit (e.g "[bpm]") or whole text (e.g. "Heart Rate [bpm]").
 ##
 ## @param feature character string representing the feature whose units we want to generate.

@@ -18,7 +18,6 @@
 plot_selected_workouts <- function(x,
                                    session,
                                    what,
-                                   what2,
                                    sumX,
                                    threshold = TRUE,
                                    smooth = FALSE,
@@ -208,13 +207,6 @@ plot_selected_workouts <- function(x,
             }
             else {
                 a <- plot_ly()
-                ## a <- plot_ly(df_subset[sampled_rows, ],
-                ##              x = ~ Index, y = ~ Value,
-                ##              hoverinfo = "none",
-                ##              type = "scatter", mode = "lines",
-                ##              showlegend = FALSE,
-                ##              alpha = 0.2,
-                ##              color = I(col))
             }
             if (smooth & !ceg) {
                 ## Using gam
