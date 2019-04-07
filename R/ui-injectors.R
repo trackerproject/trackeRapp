@@ -131,59 +131,6 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                             uiOutput(paste0(id, "_plot"))))))))
 }
 
-## create_work_capacity_plot <- function(id, collapsed = TRUE) {
-##     insertUI(
-##         selector = ".content",
-##         where = "beforeEnd",
-##         ui = conditionalPanel(
-##             condition = "output.work_capacity == false & output.work_capacity_running == false",
-##             div(class = "plots", id = id,
-##                 fluidRow(
-##                     box(
-##                         width = 12,
-##                         collapsible = TRUE,
-##                         collapsed = collapsed,
-##                         title = tagList(icon("gear"), "W' expended running"),
-##                             dropdownButton(
-##                                 circle = TRUE,
-##                                 up = TRUE,
-##                                 icon = icon("wrench"),
-##                                 width = "300px",
-##                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
-##                                 numericInput(min = 0.01, max = 12, step = 0.1,
-##                                              inputId = "critical_power_running",
-##                                              label = "Critical speed [m/s]", value = 4),
-##                                 actionButton("running_update_power",
-##                                              "Update W' expended")),
-##                             div(id = "workout_view_plot",
-##                                 uiOutput(paste0("running_work_capacity", "_plot"))))))))
-##     insertUI(
-##         selector = ".content",
-##         where = "beforeEnd",
-##         ui = conditionalPanel(
-##             condition = "output.work_capacity == false & output.work_capacity_cycling == false",
-##             div(class = "plots", id = id,
-##                 fluidRow(
-##                     box(
-##                         width = 12,
-##                         collapsible = TRUE,
-##                         collapsed = collapsed,
-##                         title = tagList(icon("gear"), "W' expended cycling"),
-##                             dropdownButton(
-##                                 circle = TRUE,
-##                                 up = TRUE,
-##                                 icon = icon("wrench"),
-##                                 width = "300px",
-##                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
-##                                 numericInput(min = 0, max = 400, step = 1,
-##                                              inputId = "critical_power_cycling",
-##                                              label = "Critical power [W]", value = 180),
-##                                 actionButton("cycling_update_power",
-##                                              "Update W' expended")),
-##                             div(id = "workout_view_plot",
-##                                 uiOutput(paste0("cycling_work_capacity", "_plot"))))))))
-## }
-
 ## Create concentration profile plot UI.
 ## @param inputId A character. The ID of the user input for the metrics that should be plotted
 ## @param plotId A character. The ID of the plot.
