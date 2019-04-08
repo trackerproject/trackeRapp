@@ -12,6 +12,7 @@ plot_selected_workouts2 <- function(x,
                                     na_threshold = 0.5,
                                     options = NULL) {
 
+
     opts <- if (is.null(options)) trops() else options
 
     ## if (isTRUE(length(session) == 0)) {
