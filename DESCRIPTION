@@ -1,6 +1,6 @@
 Package: trackeRapp
 Title: Interface for the Analysis of Running, Cycling and Swimming Data from GPS-Enabled Tracking Devices
-Version: 0.9.900
+Version: 1.0
 Authors@R: c(person(given = "Ioannis", family = "Kosmidis",
 	            role = c("aut", "cre"), email = "ioannis.kosmidis@warwick.ac.uk",
 		    comment = c(ORCID = "0000-0003-1556-0302")),
@@ -11,7 +11,7 @@ Description: Provides an integrated user interface and workflow for
              tracking devices through the 'trackeR' <https://CRAN.R-project.org/package=trackeR> R package.
 Depends:
     R (>= 3.5.0),
-    trackeR (>= 1.4.1)
+    trackeR (>= 1.5.0)
 Imports:
     colorspace,
     zoo,

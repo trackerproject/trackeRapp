@@ -8,13 +8,13 @@ plot_concentration_profiles <- function(x,
                                         session,
                                         profiles_calculated,
                                         what = c("speed"),
+                                        limits = NULL,
                                         options = NULL) {
 
     opts <- if (is.null(options)) trops() else options
 
-    if (isTRUE(length(session) == 0)) {
+    if (isTRUE(length(session) == 0) | is.null(profiles_calculated)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
-
     }
 
     if (is.null(what)) {
@@ -42,13 +42,19 @@ plot_concentration_profiles <- function(x,
     ## pal <- colorRampPalette(opts$zones_colours)(max(df$Series))
     individual_plots <- list()
     legend_status <- FALSE
+
     for (feature in what) {
         y <- list(title = "dtime", tickangle = 0)
-        x <- list(title = lab_data(feature, units), tickangle = 0)
+        x <- list(title = lab_data(feature, units),
+                  range = limits[[feature]],
+                  tickangle = 0)
         var_units <- lab_sum(feature = feature, data = tracker_object,
                              whole_text = FALSE, transform_feature = FALSE)
         feature_profile <- df[df$Profile == feature, ]
-        feature_profile$Value[is.na(feature_profile$Value)] <- 0
+
+        if (feature != "heart_rate") {
+            feature_profile$Value[is.na(feature_profile$Value)] <- 0
+        }
 
         p <- plot_ly(feature_profile,
                      x = ~ Index, y = ~ Value,

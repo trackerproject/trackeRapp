@@ -23,7 +23,6 @@ if (isTRUE(live_version)) {
 opts <- trackeRapp:::trops()
 
 ## Set token for Mapbox
-## Sys.setenv("MAPBOX_TOKEN" = "pk.eyJ1IjoicnVnZWVyIiwiYSI6ImNqOTduN2phMTBmYXkyd29yNjR1amU2cjUifQ.IhNRZRmy1mlbLloz-p6vbw")
 mapbox_key <- "pk.eyJ1IjoicnVnZWVyIiwiYSI6ImNqOTduN2phMTBmYXkyd29yNjR1amU2cjUifQ.IhNRZRmy1mlbLloz-p6vbw"
 ## Set the maximum file size to upload
 options(shiny.maxRequestSize = 30 * 1024^3)
@@ -35,31 +34,37 @@ server <- function(input, output, session) {
     ## dissapear by a click in the window.
     shinyjs::runjs('$(document).on("click", ".dropdown-menu", function (e) {
                      e.stopPropagation();
-                    });')
+                    });
+                    window.onbeforeunload = function(e) {
+                    e = e || window.event;
+                    if (e) {
+                     e.returnValue = "Sure?";
+                    }
+                    return "Sure";
+                    };')
 
     ## Main object where most data is stored
     data <- reactiveValues(summary = NULL,
                            object = NULL,
                            selected_sessions = NULL,
                            has_data = NULL,
-                           dummy = 0)
+                           dummy = 0,
+                           has_metrics = NULL)
 
     ## Store the previous value to let user upload new data constantly
     previous_file_paths <- reactiveValues(processed = 'NULL')
 
     ## Load named vectors
-    choices <- trackeRapp:::summary_view_features()
-    metrics <- trackeRapp:::workout_view_features()
+    summary_features <- trackeRapp:::summary_view_features()
+    workout_features <- trackeRapp:::workout_view_features()
 
     ## Check if there is internet connection
     has_internet_connection <- curl::has_internet()
 
     ##  Upload data
     observeEvent(input$uploadButton, {
-
         no_raw_directory_selected <- is.null(input$rawDataDirectory$datapath)
         no_processed_file_selected <- is.null(input$processedDataPath$datapath)
-
         if (no_raw_directory_selected & no_processed_file_selected) {
             trackeRapp:::show_warning_no_data_selected()
         }
@@ -86,8 +91,10 @@ server <- function(input, output, session) {
             previous_file_paths$processed <- input$processedDataPath$datapath
             ## Process uploaded data
             ## Remove duplicate sessions and create trackeRdata object from both raw and processed data
+            ## FIXME: If processed_data is NULL show modal that container file has now data and reset
             data$object <- sort(unique(trackeR:::c.trackeRdata(processed_data, raw_data,
                                                                data$object)), decreasing = FALSE)
+
             ## Threshold?
             if (opts$threshold) {
                 th <- trackeR::generate_thresholds()
@@ -101,7 +108,7 @@ server <- function(input, output, session) {
             }
 
             ## See helpers.R file
-            trackeRapp:::generate_objects(data, output, session, choices)
+            trackeRapp:::generate_objects(data, output, session, summary_features)
         }
 
         shinyjs::hide("logo")
@@ -116,7 +123,7 @@ server <- function(input, output, session) {
     })
 
     metrics_available_sport <- reactive({
-        c(choices[sapply(choices, function(x)
+        c(summary_features[sapply(summary_features, function(x)
             has_data_sport()[[x]]
             )])
     })
@@ -139,13 +146,15 @@ server <- function(input, output, session) {
         trackeRapp:::generate_selected_sessions_object(data, input,
                                                        plot_selection = TRUE)
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
-        shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
+        shinyWidgets::updatePickerInput(session = session, inputId =
+                                                               "'metricsSelected",
                                         selected = selected_metrics(),
                                         choices = metrics_available_sport())
     })
 
     observeEvent(input$all_sports, {
         data$sports <- c("running", "cycling", "swimming")
+        data$dummy <- data$dummy + 1
     })
 
     observeEvent(input$no_sports, {
@@ -177,7 +186,7 @@ server <- function(input, output, session) {
         shinyjs::delay(1000,
                        DT::selectRows(proxy = proxy, selected = data$selected_sessions)
                        )
-        shinyWidgets::updatePickerInput(session = session, inputId = 'metricsSelected',
+        shinyWidgets::updatePickerInput(session = session, inputId = "metricsSelected",
                                         selected = selected_metrics(),
                                         choices = metrics_available_sport())
     }, ignoreNULL = FALSE, ignoreInit = TRUE)
@@ -189,15 +198,15 @@ server <- function(input, output, session) {
             trackeRapp:::generate_selected_sessions_object(data, input,
                                                            table_selection = TRUE)
         }
-    }, ignoreNULL = FALSE)
+    }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
     ##  Uploading sample dataset
     observeEvent(input$uploadSampleDataset, {
         removeModal()
-        filepath <- system.file('extdata/sample.rds', package = 'trackeRapp')
+        filepath <- system.file("extdata/sample.rds", package = "trackeRapp")
         data$object <- readRDS(filepath)
         ## See helper file
-        trackeRapp:::generate_objects(data, output, session, choices)
+        trackeRapp:::generate_objects(data, output, session, summary_features)
     })
 
     ##  Change units
@@ -208,11 +217,7 @@ server <- function(input, output, session) {
     observeEvent(input$updateUnits, {
         data$object <- trackeRapp:::change_object_units(data, input, "object")
         data$summary <- trackeRapp:::change_object_units(data, input, "summary")
-        data$limits <- reactive({
-            trackeR::compute_limits(data$object,
-                                    a = opts$quantile_for_limits)
-        })
-        DT::selectRows(proxy = proxy, selected = data$selected_sessions)
+         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         removeModal()
     })
 
@@ -230,11 +235,8 @@ server <- function(input, output, session) {
     ## Session summaries page
     observeEvent(input$createDashboard, {
 
-        ## data$limits0 <- trackeR::compute_limits(data$object,
-        ##                                         a = opts$quantile_for_limits)
-
         output$timeline_plot <- plotly::renderPlotly({
-            withProgress(message = 'Timeline', value = 0, {
+            withProgress(message = "Timeline", value = 0, {
                 if (!is.null(data$summary)) {
                     ret <- trackeRapp:::plot_timeline(data$summary, session = data$selected_sessions,
                                                       options = opts)
@@ -245,13 +247,13 @@ server <- function(input, output, session) {
         })
 
         ## Re-render all plots
-        metrics_available <- reactive({c(choices[sapply(choices, function(x)
-            data$has_data[[x]]
-            )])
+        metrics_available <- reactive({
+            c(summary_features[sapply(summary_features, function(x) data$has_data[[x]] )])
         })
 
         trackeRapp:::create_option_box(sport_options = data$identified_sports,
-                                       metrics_available = metrics_available())
+                                       summary_features_available = metrics_available(),
+                                       workout_features_available = workout_features)
 
         ## Check which sports are available in the data and disable the selectors accordingly
         sapply(c("running", "cycling", "swimming"), function(sp) {
@@ -281,8 +283,10 @@ server <- function(input, output, session) {
                                                                    "Average heart rate", data)
         output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
                                                               "Average pace", data)
-        output$avgAltitude_box <- trackeRapp:::render_summary_box("avgAltitude",
-                                                                  "Average altitude", data)
+        ## output$avgAltitude_box <- trackeRapp:::render_summary_box("avgAltitude",
+        ##                                                           "Average altitude", data)
+        output$total_elevation_gain_box <- trackeRapp:::render_summary_box("total_elevation_gain",
+                                                                           "Total elevation gain", data)
         output$avgTemperature_box <- trackeRapp:::render_summary_box("avgTemperature",
                                                                      "Average Temperature", data)
 
@@ -295,14 +299,45 @@ server <- function(input, output, session) {
         if ((any(data$is_location_data)) & (has_internet_connection)) {
             trackeRapp:::create_map()
 
-            preped_route_map <- reactive({
-                sessions <- seq_along(data$object)[data$is_location_data]
-                trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
-            })
-
             output$map <- mapdeck::renderMapdeck({
                 mapdeck::mapdeck(token = mapbox_key,
                                  style = mapdeck::mapdeck_style(opts$mapdeck_style))
+            })
+
+            selected_data <- reactive({
+                sessions <- seq_along(data$object)[data$is_location_data]
+                sessions <- sessions[sessions %in% data$selected_sessions]
+                if (length(sessions)) {
+                    out <- trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
+                    out$col <- ifelse(out$sport == "running",
+                                        opts$summary_plots_selected_colour_run,
+                                 ifelse(out$sport == "cycling",
+                                        opts$summary_plots_selected_colour_ride,
+                                        opts$summary_plots_selected_colour_swim))
+                    out$tooltip <- paste(out$tooltip)
+                    out
+                }
+                else {
+                    NULL
+                }
+            })
+
+            deselected_data <- reactive({
+                sessions <- seq_along(data$object)[data$is_location_data]
+                sessions <- sessions[!(sessions %in% data$selected_sessions)]
+                if (length(sessions)) {
+                    out <- trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
+                    out$col <- ifelse(out$sport == "running",
+                                        opts$summary_plots_selected_colour_run,
+                                 ifelse(out$sport == "cycling",
+                                        opts$summary_plots_selected_colour_ride,
+                                    opts$summary_plots_selected_colour_swim))
+                    out$tooltip <- paste(out$tooltip)
+                    out
+                }
+                else {
+                    NULL
+                }
             })
 
             ## Selecting from the map
@@ -314,47 +349,45 @@ server <- function(input, output, session) {
 
             ## Update map based on current selection
             observeEvent(data$selected_sessions, {
+
+                ## Profile memory usage
+                ## print(pryr:::object_size(data))
+
                 withProgress(message = 'Map', value = 0, {
+                    sel <- selected_data()
+                    des <- deselected_data()
                     incProgress(1/2, detail = "Preparing routes")
-                    selected <- preped_route_map()$session %in% data$selected_sessions
-                    selected_data <- preped_route_map()[selected, ]
-                    if (!nrow(selected_data)) {
-                        incProgress(1/1, detail = "Mapping")
-                        mapdeck::mapdeck_update(map_id = "map", data = selected_data) %>%
-                            mapdeck::clear_path("selection_path")
-                    }
-                    else {
-                        selected_data$col <- ifelse(selected_data$sport == "running",
-                                                    opts$summary_plots_selected_colour_run,
-                                             ifelse(selected_data$sport == "cycling",
-                                                    opts$summary_plots_selected_colour_ride,
-                                                    opts$summary_plots_selected_colour_swim))
-                        deselected_data <- preped_route_map()[!selected, ]
-                        ## Compute centroids for histogram
-                        centroids <- sf::st_centroid(selected_data)
-                        ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-                        selected_data$tooltip <- paste(selected_data$tooltip)
-                        incProgress(1/1, detail = "Mapping")
-                        p <- mapdeck::mapdeck_update(map_id = "map", data = selected_data)
-                        p <- mapdeck::clear_path(p, "selection_path")
-                        if (nrow(deselected_data)) {
-                            p <- mapdeck::add_path(p,
-                                                   data = deselected_data,
-                                                   stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),
-                                                   stroke_width = opts$mapdeck_width,
-                                                   layer_id = "deselection_path")
-                        }
+                    ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
+
+                    incProgress(1/1, detail = "Mapping")
+                    if (!is.null(des)) {
+                        p <- mapdeck::mapdeck_update(map_id = "map")
+                        p <- mapdeck::clear_path(p, "deselection_path")
                         p <- mapdeck::add_path(p,
+                                               data = des,
+                                               stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),
+                                               stroke_width = opts$mapdeck_width,
+                                               layer_id = "deselection_path",
+                                               update_view = FALSE,
+                                               focus_layer = FALSE)
+                    }
+                    if (!is.null(sel)) {
+                        p <- mapdeck::mapdeck_update(map_id = "map")
+                        p <- mapdeck::clear_path(p, "selection_path")
+                        p <- mapdeck::add_path(p,
+                                               data = sel,
                                                stroke_colour = "col",
                                                stroke_width = opts$mapdeck_width * 2,
                                                tooltip = "tooltip",
                                                layer_id = "selection_path",
                                                update_view = TRUE,
                                                focus_layer = TRUE)
-                        p <- mapdeck::add_screengrid(p, data = centroids,
-                                                     colour_range = rev(colorspace::sequential_hcl(palette = "Light Gray", n =6)),
+                        centroids <- sf::st_centroid(sel)
+                        p <- mapdeck::add_screengrid(p,
+                                                     data = centroids,
+                                                     colour_range = rev(colorspace::sequential_hcl(h = 10, power = 1, c = 65, l = 70, n = 6)),
                                                      cell_size = 20,
-                                                     opacity = 0.05)
+                                                     opacity = 0.1)
                     }
                 })
             }, priority = -3)
@@ -362,15 +395,14 @@ server <- function(input, output, session) {
 
         ## Sessions summaries plots
         ## Generate conditional plot for each metric irrespective of whether data available
-        for (metric in c(choices)) {
+        for (metric in c(summary_features)) {
             trackeRapp:::create_workout_plots(metric)
         }
 
-        sapply(c(choices), function(i) {
+        sapply(c(summary_features), function(i) {
             output[[paste0(i, "_plot")]] <- plotly::renderPlotly({
                 withProgress(message = paste(i, "plots"), value = 0, {
-                    incProgress(1/1, detail = "Subsetting")
-
+                    incProgress(1/2, detail = "Subsetting")
                     ret <- trackeRapp:::plot_workouts(data = data,
                                                       what = i,
                                                       options = opts,
@@ -389,7 +421,7 @@ server <- function(input, output, session) {
 
         outputOptions(output, "cond", suspendWhenHidden = FALSE)
         data$show_summary_plots <- TRUE
-        sapply(c(choices), function(choice) {
+        sapply(c(summary_features), function(choice) {
             output[[choice]] <- reactive({
                 !isTRUE((choice %in% input$metricsSelected) & (data$show_summary_plots))
             })
@@ -398,18 +430,26 @@ server <- function(input, output, session) {
     }, once = TRUE)
 
     ## Test which metrics have data
-    have_data_metrics_selected <- reactive({
-        !sapply(metrics, function(metric) {
-            all(sapply(data$object[data$selected_sessions], {
-                function(x) all((is.na(x[, metric])) | (x[, metric] == 0))
-            }))
-        })
+    metric_is_available <- reactive({
+        if (length(data$selected_sessions)) {
+            out <- colMeans(data$has_metrics[data$selected_sessions, workout_features, drop = FALSE]) > 0
+        }
+        else {
+            out <- logical(length(workout_features))
+        }
+        names(out) <- names(workout_features)
+        out
     })
 
     observeEvent(data$selected_sessions, {
         data$limits <- reactive({
-            trackeR::compute_limits(data$object[data$selected_sessions],
-                                    a = opts$quantile_for_limits)
+            if (length(data$selected_sessions)) {
+                trackeR::compute_limits(data$object[data$selected_sessions],
+                                        a = opts$quantile_for_limits)
+            }
+            else {
+                NULL
+            }
         })
     })
 
@@ -421,47 +461,98 @@ server <- function(input, output, session) {
         ##  Time in zones
         trackeRapp:::create_zones_box(inputId = "zonesMetricsPlot",
                                       plotId = "zonesPlotUi",
-                                      choices = metrics[have_data_metrics_selected()])
+                                      choices = workout_features[metric_is_available()])
 
         ## Render UI for time in zones plot
         output$zonesPlotUi <- renderUI({
             req(input$zonesMetricsPlot)
             plotly::plotlyOutput("zones_plot",
                                  width = "auto",
-                                 ## height = "auto")
                                  height = paste0(opts$workout_view_rel_height * length(input$zonesMetricsPlot), "vh"))
         })
 
-        ## Render actual plot
-        breaks <- reactive({
-            trackeR::compute_breaks(object = data$object, limits = data$limits(),
+
+        br <- reactive({
+            lims <- data$limits()
+            trackeR::compute_breaks(object = data$object,
+                                    limits = lims,
                                     n_breaks = as.numeric(input$n_zones),
                                     what = input$zonesMetricsPlot)
         })
 
+        ## Render actual plot
         output$zones_plot <- plotly::renderPlotly({
-            withProgress(message = 'Zones plots', value = 0, {
-                incProgress(1/2, detail = "Computing breaks")
-                br <- breaks()
-                ret <- trackeRapp:::plot_zones(x = data$object, session = data$selected_sessions,
-                                               what = input$zonesMetricsPlot, breaks = br,
+            withProgress(message = "Zones plots", value = 0, {
+                incProgress(1/2, detail = "Computing")
+                breaks <- br()
+                ret <- trackeRapp:::plot_zones(x = data$object,
+                                               session = data$selected_sessions,
+                                               what = input$zonesMetricsPlot,
+                                               breaks = breaks,
                                                n_zones = as.numeric(input$n_zones))
                 incProgress(2/2, detail = "Plotting")
                 ret
             })
         })
 
-        ## Generate individual sessions plots (except work capacity)
-        metrics_to_expand <- "" #c('speed')
+                ##  Concentration profiles
+        trackeRapp:::create_profiles_box(
+                         inputId = "profileMetricsPlot",
+                         plotId = "concentration_profiles",
+                         choices = workout_features[metric_is_available()],
+                         collapsed = TRUE)
+        ## Render UI for concentration profiles
+        output$concentration_profiles <- renderUI({
+            req(input$profileMetricsPlot)
+            plotly::plotlyOutput("conc_profiles_plots",
+                                 width = "auto",
+                                 height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
+        })
 
-        ## First generate all plots irrespective if data available
-        for (i in metrics) {
-            collapse <- if (i %in% metrics_to_expand) FALSE else TRUE
-            i <- if (i == 'heart_rate') "heart_rate" else i
-            trackeRapp:::create_selected_workout_plot(id = i, collapsed = collapse)
+        conc_profiles <- {
+            wh <- workout_features[metric_is_available()]
+            if (length(wh)) {
+                lims <- data$limits0
+                trackeR::concentration_profile(data$object,
+                                               what = wh,
+                                               limits = lims)
+            }
+            else {
+                NULL
+            }
         }
 
-        sapply(metrics, function(i) {
+        ## Render actual plot
+        output$conc_profiles_plots <- plotly::renderPlotly({
+            withProgress(message = "Training concentration", value = 0, {
+                incProgress(1/2, detail = "Computing")
+                ## Compute concentration for static limits on all data and
+                ## then simply plot with reactive limits
+                ret <- trackeRapp:::plot_concentration_profiles(
+                                        x = data$object,
+                                        session = data$selected_sessions,
+                                        what = input$profileMetricsPlot,
+                                        profiles_calculated = conc_profiles,
+                                        limits = data$limits(),
+                                        options = opts)
+                incProgress(1/1, detail = "Plotting")
+                ret
+            })
+        })
+
+        ## Generate individual sessions plots (except work capacity)
+        metrics_to_expand <- ""
+
+        ## First generate all plots irrespective if data available
+        for (i in workout_features) {
+            collapse <- if (i %in% metrics_to_expand) FALSE else TRUE
+            i <- if (i == "heart_rate") "heart_rate" else i
+            trackeRapp:::create_selected_workout_plot(id = i,
+                                                      workout_features = workout_features[metric_is_available()],
+                                                      collapsed = collapse)
+        }
+
+        sapply(workout_features, function(i) {
             plot_width <- reactive({
                 n_sessions <- length(as.vector(data$selected_sessions))
                 paste0(opts$workout_view_rel_width * n_sessions, "vw")
@@ -469,82 +560,67 @@ server <- function(input, output, session) {
             output[[paste0(i, "_plot")]] <- renderUI({
                 plotly::plotlyOutput(paste0(i, "Plot"),
                                      width = plot_width(),
-                                     ## height = "auto")
                                      height = paste0(opts$workout_view_rel_height, "vw"))
             })
 
             ## Render individual sessions plots (except work capacity)
             output[[paste0(i, "Plot")]] <- plotly::renderPlotly({
-                withProgress(message = paste(i, 'plots'), value = 0, {
+                withProgress(message = paste(i, "plots"), value = 0, {
                     ## Whether to detect changepoints
                     if (!is.null(input[[paste0("detect_changepoints", i)]])) {
                         fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
                     }
-                    ret <- trackeRapp:::plot_selected_workouts(
-                                            x = data$object, session = data$selected_sessions, what = i,
-                                            sumX = data$summary, changepoints = fit_changepoint,
-                                            threshold = FALSE, smooth = TRUE,
+                    ret <- trackeRapp:::plot_selected_workouts2(
+                                            x = data$object,
+                                            session = data$selected_sessions,
+                                            what1 = i,
+                                            what2 = input[[paste0("what2", i)]],
+                                            changepoints = fit_changepoint,
+                                            smooth = TRUE,
                                             n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
-                                            desampling = opts$thin,
-                                            y_axis_range = data$limits()[[i]])
+                                            k = 101,
+                                            thin = opts$thin,
+                                            ylim1 = data$limits()[[i]],
+                                            ylim2 = data$limits()[[input[[paste0("what2", i)]]]])
+
+                    ## ret <- trackeRapp:::plot_selected_workouts(
+                    ##                         x = data$object,
+                    ##                         session = data$selected_sessions,
+                    ##                         what = i,
+                    ##                         sumX = data$summary,
+                    ##                         changepoints = fit_changepoint,
+                    ##                         threshold = FALSE,
+                    ##                         smooth = TRUE,
+                    ##                         n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
+                    ##                         k = 100,
+                    ##                         desampling = opts$thin,
+                    ##                         y_axis_range = data$limits()[[i]])
                     incProgress(1/1, detail = "Plotting")
                     ret
                 })
             })
             output[[i]] <- reactive({
-                !isTRUE((i %in% metrics[have_data_metrics_selected()]) & data$show_individual_sessions)
+                !isTRUE((i %in% workout_features[metric_is_available()]) &
+                        data$show_individual_sessions &
+                        (i %in% input$workout_features_selected))
             })
             outputOptions(output, i, suspendWhenHidden = FALSE)
         })
 
-        ##  Concentration profiles
-        trackeRapp:::create_profiles_box(
-                         inputId = "profileMetricsPlot",
-                         plotId = "concentration_profiles",
-                         choices = metrics[have_data_metrics_selected()],
-                         collapsed = TRUE)
-        ## Render UI for concentration profiles
-        output$concentration_profiles <- renderUI({
-            req(input$profileMetricsPlot)
-            plotly::plotlyOutput("conc_profiles_plots",
-                                 width = "auto",
-                                 ## height = "auto")
-            paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
-        })
-
-        concentration_profiles <- reactive({
-            trackeR::concentration_profile(data$object,
-                                           what = metrics[have_data_metrics_selected()],
-                                           limits = data$limits())
-        })
-
-
-        ## Render actual plot
-        output$conc_profiles_plots <- plotly::renderPlotly({
-            withProgress(message = 'Concentration profiles', value = 0, {
-                incProgress(1/2, detail = "Computing profiles")
-
-                cps <- concentration_profiles()
-
-                ret <- trackeRapp:::plot_concentration_profiles(
-                                        x = data$object,
-                                        session = data$selected_sessions,
-                                        what = input$profileMetricsPlot,
-                                        profiles_calculated = cps,
-                                        options = opts)
-                incProgress(1/1, detail = "Plotting")
-                ret
-            })
-        })
 
         ## Update metrics available each time different sessions selected
         observeEvent(data$selected_sessions, {
-            shinyWidgets::updatePickerInput(session = session, inputId = "profileMetricsPlot",
-                                            choices =  metrics[have_data_metrics_selected()],
-                                            selected = 'speed')
+            has_sessions <- isTRUE(length(data$selected_sessions) > 0)
+            has_profile_metrics <- isTRUE(length(input$profileMetricsPlot) > 0)
+            has_zone_metrics <- isTRUE(length(input$zonesMetricsPlot) > 0)
+            profile_metrics <- if (has_sessions & !has_profile_metrics) "speed" else input$profileMetricsPlot
+            zone_metrics <- if (has_sessions & !has_zone_metrics) "speed" else input$zonesMetricsPlot
             shinyWidgets::updatePickerInput(session = session, inputId = "zonesMetricsPlot",
-                                            choices =  metrics[have_data_metrics_selected()],
-                                            selected = 'speed')
+                                            choices =  workout_features[metric_is_available()],
+                                            selected = zone_metrics)
+            shinyWidgets::updatePickerInput(session = session, inputId = "profileMetricsPlot",
+                                            choices =  workout_features[metric_is_available()],
+                                            selected = profile_metrics)
         }, ignoreInit = TRUE)
 
     }, once = TRUE)
@@ -587,7 +663,6 @@ server <- function(input, output, session) {
             shinyjs::click("proceed")
         }
     }, ignoreNULL = TRUE, ignoreInit = TRUE)
-
 
     observeEvent(input$proceed_modal, {
         shinyjs::click("proceed")

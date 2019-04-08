@@ -10,7 +10,7 @@ plot_zones <- function(x, session, what = c("heart_rate"),
                        n_zones, parallel = TRUE, breaks,
                        options = NULL) {
     opts <- if (is.null(options)) trops() else options
-    if (isTRUE(length(session) == 0)) {
+    if (isTRUE(length(session) == 0) | is.null(breaks)) {
         return(plotly_empty(type = "scatter", mode= "markers"))
     }
     if (is.null(what)) {
@@ -39,18 +39,21 @@ plot_zones <- function(x, session, what = c("heart_rate"),
     dat$timeN <- as.numeric(dat$time)
     ## facets
     units <- getUnits(x)
-
     individual_plots <- list()
     legend_status <- FALSE
     for (feature in what) {
         y <- list(title = "% of time")
         x <- list(title = lab_data(feature, units))
         feature_zones <- dat[dat$variable == feature, ]
+        time_unit <- units(feature_zones$time)
         p <- plot_ly(feature_zones,
                      x = ~ zoneF, y = ~ percent,
                      color = ~ Session, colors = col,#[feature_zones$session],
                      legendgroup = ~ Session, hoverinfo = "text",
-                     text = ~ paste0("Proportion of session: ", round(percent, 1), "%", "\n", Session)) %>%
+                     text = ~ paste0(
+                               Session, "\n",
+                               round(time, 1), " ", time_unit, " in zone\n",
+                               round(percent, 1), "% of session\n")) %>%
             add_bars() %>%
             layout(xaxis = x, yaxis = y, hovermode = "closest",
                    plot_bgcolor = "rgba(0, 0, 0, 0)",

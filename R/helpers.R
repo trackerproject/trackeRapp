@@ -1,3 +1,11 @@
+get_workout_unit <- function(what, sport, units) {
+    if (what == "cumulative_elevation_gain") {
+        what <- "altitude"
+    }
+    thisunit <- units$unit[units$variable == what & units$sport == sport]
+    prettifyUnits(thisunit)
+}
+
 ## Generate a character of formatted units, either only the unit (e.g "[bpm]") or whole text (e.g. "Heart Rate [bpm]").
 ##
 ## @param feature character string representing the feature whose units we want to generate.
@@ -19,12 +27,18 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "avgCadenceRunning" = "cadence_running",
                           "avgHeartRate" = "heart_rate",
                           "avgCadenceCycling" = "cadence_cycling",
+                          "total_elevation_gain" = "total_elevation_gain",
                           "wrRatio" = "work-to-rest \n ratio")
     }
     else {
         concept <- feature
     }
-    thisunit <- units$unit[units$variable == concept]
+    if (feature == "total_elevation_gain" | feature == "cumulative_elevation_gain") {
+        thisunit <- units$unit[units$variable == "altitude"]
+    }
+    else {
+        thisunit <- units$unit[units$variable == concept]
+    }
     prettyUnit <- prettifyUnits(thisunit)
     if (whole_text) {
         if (transform_feature) {
@@ -38,6 +52,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "avgCadenceRunning" = paste0("Cadence Running \n[", prettyUnit, "]"),
                           "avgCadenceCycling" = paste0("Cadence Cycling \n[", prettyUnit, "]"),
                           "avgPower" = paste0("Average Power \n[", prettyUnit, "]"),
+                          "total_elevation_gain" = paste0("Total elevation gain \n[", prettyUnit, "]"),
                           "avgHeartRate" = paste0("Average Heart Rate \n[", prettyUnit, "]"),
                           "wrRatio" = "work-to-rest \n ratio")
         }
@@ -50,6 +65,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "altitude" = paste0("Altitude \n[", prettyUnit, "]"),
                           "temperature" = paste0("Temperature \n[", prettyUnit, "]"),
                           "speed" = paste0("Speed \n[", prettyUnit, "]"),
+                          "total_elevation_gain" = paste0("Total elevation gain \n[", prettyUnit, "]"),
                           "power" = paste0("Power \n[", prettyUnit, "]"))
         }
     }
@@ -66,6 +82,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "avgHeartRate" = prettyUnit,
                           "avgAltitude" = prettyUnit,
                           "avgTemperature" = prettyUnit,
+                          "total_elevation_gain" = prettyUnit,
                           "wrRatio" = "")
         }
         else {
@@ -77,6 +94,7 @@ lab_sum <- function(feature, data, whole_text = TRUE, transform_feature = TRUE) 
                           "altitude" = prettyUnit,
                           "temperature" = prettyUnit,
                           "speed" = prettyUnit,
+                          "cumulative_elevation_gain" = prettyUnit,
                           "power" = prettyUnit)
         }
     }
@@ -92,6 +110,7 @@ create_icon <- function(feature) {
                    "duration" = "clock-o",
                    "avgSpeed" = "line-chart",
                    "avgAltitude" = "arrows-v",
+                   "total_elevation_gain" = "arrows-v",
                    "avgTemperature" = "thermometer",
                    "nsessions_cycling" = "bicycle",
                    "nsessions_running" = "walking",
@@ -159,6 +178,7 @@ summary_view_features <- function() {
       "Average heart rate" = "avgHeartRate",
       "Work to rest ratio" = "wrRatio",
       "Average altitude" = "avgAltitude",
+      "Total elevation gain" = "total_elevation_gain",
       "Average temperature" = "avgTemperature")
 }
 
@@ -171,6 +191,7 @@ workout_view_features <- function() {
       "Cadence cycling" = "cadence_cycling",
       "Power" = "power",
       "Altitude" = "altitude",
+      "Cumulative elevation gain" = "cumulative_elevation_gain",
       "Temperature" = "temperature")
 }
 
@@ -244,14 +265,13 @@ generate_objects <- function(data, output, session, choices, options = NULL) {
     identified_sports <- sports_options %in% unique(get_sport(data$object))
     data$sports <- sports_options[identified_sports]
     data$identified_sports <- sports_options[identified_sports]
-    data$limits <- compute_limits(data$object, a = opts$quantile_for_limits)
+    data$limits0 <- trackeR::compute_limits(data$object, a = opts$quantile_for_limits)
+    data$has_metrics <- do.call("rbind", lapply(data$object, function(x) colMeans(is.na(x)) < 1))
     data$is_location_data <- sapply(data$object, function(x) {
         size <- nrow(x)
         x_sample <- sample(x[, 'longitude'], round(size / 1000))
         !all((is.na(x_sample)) | (x_sample == 0))
     })
-    data$sessions_map <- rep(seq_along(data$object)[data$is_location_data],
-                             times = 1, each = 2)
     data$dummy <- data$dummy + 1
 }
 
@@ -344,7 +364,13 @@ render_summary_box <- function(short_name, long_name, data) {
                 sports <- data$summary[data$selected_sessions][["sport"]]
                 value <- sum(sports == "swimming")
             }
-            if (!(what %in% c("nsessions_swimming", "nsessions_running", "nsessions_cycling"))) {
+            if (what == "total_elevation_gain") {
+                value <- data$summary[data$selected_sessions][[what]]
+                value <- round(sum(value[is.finite(value)], na.rm = TRUE), 1)
+            }
+
+            if (!(what %in% c("nsessions_swimming", "nsessions_running", "nsessions_cycling",
+                              "total_elevation_gain"))) {
                 value <- data$summary[data$selected_sessions][[what]]
                 value <- round(mean(value[is.finite(value)], na.rm = TRUE), 1)
             }
@@ -355,9 +381,12 @@ render_summary_box <- function(short_name, long_name, data) {
                 paste0(value, " ", unique(lab_sum(what, data$summary, FALSE)))
             }
         })
-        color <- ifelse(value() == "not available",
-                        opts$summary_box_na_colour,
+        color <- switch(what,
+                        "nsessions_cycling" = opts$summary_box_ride_colour,
+                        "nsessions_swimming" = opts$summary_box_swim_colour,
+                        "nsessions_running" = opts$summary_box_run_colour,
                         opts$summary_box_ok_colour)
+        color <- ifelse(value() == "not available", opts$summary_box_na_colour, color)
         valueBox(value(), subtitle, icon, color = color)
     }
     renderValueBox({
@@ -405,8 +434,10 @@ render_summary_table <- function(data, input, options = NULL) {
     opts <- if (is.null(options)) trops() else options
     renderDT({
         dataSelected <- data.frame("Session" = data$summary[["session"]],
+                                   "Day" = format(data$summary[["sessionStart"]],
+                                                  format = "%a"),
                                    "Date" = format(data$summary[["sessionStart"]],
-                                                   format = "%a, %d %b %Y"),
+                                                   format = "%d %b %Y"),
                                    "Start" = format(data$summary[["sessionStart"]],
                                                     format = "%H:%M"),
                                    "End" = format(data$summary[["sessionEnd"]],
@@ -421,7 +452,7 @@ render_summary_table <- function(data, input, options = NULL) {
                          options = list(paging = FALSE, scrollY = "295px", info = FALSE,
                                         drawCallback = JS(opts$dt_callback_js)))
         formatStyle(out,
-                    c("Session", "Date", "Start", "End", "Duration", "Sport"),
+                    c("Session", "Day", "Date", "Start", "End", "Duration", "Sport"),
                     backgroundColor = opts$summary_plots_deselected_colour)
     })
 }

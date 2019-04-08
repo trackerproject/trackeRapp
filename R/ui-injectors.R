@@ -16,7 +16,6 @@ create_map <- function() {
                              mapdeck::mapdeckOutput(outputId = "map"))))))
 }
 
-
 ## Insert summary boxes
 create_summary_boxes <- function() {
     insertUI(immediate = TRUE,
@@ -36,7 +35,8 @@ create_summary_boxes <- function() {
                      fluidRow(
                          valueBoxOutput("avgHeartRate_box", width = 4),
                          valueBoxOutput("avgTemperature_box", width = 4),
-                         valueBoxOutput("avgAltitude_box", width = 4))
+                         ## valueBoxOutput("avgAltitude_box", width = 4))
+                         valueBoxOutput("total_elevation_gain_box", width = 4))
                      )))
 }
 
@@ -55,6 +55,7 @@ create_workout_plots <- function(feature) {
                     "avgHeartRate" = "Average Heart Rate",
                     "avgTemperature" = "Average Temperature",
                     "avgAltitude" = "Average Altitude",
+                    "total_elevation_gain" = "Total elevation gain",
                     "wrRatio" = "Work-to-rest Ratio")
     insertUI(selector = ".content",
              where = "beforeEnd",
@@ -73,7 +74,7 @@ create_workout_plots <- function(feature) {
 ## Create selected_workouts plot
 ## @param id A character. The ID of the plot.
 ## @param collapsed A logical. Whether or not the UI box should be collapsed.
-create_selected_workout_plot <- function(id, collapsed = FALSE) {
+create_selected_workout_plot <- function(id, workout_features, collapsed = FALSE) {
     insertUI(
         selector = ".content",
         where = "beforeEnd",
@@ -95,13 +96,14 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                                                "cadence_running" = "Cadence Running",
                                                "cadence_cycling" = "Cadence Cycling",
                                                "altitude" = "Altitude",
-                                               "temperature" = "Temperature")),
+                                               "temperature" = "Temperature",
+                                               "cumulative_elevation_gain" = "Cumulative elevation gain")),
                         dropdownButton(
                             circle = TRUE,
                             up = TRUE,
                             icon = icon("wrench"),
                             size = trops()$dropdown_button_size,
-                            tooltip = tooltipOptions(title = "Click to see inputs !"),
+                            ## tooltip = tooltipOptions(title = "Click to see inputs !"),
                             selectizeInput(
                                 inputId = paste0("n_changepoints", id),
                                 label = "Number of changepoints",
@@ -119,68 +121,17 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                                             "11" = 11,
                                             "12" = 12),
                                 selected = "3"),
-                            ## div(class = "form-group shiny-input-container",
-                            ##     id = "processed_path",
-                            ##     div(class = "input-group",
                             actionButton(paste0("detect_changepoints", id),
-                                         label = "Detect changepoints")),
-                        ## hr(),
+                                         label = "Detect changepoints"),
+                            selectInput(
+                                inputId = paste0("what2", id),
+                                label = "Second feature",
+                                multiple = FALSE,
+                                choices = workout_features, #c("altitude", "temperature", "speed", "pace"),
+                                selected = "altitude")),
                         div(id = "workout_view_plot",
                             uiOutput(paste0(id, "_plot"))))))))
 }
-
-## create_work_capacity_plot <- function(id, collapsed = TRUE) {
-##     insertUI(
-##         selector = ".content",
-##         where = "beforeEnd",
-##         ui = conditionalPanel(
-##             condition = "output.work_capacity == false & output.work_capacity_running == false",
-##             div(class = "plots", id = id,
-##                 fluidRow(
-##                     box(
-##                         width = 12,
-##                         collapsible = TRUE,
-##                         collapsed = collapsed,
-##                         title = tagList(icon("gear"), "W' expended running"),
-##                             dropdownButton(
-##                                 circle = TRUE,
-##                                 up = TRUE,
-##                                 icon = icon("wrench"),
-##                                 width = "300px",
-##                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
-##                                 numericInput(min = 0.01, max = 12, step = 0.1,
-##                                              inputId = "critical_power_running",
-##                                              label = "Critical speed [m/s]", value = 4),
-##                                 actionButton("running_update_power",
-##                                              "Update W' expended")),
-##                             div(id = "workout_view_plot",
-##                                 uiOutput(paste0("running_work_capacity", "_plot"))))))))
-##     insertUI(
-##         selector = ".content",
-##         where = "beforeEnd",
-##         ui = conditionalPanel(
-##             condition = "output.work_capacity == false & output.work_capacity_cycling == false",
-##             div(class = "plots", id = id,
-##                 fluidRow(
-##                     box(
-##                         width = 12,
-##                         collapsible = TRUE,
-##                         collapsed = collapsed,
-##                         title = tagList(icon("gear"), "W' expended cycling"),
-##                             dropdownButton(
-##                                 circle = TRUE,
-##                                 up = TRUE,
-##                                 icon = icon("wrench"),
-##                                 width = "300px",
-##                                 tooltip = tooltipOptions(title = "Click to see inputs !"),
-##                                 numericInput(min = 0, max = 400, step = 1,
-##                                              inputId = "critical_power_cycling",
-##                                              label = "Critical power [W]", value = 180),
-##                                 actionButton("cycling_update_power",
-##                                              "Update W' expended")),
-##                             div(id = "workout_view_plot",
-##                                 uiOutput(paste0("cycling_work_capacity", "_plot"))))))))
-## }
 
 ## Create concentration profile plot UI.
 ## @param inputId A character. The ID of the user input for the metrics that should be plotted
@@ -199,7 +150,7 @@ create_profiles_box <- function(inputId, plotId, choices, collapsed = FALSE) {
                         width = 12,
                         collapsible = TRUE,
                         collapsed = collapsed,
-                        title = tagList(icon("gear"), "Concentration profiles"),
+                        title = tagList(icon("gear"), "Workout concentration"),
                         fluidRow(
                             column(2, pickerInput(inputId = inputId,
                                                   label = "Features",
@@ -235,7 +186,7 @@ create_zones_box <- function(inputId, plotId, choices) {
                                                   multiple = TRUE,
                                                   selected = c("speed"))),
                             column(2, pickerInput(inputId = "n_zones",
-                                                  label = "Select number of zones:",
+                                                  label = "Number of zones:",
                                                   multiple = FALSE,
                                                   choices = c("2" = 2,
                                                               "3" = 3,
@@ -253,7 +204,7 @@ create_zones_box <- function(inputId, plotId, choices) {
 ## Create a return button from selected workouts plot
 ## @param sport_options A vector of sports identified from the uploaded sessions.
 ## @param metrics_available A vector of metrics that are found in the dataset.
-create_option_box <- function(sport_options, metrics_available) {
+create_option_box <- function(sport_options, summary_features_available, workout_features_available) {
     insertUI(
         immediate = TRUE,
         selector = ".content",
@@ -290,12 +241,13 @@ create_option_box <- function(sport_options, metrics_available) {
                                         icon = icon("swimmer")))),
                          br(),
                          fluidRow(
-                             column(3, conditionalPanel(
-                                           condition = "output.cond == false",
-                                           actionButton(
-                                               inputId = "return_to_main_page",
-                                               label = "Summary view",
-                                               icon = icon("search-minus"))),
+                             column(3,
+                                    conditionalPanel(
+                                        condition = "output.cond == false",
+                                        actionButton(
+                                            inputId = "return_to_main_page",
+                                            label = "Summary view",
+                                            icon = icon("search-minus"))),
                                     conditionalPanel(
                                         condition = "output.cond == true",
                                         actionButton(inputId = "plotSelectedWorkouts",
@@ -305,10 +257,20 @@ create_option_box <- function(sport_options, metrics_available) {
                                                     label = "Change units",
                                                     icon = icon("balance-scale"))),
                              column(6,
-                                    pickerInput(inputId = "metricsSelected",
-                                                choices = metrics_available,
-                                                options = list(`actions-box` = TRUE),
-                                                multiple = TRUE, selected = trops()$default_summary_plots)))))))
+                                    conditionalPanel(
+                                        condition = "output.cond == true",
+                                        pickerInput(inputId = "metricsSelected",
+                                                    choices = summary_features_available,
+                                                    options = list(`actions-box` = TRUE),
+                                                    multiple = TRUE, selected = trops()$default_summary_plots)),
+                                    conditionalPanel(
+                                        condition = "output.cond == false",
+                                        pickerInput(inputId = "workout_features_selected",
+                                                    choices = workout_features_available,
+                                                    options = list(`actions-box` = TRUE),
+                                                    multiple = TRUE,
+                                                    selected = trops()$default_workout_plots))
+                                       ))))))
 }
 
 

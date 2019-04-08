@@ -29,6 +29,7 @@ plot_selected_workouts <- function(x,
                                    unit_reference_sport = NULL,
                                    moving_threshold = NULL,
                                    desampling = 1,
+                                   k = 200,
                                    y_axis_range = NULL,
                                    options = NULL) {
     opts <- if (is.null(options)) trops() else options
@@ -41,6 +42,10 @@ plot_selected_workouts <- function(x,
     if(what == 'altitude') {
         y_axis_range[[1]] <- y_axis_range[[1]] * 0.80
         y_axis_range[[2]] <- y_axis_range[[2]] * 1.2
+    }
+
+    if(what == 'pace') {
+        y_axis_range <- y_axis_range[c(2,1)]
     }
 
     sports <- get_sport(x)[session]
@@ -183,24 +188,50 @@ plot_selected_workouts <- function(x,
                    ifelse(csport == "cycling",
                           opts$summary_plots_selected_colour_ride,
                           opts$summary_plots_selected_colour_swim))
+            ceg <- what == "cumulative_elevation_gain"
+            if (ceg) {
+                hovertext <- paste(round(df_subset$Value, 2), var_units)
+                a <- plot_ly(df_subset[sampled_rows, ],
+                             x = ~ Index, y = ~ Value, hoverinfo = "text",
+                             text = hovertext[sampled_rows],
+                             type = "scatter", mode = "lines",
+                             showlegend = FALSE, alpha = 1, color = I(col))
+                a <- add_lines(a, x = ~ Index, y = I(0),
+                               type = 'scatter',
+                               mode = 'lines',
+                               fill = 'tonexty',
+                               fillcolor = I(col),
+                               hoverinfo = "none",
+                               alpha = 0.2,
+                               showlegend = FALSE)
+            }
+            else {
+                a <- plot_ly()
+            }
+            if (smooth & !ceg) {
+                ## Using gam
+                ## smoothed_model <- gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
+                ## smoothed_data <- predict.gam(smoothed_model, newdata = df_subset)
+                ## Using smooth spline
+                ## smoothed_model <- smooth.spline(df_subset$numericDate, df_subset$Value)
+                ## smoothed_data <- predict(smoothed_model)$y
+                ## Using moving averages
+                smoothed_data <- rollmedian(zoo(x = df_subset$Value, order.by = df_subset$Index),
+                                          k = k, align = "center")
 
-            a <- plot_ly(df_subset[sampled_rows, ],
-                         x = ~ Index, y = ~ Value, hoverinfo = "none",
-                         type = "scatter", mode = "lines",
-                         showlegend = FALSE, alpha = 0.2, color = I(col))#I(opts$workouts_background_colour))
-            if (smooth) {
-                smoothed_model <- gam(Value ~ s(numericDate, bs = "cs"), data = df_subset)
-                smoothed_data <- predict.gam(smoothed_model, newdata = df_subset)
                 smoothed_values$minimum <- c(smoothed_values$minimum, min(smoothed_data))
                 smoothed_values$maximum <- c(smoothed_values$maximum, max(smoothed_data))
                 a <- a %>% add_lines(data = df_subset,
-                                     x = ~ Index, y = smoothed_data, hoverinfo = "text",
+                                     ## x = ~ Index, y = smoothed_data,
+                                     x = index(smoothed_data), y = coredata(smoothed_data),
+                                     hoverinfo = "text",
                                      text = paste(round(smoothed_data, 2), var_units),
-                                     color = I(col),#I(opts$workouts_smoother_colour),
+                                     color = I(col),
                                      showlegend = FALSE, alpha = 1)
             }
             a <- a %>% layout(annotations = annotations_list,
-                              xaxis = axis_list, yaxis = c(axis_list, list(range = y_axis_range)))
+                              xaxis = axis_list,
+                              yaxis = c(axis_list, list(range = y_axis_range)))
         }
         else {
             maximal_range <- c(-1, 1)

@@ -37,11 +37,23 @@ trops <- function() {
     }
 
     .small-box.bg-blue {
-     background-color: #2AC28A !important;
+     background-color: #00BFD0 !important;
     }
 
     .small-box.bg-navy {
      background-color: #d2d6de !important;
+    }
+
+    .small-box.bg-light-blue {
+     background-color: #67B2EB !important;
+    }
+
+    .small-box.bg-yellow {
+     background-color: #CEA550 !important;
+    }
+
+    .small-box.bg-green {
+     background-color: #2AC28A !important;
     }
 
     .logo {
@@ -99,13 +111,13 @@ trops <- function() {
      };
      shinyjs.reset_page = function() { location.reload(); };
      shinyjs.no_sports = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); };
-   "
+    "
 
     dt_callback_js <-
     "
      function(){
       $('tr').each(function(){
-       var col_val = $(this).find('td:eq(5)').text();
+       var col_val = $(this).find('td:eq(6)').text();
         if (col_val == 'running'){
          $(this).addClass('running');
         };
@@ -127,11 +139,16 @@ trops <- function() {
         custom_css = custom_css,
         custom_js = custom_js,
         dt_callback_js = dt_callback_js,
-        summary_box_na_colour = "navy", ## same as #001f3f
-        summary_box_ok_colour = "blue", # light-blue: #3c8dbc blue: #0073b7
+        summary_box_na_colour = "navy", # same as #001f3f
+        summary_box_ok_colour = "blue", # blue: #0073b7
+        summary_box_swim_colour = "light-blue",
+        summary_box_run_colour = "green",
+        summary_box_ride_colour = "yellow",
         summary_plots_selected_colour = "#0073b7",
         summary_plots_deselected_colour = "#d2d6de",
         ## Pallete harmonic with h1 = 60, h2 = 240, c = 65, l = 70
+        ##  qualitative_hcl(h1 = 60, h2 = 240, c = 65, l = 70, n = 3)
+        ##  for average box qualitative_hcl(h1 = 10, h2 = 200, c = 65, l = 70, n =3)
         summary_plots_selected_colour_swim = "#67B2EB",
         summary_plots_selected_colour_run = "#2AC28A",
         summary_plots_selected_colour_ride = "#CEA550",
@@ -151,7 +168,8 @@ trops <- function() {
         workout_view_rel_width = 60,
         workout_view_rel_height = 30,
         dropdown_button_size = "sm", ## see ?shinyWidget::dropdownButton
-        default_summary_plots = c("distance", "duration", "avgPace"),
+        default_summary_plots = c("distance", "duration", "avgPace", "total_elevation_gain"),
+        default_workout_plots = c("speed"),
         threshold = FALSE,
         quantile_for_limits = 0.05
     )
@@ -262,3 +280,6 @@ trops <- function() {
 ## 2% — 05
 ## 1% — 03
 ## 0% — 00
+
+## valid box xolours
+## red, yellow, aqua, blue, light-blue, green, navy, teal, olive, lime, orange, fuchsia, purple, maroon, black
