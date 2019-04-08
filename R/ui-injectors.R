@@ -74,7 +74,7 @@ create_workout_plots <- function(feature) {
 ## Create selected_workouts plot
 ## @param id A character. The ID of the plot.
 ## @param collapsed A logical. Whether or not the UI box should be collapsed.
-create_selected_workout_plot <- function(id, collapsed = FALSE) {
+create_selected_workout_plot <- function(id, workout_features, collapsed = FALSE) {
     insertUI(
         selector = ".content",
         where = "beforeEnd",
@@ -103,7 +103,7 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                             up = TRUE,
                             icon = icon("wrench"),
                             size = trops()$dropdown_button_size,
-                            tooltip = tooltipOptions(title = "Click to see inputs !"),
+                            ## tooltip = tooltipOptions(title = "Click to see inputs !"),
                             selectizeInput(
                                 inputId = paste0("n_changepoints", id),
                                 label = "Number of changepoints",
@@ -121,12 +121,14 @@ create_selected_workout_plot <- function(id, collapsed = FALSE) {
                                             "11" = 11,
                                             "12" = 12),
                                 selected = "3"),
-                            ## div(class = "form-group shiny-input-container",
-                            ##     id = "processed_path",
-                            ##     div(class = "input-group",
                             actionButton(paste0("detect_changepoints", id),
-                                         label = "Detect changepoints")),
-                        ## hr(),
+                                         label = "Detect changepoints"),
+                            selectInput(
+                                inputId = paste0("what2", id),
+                                label = "Second feature",
+                                multiple = FALSE,
+                                choices = workout_features, #c("altitude", "temperature", "speed", "pace"),
+                                selected = "altitude")),
                         div(id = "workout_view_plot",
                             uiOutput(paste0(id, "_plot"))))))))
 }

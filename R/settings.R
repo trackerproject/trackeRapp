@@ -111,7 +111,7 @@ trops <- function() {
      };
      shinyjs.reset_page = function() { location.reload(); };
      shinyjs.no_sports = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); };
-   "
+    "
 
     dt_callback_js <-
     "

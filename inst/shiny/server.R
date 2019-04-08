@@ -34,7 +34,14 @@ server <- function(input, output, session) {
     ## dissapear by a click in the window.
     shinyjs::runjs('$(document).on("click", ".dropdown-menu", function (e) {
                      e.stopPropagation();
-                    });')
+                    });
+                    window.onbeforeunload = function(e) {
+                    e = e || window.event;
+                    if (e) {
+                     e.returnValue = "Sure?";
+                    }
+                    return "Sure";
+                    };')
 
     ## Main object where most data is stored
     data <- reactiveValues(summary = NULL,
@@ -540,7 +547,9 @@ server <- function(input, output, session) {
         for (i in workout_features) {
             collapse <- if (i %in% metrics_to_expand) FALSE else TRUE
             i <- if (i == "heart_rate") "heart_rate" else i
-            trackeRapp:::create_selected_workout_plot(id = i, collapsed = collapse)
+            trackeRapp:::create_selected_workout_plot(id = i,
+                                                      workout_features = workout_features[metric_is_available()],
+                                                      collapsed = collapse)
         }
 
         sapply(workout_features, function(i) {
@@ -561,18 +570,31 @@ server <- function(input, output, session) {
                     if (!is.null(input[[paste0("detect_changepoints", i)]])) {
                         fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
                     }
-                    ret <- trackeRapp:::plot_selected_workouts(
+                    ret <- trackeRapp:::plot_selected_workouts2(
                                             x = data$object,
                                             session = data$selected_sessions,
-                                            what = i,
-                                            sumX = data$summary,
+                                            what1 = i,
+                                            what2 = input[[paste0("what2", i)]],
                                             changepoints = fit_changepoint,
-                                            threshold = FALSE,
                                             smooth = TRUE,
                                             n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
-                                            k = 100,
-                                            desampling = opts$thin,
-                                            y_axis_range = data$limits()[[i]])
+                                            k = 101,
+                                            thin = opts$thin,
+                                            ylim1 = data$limits()[[i]],
+                                            ylim2 = data$limits()[[input[[paste0("what2", i)]]]])
+
+                    ## ret <- trackeRapp:::plot_selected_workouts(
+                    ##                         x = data$object,
+                    ##                         session = data$selected_sessions,
+                    ##                         what = i,
+                    ##                         sumX = data$summary,
+                    ##                         changepoints = fit_changepoint,
+                    ##                         threshold = FALSE,
+                    ##                         smooth = TRUE,
+                    ##                         n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
+                    ##                         k = 100,
+                    ##                         desampling = opts$thin,
+                    ##                         y_axis_range = data$limits()[[i]])
                     incProgress(1/1, detail = "Plotting")
                     ret
                 })
