@@ -15,9 +15,9 @@ plot_selected_workouts2 <- function(x,
 
     opts <- if (is.null(options)) trops() else options
 
-    ## if (isTRUE(length(session) == 0)) {
-    ##     return(plotly_empty(type = "scatter", mode= "markers"))
-    ## }
+    if (isTRUE(length(session) == 0)) {
+        return(plotly_empty(type = "scatter", mode= "markers"))
+    }
 
 
     if (isTRUE(what1 == "pace")) {
@@ -29,7 +29,7 @@ plot_selected_workouts2 <- function(x,
     }
 
 
-    if (is.null(session)) {
+    if (missing(session)) {
         session <- seq_along(x)
     }
 
