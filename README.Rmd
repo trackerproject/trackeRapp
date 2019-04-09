@@ -76,6 +76,13 @@ knitr::include_graphics('README_files/session_summaries.png')
 knitr::include_graphics('README_files/zones_multiple_sessions.png')
 ```
 
+<br>
+
+```{r out.width='95%', fig.align='center', echo=FALSE}
+knitr::include_graphics('README_files/selected_workouts.png')
+```
+
+
 ## Video channel
 **trackeRapp** has a dedicated [YouTube
 channel](https://www.youtube.com/channel/UCY6y-pw8d1kek1WAIWiVhhw). The
