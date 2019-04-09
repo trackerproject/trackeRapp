@@ -567,9 +567,10 @@ server <- function(input, output, session) {
             output[[paste0(i, "Plot")]] <- plotly::renderPlotly({
                 withProgress(message = paste(i, "plots"), value = 0, {
                     ## Whether to detect changepoints
-                    if (!is.null(input[[paste0("detect_changepoints", i)]])) {
-                        fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
-                    }
+                    ## if (!is.null(input[[paste0("detect_changepoints", i)]])) {
+                        ## fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
+                    fit_changepoint <- as.numeric(input[[paste0("n_changepoints", i)]]) > 0
+                    ## }
                     ret <- trackeRapp:::plot_selected_workouts2(
                                             x = data$object,
                                             session = data$selected_sessions,
