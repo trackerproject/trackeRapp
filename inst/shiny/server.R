@@ -349,7 +349,6 @@ server <- function(input, output, session) {
 
             ## Update map based on current selection
             observeEvent(data$selected_sessions, {
-
                 ## Profile memory usage
                 ## print(pryr:::object_size(data))
 
