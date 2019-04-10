@@ -65,7 +65,7 @@
 #' @importFrom shinyWidgets updatePickerInput dropdownButton tooltipOptions pickerInput actionBttn checkboxGroupButtons awesomeRadio updateCheckboxGroupButtons
 #' @importFrom shinyjs hidden disable show hide enable html click delay useShinyjs extendShinyjs runjs js addClass
 #' @importFrom shinydashboard box dashboardPage dashboardHeader dashboardSidebar sidebarMenu dashboardBody valueBox valueBoxOutput renderValueBox
-#' @importFrom zoo index coredata
+#' @importFrom zoo zoo index coredata rollmedian
 #' @importFrom changepoint cpt.mean cpts coef
 #' @importFrom mgcv gam predict.gam
 #' @importFrom stats sd na.omit median

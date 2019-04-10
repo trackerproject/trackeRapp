@@ -60,7 +60,7 @@ plot_concentration_profiles <- function(x,
                      x = ~ Index, y = ~ Value,
                      color = ~ series, colors = col, #pal[feature_profile$Series],
                      legendgroup = ~ Series,
-                     hoverinfo = "text", text = ~ paste(" Value:", round(Index, 1), var_units, "\n", series)) %>%
+                     hoverinfo = "text", text = ~ paste(" Value:", round(Index, 2), var_units, "\n", series)) %>%
             add_lines() %>%
             layout(xaxis = x, yaxis = y, hovermode = "closest",
                    plot_bgcolor = "rgba(0, 0, 0, 0)",

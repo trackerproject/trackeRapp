@@ -71,6 +71,10 @@ Session summaries
 
 <img src="README_files/zones_multiple_sessions.png" width="95%" style="display: block; margin: auto;" />
 
+<br>
+
+<img src="README_files/selected_workouts.png" width="95%" style="display: block; margin: auto;" />
+
 Video channel
 -------------
 

@@ -15,9 +15,9 @@ plot_selected_workouts2 <- function(x,
 
     opts <- if (is.null(options)) trops() else options
 
-    ## if (isTRUE(length(session) == 0)) {
-    ##     return(plotly_empty(type = "scatter", mode= "markers"))
-    ## }
+    if (isTRUE(length(session) == 0)) {
+        return(plotly_empty(type = "scatter", mode= "markers"))
+    }
 
 
     if (isTRUE(what1 == "pace")) {
@@ -29,7 +29,7 @@ plot_selected_workouts2 <- function(x,
     }
 
 
-    if (is.null(session)) {
+    if (missing(session)) {
         session <- seq_along(x)
     }
 
@@ -45,13 +45,15 @@ plot_selected_workouts2 <- function(x,
     plots <- list()
     images <- list()
 
-    step_size <- 1 / length(unique(session))
-    start <- 0
-
     cumel1 <- what1 == "cumulative_elevation_gain"
     cumel2 <- what2 == "cumulative_elevation_gain"
 
-    for (i in seq_along(session)) {
+    n_sessions <- length(session)
+
+
+    margin <- 0.003
+
+    for (i in seq.int(n_sessions)) {
         shapes <- list()
 
         current_session <- session[i]
@@ -124,14 +126,18 @@ plot_selected_workouts2 <- function(x,
                                           "running" = "running.png",
                                           "cycling" = "cycling.png",
                                           "swimming" = "swimming.png")
+
+            ## This will place the image 10% in each plot
+            x_image <- (i - 1 + 0.1)/(n_sessions + 1) + margin
             images[[current_session]] <- list(source = current_sport_image,
                                               xref = "paper",
                                               yref = "paper",
-                                              x = start + step_size / 10,
+                                              x = x_image,
                                               y = 1,
                                               sizex = 0.07,
                                               sizey = 0.07,
                                               opacity = 0.3)
+
 
             ## Changepoint detection should applied before thining the data
             if (changepoints) {
@@ -177,8 +183,8 @@ plot_selected_workouts2 <- function(x,
 
 
             ## Plotting
-            v1 <- round(var_df$value1, 1)
-            v2 <- round(var_df$value2, 1)
+            v1 <- round(var_df$value1, 2)
+            v2 <- round(var_df$value2, 2)
             var_df$text <- paste0(what1, ": ", ifelse(is.na(v1), "", paste(v1, var1_units)), "\n",
                                   what2, ": ", ifelse(is.na(v2), "", paste(v2, var2_units)))
 
@@ -221,26 +227,41 @@ plot_selected_workouts2 <- function(x,
             var_df$date <- dates
             var_df$value1 <- unlist(ylim1)
             var_df$value2 <- unlist(ylim2)
-            this_plot <- plot_ly(data = var_df,
-                                 x = ~ date, y = ~ value1,
-                                 hoverinfo = "none",
-                                 type = "scatter",
-                                 mode = "none",
-                                 showlegend = FALSE)
+
+
+            this_plot <- plot_ly(data = var_df)
+            this_plot <- add_trace(this_plot,
+                                   x = ~ date, y = ~ value1,
+                                   hoverinfo = "none",
+                                   type = "scatter",
+                                   mode = "none",
+                                   yaxis = "y",
+                                   showlegend = FALSE)
+
+            this_plot <- add_trace(this_plot,
+                                   x = ~ date, y = I(ylim2[[1]]),
+                                   hoverinfo = "none",
+                                   type = "scatter",
+                                   mode = "none",
+                                   yaxis = "y2",
+                                   showlegend = FALSE)
+
         }
 
         plots[[as.character(i)]] <- this_plot %>%
             layout(xaxis = x1, yaxis = y1, yaxis2 = y2,
                    annotations = annotations_list,
                    shapes = shapes)
-        start <- start + step_size
 
     }
+
+    plots[[as.character(n_sessions + 1)]] <- plotly_empty(type = "scatter", mode= "markers")
+
 
     y1 <- list(fixedrange = TRUE)
     y2 <- list(fixedrange = TRUE)
 
-    subplot(plots, nrows = 1, titleY = FALSE, margin = 0.003) %>%
+    subplot(plots, nrows = 1, titleY = FALSE, margin = margin) %>%
            config(displayModeBar = FALSE) %>%
         layout(showlegend = FALSE,
                hovermode = "x",

@@ -111,8 +111,11 @@ server <- function(input, output, session) {
             trackeRapp:::generate_objects(data, output, session, summary_features)
         }
 
+        ## Close sidebar
+        shinyjs::addClass(selector = "body", class = "sidebar-collapse")
         shinyjs::hide("logo")
         shinyjs::hide("dummy_map")
+
     })
 
     has_data_sport <- reactive({
@@ -291,9 +294,6 @@ server <- function(input, output, session) {
                                                                      "Average Temperature", data)
 
 
-        ## Close sidebar
-        shinyjs::addClass(selector = "body", class = "sidebar-collapse")
-
         ## Map (move to a plot_map function)
         ## do not generate map if no location data for any of the sessions
         if ((any(data$is_location_data)) & (has_internet_connection)) {
@@ -349,7 +349,6 @@ server <- function(input, output, session) {
 
             ## Update map based on current selection
             observeEvent(data$selected_sessions, {
-
                 ## Profile memory usage
                 ## print(pryr:::object_size(data))
 
@@ -494,52 +493,6 @@ server <- function(input, output, session) {
                 ret
             })
         })
-
-                ##  Concentration profiles
-        trackeRapp:::create_profiles_box(
-                         inputId = "profileMetricsPlot",
-                         plotId = "concentration_profiles",
-                         choices = workout_features[metric_is_available()],
-                         collapsed = TRUE)
-        ## Render UI for concentration profiles
-        output$concentration_profiles <- renderUI({
-            req(input$profileMetricsPlot)
-            plotly::plotlyOutput("conc_profiles_plots",
-                                 width = "auto",
-                                 height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
-        })
-
-        conc_profiles <- {
-            wh <- workout_features[metric_is_available()]
-            if (length(wh)) {
-                lims <- data$limits0
-                trackeR::concentration_profile(data$object,
-                                               what = wh,
-                                               limits = lims)
-            }
-            else {
-                NULL
-            }
-        }
-
-        ## Render actual plot
-        output$conc_profiles_plots <- plotly::renderPlotly({
-            withProgress(message = "Training concentration", value = 0, {
-                incProgress(1/2, detail = "Computing")
-                ## Compute concentration for static limits on all data and
-                ## then simply plot with reactive limits
-                ret <- trackeRapp:::plot_concentration_profiles(
-                                        x = data$object,
-                                        session = data$selected_sessions,
-                                        what = input$profileMetricsPlot,
-                                        profiles_calculated = conc_profiles,
-                                        limits = data$limits(),
-                                        options = opts)
-                incProgress(1/1, detail = "Plotting")
-                ret
-            })
-        })
-
         ## Generate individual sessions plots (except work capacity)
         metrics_to_expand <- ""
 
@@ -555,7 +508,7 @@ server <- function(input, output, session) {
         sapply(workout_features, function(i) {
             plot_width <- reactive({
                 n_sessions <- length(as.vector(data$selected_sessions))
-                paste0(opts$workout_view_rel_width * n_sessions, "vw")
+                paste0(opts$workout_view_rel_width * (n_sessions + 1), "vw")
             })
             output[[paste0(i, "_plot")]] <- renderUI({
                 plotly::plotlyOutput(paste0(i, "Plot"),
@@ -567,9 +520,7 @@ server <- function(input, output, session) {
             output[[paste0(i, "Plot")]] <- plotly::renderPlotly({
                 withProgress(message = paste(i, "plots"), value = 0, {
                     ## Whether to detect changepoints
-                    if (!is.null(input[[paste0("detect_changepoints", i)]])) {
-                        fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
-                    }
+                    fit_changepoint <- as.numeric(input[[paste0("n_changepoints", i)]]) > 0
                     ret <- trackeRapp:::plot_selected_workouts2(
                                             x = data$object,
                                             session = data$selected_sessions,
@@ -582,20 +533,7 @@ server <- function(input, output, session) {
                                             thin = opts$thin,
                                             ylim1 = data$limits()[[i]],
                                             ylim2 = data$limits()[[input[[paste0("what2", i)]]]])
-
-                    ## ret <- trackeRapp:::plot_selected_workouts(
-                    ##                         x = data$object,
-                    ##                         session = data$selected_sessions,
-                    ##                         what = i,
-                    ##                         sumX = data$summary,
-                    ##                         changepoints = fit_changepoint,
-                    ##                         threshold = FALSE,
-                    ##                         smooth = TRUE,
-                    ##                         n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
-                    ##                         k = 100,
-                    ##                         desampling = opts$thin,
-                    ##                         y_axis_range = data$limits()[[i]])
-                    incProgress(1/1, detail = "Plotting")
+               incProgress(1/1, detail = "Plotting")
                     ret
                 })
             })
@@ -607,6 +545,54 @@ server <- function(input, output, session) {
             outputOptions(output, i, suspendWhenHidden = FALSE)
         })
 
+
+
+        ##  Concentration profiles
+        trackeRapp:::create_profiles_box(
+                         inputId = "profileMetricsPlot",
+                         plotId = "concentration_profiles",
+                         choices = workout_features[metric_is_available()],
+                         collapsed = TRUE)
+        ## Render UI for concentration profiles
+        output$concentration_profiles <- renderUI({
+            req(input$profileMetricsPlot)
+            plotly::plotlyOutput("conc_profiles_plots",
+                                 width = "auto",
+                                 height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
+        })
+
+        conc_profiles <- reactive({
+                    wh <- workout_features[metric_is_available()]
+                    if (length(wh)) {
+                        lims <- data$limits()
+                        trackeR::concentration_profile(data$object,
+                                                       what = wh,
+                                                       limits = lims)
+                    }
+                    else {
+                        NULL
+                    }
+        })
+
+
+        ## Render actual plot
+        output$conc_profiles_plots <- plotly::renderPlotly({
+            withProgress(message = "Training concentration", value = 0, {
+                incProgress(1/2, detail = "Computing")
+
+                ## Compute concentration for static limits on all data and
+                ## then simply plot with reactive limits
+                ret <- trackeRapp:::plot_concentration_profiles(
+                                        x = data$object,
+                                        session = data$selected_sessions,
+                                        what = input$profileMetricsPlot,
+                                        profiles_calculated = conc_profiles(),
+                                        limits = data$limits(),
+                                        options = opts)
+                incProgress(1/1, detail = "Plotting")
+                ret
+            })
+        })
 
         ## Update metrics available each time different sessions selected
         observeEvent(data$selected_sessions, {

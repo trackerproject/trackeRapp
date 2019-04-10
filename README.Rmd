@@ -7,6 +7,7 @@ output: github_document
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 
+
 # trackeRapp <img src="README_files/hex_trackeRapp.svg" width="320" align="right">
 
 [**trackeRapp**](https://trackerapp.com) is a
@@ -75,6 +76,13 @@ knitr::include_graphics('README_files/session_summaries.png')
 ```{r out.width='95%', fig.align='center', echo=FALSE}
 knitr::include_graphics('README_files/zones_multiple_sessions.png')
 ```
+
+<br>
+
+```{r out.width='95%', fig.align='center', echo=FALSE}
+knitr::include_graphics('README_files/selected_workouts.png')
+```
+
 
 ## Video channel
 **trackeRapp** has a dedicated [YouTube

@@ -52,8 +52,8 @@ plot_zones <- function(x, session, what = c("heart_rate"),
                      legendgroup = ~ Session, hoverinfo = "text",
                      text = ~ paste0(
                                Session, "\n",
-                               round(time, 1), " ", time_unit, " in zone\n",
-                               round(percent, 1), "% of session\n")) %>%
+                               round(time, 2), " ", time_unit, " in zone\n",
+                               round(percent, 2), "% of session\n")) %>%
             add_bars() %>%
             layout(xaxis = x, yaxis = y, hovermode = "closest",
                    plot_bgcolor = "rgba(0, 0, 0, 0)",
