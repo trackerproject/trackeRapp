@@ -183,8 +183,8 @@ plot_selected_workouts2 <- function(x,
 
 
             ## Plotting
-            v1 <- round(var_df$value1, 1)
-            v2 <- round(var_df$value2, 1)
+            v1 <- round(var_df$value1, 2)
+            v2 <- round(var_df$value2, 2)
             var_df$text <- paste0(what1, ": ", ifelse(is.na(v1), "", paste(v1, var1_units)), "\n",
                                   what2, ": ", ifelse(is.na(v2), "", paste(v2, var2_units)))
 
@@ -227,12 +227,30 @@ plot_selected_workouts2 <- function(x,
             var_df$date <- dates
             var_df$value1 <- unlist(ylim1)
             var_df$value2 <- unlist(ylim2)
-            this_plot <- plot_ly(data = var_df,
-                                 x = ~ date, y = ~ value1,
-                                 hoverinfo = "none",
-                                 type = "scatter",
-                                 mode = "none",
-                                 showlegend = FALSE)
+            ## this_plot <- plot_ly(data = var_df,
+            ##                      x = ~ date, y = ~ value1,
+            ##                      hoverinfo = "none",
+            ##                      type = "scatter",
+            ##                      mode = "none",
+            ##                      showlegend = FALSE)
+
+            this_plot <- plot_ly(data = var_df)
+            this_plot <- add_trace(this_plot,
+                                   x = ~ date, y = ~ value1,
+                                   hoverinfo = "none",
+                                   type = "scatter",
+                                   mode = "none",
+                                   yaxis = "y",
+                                   showlegend = FALSE)
+
+            this_plot <- add_trace(this_plot,
+                                   x = ~ date, y = I(ylim2[[1]]),
+                                   hoverinfo = "none",
+                                   type = "scatter",
+                                   mode = "none",
+                                   yaxis = "y2",
+                                   showlegend = FALSE)
+
         }
 
         plots[[as.character(i)]] <- this_plot %>%
