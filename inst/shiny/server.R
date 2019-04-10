@@ -111,10 +111,10 @@ server <- function(input, output, session) {
             trackeRapp:::generate_objects(data, output, session, summary_features)
         }
 
-        shinyjs::hide("logo")
-        shinyjs::hide("dummy_map")
         ## Close sidebar
         shinyjs::addClass(selector = "body", class = "sidebar-collapse")
+        shinyjs::hide("logo")
+        shinyjs::hide("dummy_map")
 
     })
 

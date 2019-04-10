@@ -51,9 +51,7 @@ plot_selected_workouts2 <- function(x,
     n_sessions <- length(session)
 
 
-    step_size <- 1 / (n_sessions + 1)
-    start <- 0
-
+    margin <- 0.003
 
     for (i in seq.int(n_sessions)) {
         shapes <- list()
@@ -129,14 +127,17 @@ plot_selected_workouts2 <- function(x,
                                           "cycling" = "cycling.png",
                                           "swimming" = "swimming.png")
 
+            ## This will place the image 10% in each plot
+            x_image <- (i - 1 + 0.1)/(n_sessions + 1) + margin
             images[[current_session]] <- list(source = current_sport_image,
                                               xref = "paper",
                                               yref = "paper",
-                                              x = start + step_size / 10,
+                                              x = x_image,
                                               y = 1,
                                               sizex = 0.07,
                                               sizey = 0.07,
                                               opacity = 0.3)
+
 
             ## Changepoint detection should applied before thining the data
             if (changepoints) {
@@ -238,7 +239,6 @@ plot_selected_workouts2 <- function(x,
             layout(xaxis = x1, yaxis = y1, yaxis2 = y2,
                    annotations = annotations_list,
                    shapes = shapes)
-        start <- start + step_size
 
     }
 
@@ -248,7 +248,7 @@ plot_selected_workouts2 <- function(x,
     y1 <- list(fixedrange = TRUE)
     y2 <- list(fixedrange = TRUE)
 
-    subplot(plots, nrows = 1, titleY = FALSE, margin = 0.003) %>%
+    subplot(plots, nrows = 1, titleY = FALSE, margin = margin) %>%
            config(displayModeBar = FALSE) %>%
         layout(showlegend = FALSE,
                hovermode = "x",
