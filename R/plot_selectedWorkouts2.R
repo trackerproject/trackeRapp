@@ -45,13 +45,17 @@ plot_selected_workouts2 <- function(x,
     plots <- list()
     images <- list()
 
-    step_size <- 1 / length(unique(session))
-    start <- 0
-
     cumel1 <- what1 == "cumulative_elevation_gain"
     cumel2 <- what2 == "cumulative_elevation_gain"
 
-    for (i in seq_along(session)) {
+    n_sessions <- length(session)
+
+
+    step_size <- 1 / (n_sessions + 1)
+    start <- 0
+
+
+    for (i in seq.int(n_sessions)) {
         shapes <- list()
 
         current_session <- session[i]
@@ -124,6 +128,7 @@ plot_selected_workouts2 <- function(x,
                                           "running" = "running.png",
                                           "cycling" = "cycling.png",
                                           "swimming" = "swimming.png")
+
             images[[current_session]] <- list(source = current_sport_image,
                                               xref = "paper",
                                               yref = "paper",
@@ -236,6 +241,9 @@ plot_selected_workouts2 <- function(x,
         start <- start + step_size
 
     }
+
+    plots[[as.character(n_sessions + 1)]] <- plotly_empty(type = "scatter", mode= "markers")
+
 
     y1 <- list(fixedrange = TRUE)
     y2 <- list(fixedrange = TRUE)

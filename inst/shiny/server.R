@@ -113,6 +113,9 @@ server <- function(input, output, session) {
 
         shinyjs::hide("logo")
         shinyjs::hide("dummy_map")
+        ## Close sidebar
+        shinyjs::addClass(selector = "body", class = "sidebar-collapse")
+
     })
 
     has_data_sport <- reactive({
@@ -291,8 +294,8 @@ server <- function(input, output, session) {
                                                                      "Average Temperature", data)
 
 
-        ## Close sidebar
-        shinyjs::addClass(selector = "body", class = "sidebar-collapse")
+        ## ## Close sidebar
+        ## shinyjs::addClass(selector = "body", class = "sidebar-collapse")
 
         ## Map (move to a plot_map function)
         ## do not generate map if no location data for any of the sessions
@@ -555,7 +558,7 @@ server <- function(input, output, session) {
         sapply(workout_features, function(i) {
             plot_width <- reactive({
                 n_sessions <- length(as.vector(data$selected_sessions))
-                paste0(opts$workout_view_rel_width * n_sessions, "vw")
+                paste0(opts$workout_view_rel_width * (n_sessions + 1), "vw")
             })
             output[[paste0(i, "_plot")]] <- renderUI({
                 plotly::plotlyOutput(paste0(i, "Plot"),
