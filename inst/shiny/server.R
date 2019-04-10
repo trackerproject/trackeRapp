@@ -294,9 +294,6 @@ server <- function(input, output, session) {
                                                                      "Average Temperature", data)
 
 
-        ## ## Close sidebar
-        ## shinyjs::addClass(selector = "body", class = "sidebar-collapse")
-
         ## Map (move to a plot_map function)
         ## do not generate map if no location data for any of the sessions
         if ((any(data$is_location_data)) & (has_internet_connection)) {
@@ -524,10 +521,7 @@ server <- function(input, output, session) {
             output[[paste0(i, "Plot")]] <- plotly::renderPlotly({
                 withProgress(message = paste(i, "plots"), value = 0, {
                     ## Whether to detect changepoints
-                    ## if (!is.null(input[[paste0("detect_changepoints", i)]])) {
-                        ## fit_changepoint <- input[[paste0("detect_changepoints", i)]] > 0
                     fit_changepoint <- as.numeric(input[[paste0("n_changepoints", i)]]) > 0
-                    ## }
                     ret <- trackeRapp:::plot_selected_workouts2(
                                             x = data$object,
                                             session = data$selected_sessions,
@@ -540,20 +534,7 @@ server <- function(input, output, session) {
                                             thin = opts$thin,
                                             ylim1 = data$limits()[[i]],
                                             ylim2 = data$limits()[[input[[paste0("what2", i)]]]])
-
-                    ## ret <- trackeRapp:::plot_selected_workouts(
-                    ##                         x = data$object,
-                    ##                         session = data$selected_sessions,
-                    ##                         what = i,
-                    ##                         sumX = data$summary,
-                    ##                         changepoints = fit_changepoint,
-                    ##                         threshold = FALSE,
-                    ##                         smooth = TRUE,
-                    ##                         n_changepoints = isolate(as.numeric(input[[paste0("n_changepoints", i)]])),
-                    ##                         k = 100,
-                    ##                         desampling = opts$thin,
-                    ##                         y_axis_range = data$limits()[[i]])
-                    incProgress(1/1, detail = "Plotting")
+               incProgress(1/1, detail = "Plotting")
                     ret
                 })
             })
@@ -581,23 +562,24 @@ server <- function(input, output, session) {
                                  height = paste0(opts$workout_view_rel_height * length(input$profileMetricsPlot), "vh"))
         })
 
-        ## Render actual plot
-        output$conc_profiles_plots <- plotly::renderPlotly({
-            withProgress(message = "Training concentration", value = 0, {
-                incProgress(1/2, detail = "Computing")
-
-                conc_profiles <- {
+        conc_profiles <- reactive({
                     wh <- workout_features[metric_is_available()]
                     if (length(wh)) {
                         lims <- data$limits()
                         trackeR::concentration_profile(data$object,
                                                        what = wh,
-                                               limits = lims)
+                                                       limits = lims)
                     }
                     else {
                         NULL
                     }
-                }
+        })
+
+
+        ## Render actual plot
+        output$conc_profiles_plots <- plotly::renderPlotly({
+            withProgress(message = "Training concentration", value = 0, {
+                incProgress(1/2, detail = "Computing")
 
                 ## Compute concentration for static limits on all data and
                 ## then simply plot with reactive limits
@@ -605,7 +587,7 @@ server <- function(input, output, session) {
                                         x = data$object,
                                         session = data$selected_sessions,
                                         what = input$profileMetricsPlot,
-                                        profiles_calculated = conc_profiles,
+                                        profiles_calculated = conc_profiles(),
                                         limits = data$limits(),
                                         options = opts)
                 incProgress(1/1, detail = "Plotting")
