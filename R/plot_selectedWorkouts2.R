@@ -227,12 +227,7 @@ plot_selected_workouts2 <- function(x,
             var_df$date <- dates
             var_df$value1 <- unlist(ylim1)
             var_df$value2 <- unlist(ylim2)
-            ## this_plot <- plot_ly(data = var_df,
-            ##                      x = ~ date, y = ~ value1,
-            ##                      hoverinfo = "none",
-            ##                      type = "scatter",
-            ##                      mode = "none",
-            ##                      showlegend = FALSE)
+
 
             this_plot <- plot_ly(data = var_df)
             this_plot <- add_trace(this_plot,
