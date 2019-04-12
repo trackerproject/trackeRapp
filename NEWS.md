@@ -1,3 +1,3 @@
-# trackeRapp 0.9
+# trackeRapp 1.0
 
-* First stable release
+* First CRAN release
