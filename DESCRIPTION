@@ -7,7 +7,7 @@ Authors@R: c(person(given = "Ioannis", family = "Kosmidis",
 	    person(given = "Robin", family = "Hornak",
 	            role = c("aut"), email = "robinhornak@gmail.com"))
 Description: Provides an integrated user interface and workflow for
-             the analysis of running and cycling data from GPS-enabled
+             the analysis of running, cycling and swimming data from GPS-enabled
              tracking devices through the 'trackeR' <https://CRAN.R-project.org/package=trackeR> R package.
 Depends:
     R (>= 3.5.0),
