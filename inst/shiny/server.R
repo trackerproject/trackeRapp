@@ -65,6 +65,7 @@ server <- function(input, output, session) {
     observeEvent(input$uploadButton, {
         no_raw_directory_selected <- is.null(input$rawDataDirectory$datapath)
         no_processed_file_selected <- is.null(input$processedDataPath$datapath)
+        
         if (no_raw_directory_selected & no_processed_file_selected) {
             trackeRapp:::show_warning_no_data_selected()
         }
@@ -81,7 +82,7 @@ server <- function(input, output, session) {
                 to <- file.path(dirname(from), basename(input$rawDataDirectory$name))
                 file.rename(from, to)
                 directory <- dirname(to[1])
-                ## Process raw data
+                ## Process raw data               
                 raw_data <- trackeRapp:::read_directory_shiny(
                                              directory = directory,
                                              timezone = "GMT",
@@ -205,7 +206,7 @@ server <- function(input, output, session) {
 
     ##  Uploading sample dataset
     observeEvent(input$uploadSampleDataset, {
-        removeModal()
+        removeModal()        
         filepath <- system.file("extdata/sample.rds", package = "trackeRapp")
         data$object <- readRDS(filepath)
         ## See helper file
