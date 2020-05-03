@@ -225,7 +225,7 @@ server <- function(input, output, session) {
     })
 
     ## Message and actions on firefox issues
-    shinyjs::runjs('Shiny.setInputValue("browser", bowser.name);')
+    ## shinyjs::runjs('Shiny.setInputValue("browser", bowser.name);')
     observeEvent(input$browser, {
         if (grepl("firef", input$browser, ignore.case = TRUE)) {
             shinyjs::show(id = "firefoxmessage")
@@ -286,8 +286,6 @@ server <- function(input, output, session) {
                                                                    "Average heart rate", data)
         output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
                                                               "Average pace", data)
-        ## output$avgAltitude_box <- trackeRapp:::render_summary_box("avgAltitude",
-        ##                                                           "Average altitude", data)
         output$total_elevation_gain_box <- trackeRapp:::render_summary_box("total_elevation_gain",
                                                                            "Total elevation gain", data)
         output$avgTemperature_box <- trackeRapp:::render_summary_box("avgTemperature",
@@ -349,15 +347,11 @@ server <- function(input, output, session) {
 
             ## Update map based on current selection
             observeEvent(data$selected_sessions, {
-                ## Profile memory usage
-                ## print(pryr:::object_size(data))
-
                 withProgress(message = 'Map', value = 0, {
                     sel <- selected_data()
                     des <- deselected_data()
                     incProgress(1/2, detail = "Preparing routes")
                     ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-
                     incProgress(1/1, detail = "Mapping")                    
                     if (!is.null(des)) {
                         p <- mapdeck::mapdeck_update(map_id = "map")
@@ -389,7 +383,7 @@ server <- function(input, output, session) {
                                                      opacity = 0.1)
                     }
                 })
-            }, priority = -3)
+            })
         }
 
         ## Sessions summaries plots
