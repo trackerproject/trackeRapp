@@ -225,15 +225,15 @@ server <- function(input, output, session) {
     })
 
     ## Message and actions on firefox issues
-    ## shinyjs::runjs('Shiny.setInputValue("browser", bowser.name);')
-    observeEvent(input$browser, {
-        if (grepl("firef", input$browser, ignore.case = TRUE)) {
-            shinyjs::show(id = "firefoxmessage")
-            shinyjs::disable(id = "resetButton")
-            shinyjs::disable(id = "uploadButton")
-            shinyjs::disable(id = "download_data")
-        }
-    })
+    shinyjs::runjs('Shiny.setInputValue("browser", bowser.name);')
+    ## observeEvent(input$browser, {
+    ##     if (grepl("firef", input$browser, ignore.case = TRUE)) {
+    ##         shinyjs::show(id = "firefoxmessage")
+    ##         shinyjs::disable(id = "resetButton")
+    ##         shinyjs::disable(id = "uploadButton")
+    ##         shinyjs::disable(id = "download_data")
+    ##     }
+    ## })
 
     ## Session summaries page
     observeEvent(input$createDashboard, {
@@ -376,11 +376,13 @@ server <- function(input, output, session) {
                                                update_view = TRUE,
                                                focus_layer = TRUE)
                         centroids <- sf::st_centroid(sel)
-                        p <- mapdeck::add_screengrid(p,
-                                                     data = centroids,
-                                                     colour_range = rev(colorspace::sequential_hcl(h = 10, power = 1, c = 65, l = 70, n = 6)),
-                                                     cell_size = 20,
-                                                     opacity = 0.1)
+                        if (!isTRUE(grepl("safar", input$browser, ignore.case = TRUE))) {
+                            p <- mapdeck::add_screengrid(p,
+                                                         data = centroids,
+                                                         colour_range = rev(colorspace::sequential_hcl(h = 10, power = 1, c = 65, l = 70, n = 6)),
+                                                         cell_size = 20,
+                                                         opacity = 0.1)
+                        }
                     }
                 })
             })
