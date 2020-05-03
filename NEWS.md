@@ -6,6 +6,7 @@
 
 ## Other improvements, updates and additions
 + trackeRapp works on Firefox version >= 75.0
++ Documentation improvements
 
 # trackeRapp 1.0
 
