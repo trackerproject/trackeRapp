@@ -10,11 +10,16 @@
 #'     \code{FALSE}, then all warnings and errors are suppressed.
 #'
 #' @section Getting started:
+#' Once the interface launches, you may
+#' experiment with the interface by hitting "Load" and then
+#' "Upload sample dataset".
+#'
 #' See the \code{"tour de trackeRapp"} pages at
 #' \url{https://trackerproject.github.io/trackeRapp/} for tutorial
 #' videos, explanation of the workflow and visualizations that
 #' \pkg{trackeRapp} offers, and to, generally, learn more about
 #' \pkg{trackeRapp} and all of its capabilities.
+#' 
 #'
 #' @section Video channel:
 #' \pkg{trackeRapp} has a dedicated YouTube channel at
@@ -32,7 +37,7 @@
 #' TU/B/000082) and University of Warwick. Robin Hornak and Ioannis
 #' Kosmidis have also been supported by University of Warwick through
 #' a Warwick Impact Fund Award that runs from May 2018 to December
-#' 2019. The support of the aforementioned organisations is greatly
+#' 2019. The support of the aforementioned organizations is greatly
 #' acknowledged.
 #'
 #' @references
@@ -56,6 +61,9 @@
 #' if (interactive()) {
 #'   trackeR_app(quiet = FALSE)
 #' }
+#'
+#' # Experiment with the interface by hitting "Load" and then
+#' # "Upload sample dataset".
 #'
 #' @import trackeR
 #' @import shiny

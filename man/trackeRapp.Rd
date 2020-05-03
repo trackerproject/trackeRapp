@@ -22,6 +22,10 @@ devices through the \code{trackeR} R package. \code{trackerRapp} or
 }
 \section{Getting started}{
 
+Once the interface launches, you may
+experiment with the interface by hitting "Load" and then
+"Upload sample dataset".
+
 See the \code{"tour de trackeRapp"} pages at
 \url{https://trackerproject.github.io/trackeRapp/} for tutorial
 videos, explanation of the workflow and visualizations that
@@ -48,7 +52,7 @@ Institute under the EPSRC grant EP/N510129/1 (Turing award number
 TU/B/000082) and University of Warwick. Robin Hornak and Ioannis
 Kosmidis have also been supported by University of Warwick through
 a Warwick Impact Fund Award that runs from May 2018 to December
-2019. The support of the aforementioned organisations is greatly
+2019. The support of the aforementioned organizations is greatly
 acknowledged.
 }
 
@@ -61,6 +65,9 @@ if (interactive()) {
 if (interactive()) {
   trackeR_app(quiet = FALSE)
 }
+
+# Experiment with the interface by hitting "Load" and then
+# "Upload sample dataset".
 
 }
 \references{
