@@ -148,10 +148,9 @@ server <- function(input, output, session) {
     ## Sessions selected from plots using box/lasso selection
     observeEvent(plotly::event_data("plotly_selected"), {
         trackeRapp:::generate_selected_sessions_object(data, input,
-                                                       plot_selection = TRUE)
+                                                       plot_selection = TRUE)    
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
-        shinyWidgets::updatePickerInput(session = session, inputId =
-                                                               "'metricsSelected",
+        shinyWidgets::updatePickerInput(session = session, inputId = "metricsSelected",
                                         selected = selected_metrics(),
                                         choices = metrics_available_sport())
     })

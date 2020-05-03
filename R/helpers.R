@@ -351,43 +351,40 @@ lab_data <- function(feature, units, onlyunit = FALSE) {
 render_summary_box <- function(short_name, long_name, data) {
     opts <- trops()
     box_text <- function(what, subtitle, icon, data) {
-        value <- reactive({
-            if (what == "nsessions_running") {
-                sports <- data$summary[data$selected_sessions][["sport"]]
-                value <- sum(sports == "running")
-            }
-            if (what == "nsessions_cycling") {
-                sports <- data$summary[data$selected_sessions][["sport"]]
-                value <- sum(sports == "cycling")
-            }
-            if (what == "nsessions_swimming") {
-                sports <- data$summary[data$selected_sessions][["sport"]]
-                value <- sum(sports == "swimming")
-            }
-            if (what == "total_elevation_gain") {
-                value <- data$summary[data$selected_sessions][[what]]
-                value <- round(sum(value[is.finite(value)], na.rm = TRUE), 1)
-            }
-
-            if (!(what %in% c("nsessions_swimming", "nsessions_running", "nsessions_cycling",
-                              "total_elevation_gain"))) {
-                value <- data$summary[data$selected_sessions][[what]]
-                value <- round(mean(value[is.finite(value)], na.rm = TRUE), 1)
-            }
-            if (is.na(value)) {
-                "not available"
-            }
-            else {
-                paste0(value, " ", unique(lab_sum(what, data$summary, FALSE)))
-            }
-        })
+        if (what == "nsessions_running") {
+            sports <- data$summary[data$selected_sessions][["sport"]]
+            value <- sum(sports == "running")
+        }
+        if (what == "nsessions_cycling") {
+            sports <- data$summary[data$selected_sessions][["sport"]]
+            value <- sum(sports == "cycling")
+        }
+        if (what == "nsessions_swimming") {
+            sports <- data$summary[data$selected_sessions][["sport"]]
+            value <- sum(sports == "swimming")
+        }
+        if (what == "total_elevation_gain") {
+            value <- data$summary[data$selected_sessions][[what]]
+            value <- round(sum(value[is.finite(value)], na.rm = TRUE), 1)
+        }
+        if (!(what %in% c("nsessions_swimming", "nsessions_running", "nsessions_cycling",
+                          "total_elevation_gain"))) {
+            value <- data$summary[data$selected_sessions][[what]]
+            value <- round(mean(value[is.finite(value)], na.rm = TRUE), 1)
+        }
+        if (is.na(value)) {
+            value <- "not available"
+        }
+        else {
+            value <- paste0(value, " ", unique(lab_sum(what, data$summary, FALSE)))
+        }
         color <- switch(what,
                         "nsessions_cycling" = opts$summary_box_ride_colour,
                         "nsessions_swimming" = opts$summary_box_swim_colour,
                         "nsessions_running" = opts$summary_box_run_colour,
                         opts$summary_box_ok_colour)
-        color <- ifelse(value() == "not available", opts$summary_box_na_colour, color)
-        valueBox(value(), subtitle, icon, color = color)
+        color <- ifelse(value == "not available", opts$summary_box_na_colour, color)
+        valueBox(value, subtitle, icon, color = color)
     }
     renderValueBox({
         box_text(what = short_name,
