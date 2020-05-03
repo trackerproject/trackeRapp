@@ -482,7 +482,8 @@ get_coords <- function(data, sessions = NULL, keep = 0.1) {
     geometry <- lapply(sessions, function(s) {
         coord <- coredata(x[[s]])[, c("longitude", "latitude")]
         subsample <- seq(1, nrow(coord), length.out = ceiling(keep * nrow(coord)))
-        st_multilinestring(list(coord[subsample, ]))
+        ## st_multilinestring(list(coord[subsample, ]))
+        st_linestring(coord[subsample, ])
     })
     tooltips <- sapply(sessions, popupText)
     st_sf(session = sessions,

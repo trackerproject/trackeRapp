@@ -324,8 +324,8 @@ server <- function(input, output, session) {
             })
 
             deselected_data <- reactive({
-                sessions <- seq_along(data$object)[data$is_location_data]
-                sessions <- sessions[!(sessions %in% data$selected_sessions)]
+                sessions <- seq_along(data$object)[data$is_location_data]                
+                sessions <- sessions[!(sessions %in% data$selected_sessions)]                
                 if (length(sessions)) {
                     out <- trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
                     out$col <- ifelse(out$sport == "running",
@@ -359,10 +359,10 @@ server <- function(input, output, session) {
                     incProgress(1/2, detail = "Preparing routes")
                     ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
 
-                    incProgress(1/1, detail = "Mapping")
+                    incProgress(1/1, detail = "Mapping")                    
                     if (!is.null(des)) {
                         p <- mapdeck::mapdeck_update(map_id = "map")
-                        p <- mapdeck::clear_path(p, "deselection_path")
+                        p <- mapdeck::clear_path(p, "deselection_path")                        
                         p <- mapdeck::add_path(p,
                                                data = des,
                                                stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),

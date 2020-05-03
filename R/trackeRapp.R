@@ -61,7 +61,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom grDevices colorRampPalette
-#' @importFrom sf st_centroid st_multilinestring st_sf st_sfc
+#' @importFrom sf st_centroid st_linestring st_multilinestring st_sf st_sfc
 #' @importFrom shinyWidgets updatePickerInput dropdownButton tooltipOptions pickerInput actionBttn checkboxGroupButtons awesomeRadio updateCheckboxGroupButtons
 #' @importFrom shinyjs hidden disable show hide enable html click delay useShinyjs extendShinyjs runjs js addClass
 #' @importFrom shinydashboard box dashboardPage dashboardHeader dashboardSidebar sidebarMenu dashboardBody valueBox valueBoxOutput renderValueBox
