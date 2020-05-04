@@ -14,3 +14,4 @@ inst/scratch/
 inst/approvals/
 inst/presentations/
 ^CONDUCT\.md$
+^CRAN-RELEASE$

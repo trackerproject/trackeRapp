@@ -65,6 +65,7 @@ server <- function(input, output, session) {
     observeEvent(input$uploadButton, {
         no_raw_directory_selected <- is.null(input$rawDataDirectory$datapath)
         no_processed_file_selected <- is.null(input$processedDataPath$datapath)
+        
         if (no_raw_directory_selected & no_processed_file_selected) {
             trackeRapp:::show_warning_no_data_selected()
         }
@@ -81,7 +82,7 @@ server <- function(input, output, session) {
                 to <- file.path(dirname(from), basename(input$rawDataDirectory$name))
                 file.rename(from, to)
                 directory <- dirname(to[1])
-                ## Process raw data
+                ## Process raw data               
                 raw_data <- trackeRapp:::read_directory_shiny(
                                              directory = directory,
                                              timezone = "GMT",
@@ -147,10 +148,9 @@ server <- function(input, output, session) {
     ## Sessions selected from plots using box/lasso selection
     observeEvent(plotly::event_data("plotly_selected"), {
         trackeRapp:::generate_selected_sessions_object(data, input,
-                                                       plot_selection = TRUE)
+                                                       plot_selection = TRUE)    
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
-        shinyWidgets::updatePickerInput(session = session, inputId =
-                                                               "'metricsSelected",
+        shinyWidgets::updatePickerInput(session = session, inputId = "metricsSelected",
                                         selected = selected_metrics(),
                                         choices = metrics_available_sport())
     })
@@ -205,7 +205,7 @@ server <- function(input, output, session) {
 
     ##  Uploading sample dataset
     observeEvent(input$uploadSampleDataset, {
-        removeModal()
+        removeModal()        
         filepath <- system.file("extdata/sample.rds", package = "trackeRapp")
         data$object <- readRDS(filepath)
         ## See helper file
@@ -226,14 +226,14 @@ server <- function(input, output, session) {
 
     ## Message and actions on firefox issues
     shinyjs::runjs('Shiny.setInputValue("browser", bowser.name);')
-    observeEvent(input$browser, {
-        if (grepl("firef", input$browser, ignore.case = TRUE)) {
-            shinyjs::show(id = "firefoxmessage")
-            shinyjs::disable(id = "resetButton")
-            shinyjs::disable(id = "uploadButton")
-            shinyjs::disable(id = "download_data")
-        }
-    })
+    ## observeEvent(input$browser, {
+    ##     if (grepl("firef", input$browser, ignore.case = TRUE)) {
+    ##         shinyjs::show(id = "firefoxmessage")
+    ##         shinyjs::disable(id = "resetButton")
+    ##         shinyjs::disable(id = "uploadButton")
+    ##         shinyjs::disable(id = "download_data")
+    ##     }
+    ## })
 
     ## Session summaries page
     observeEvent(input$createDashboard, {
@@ -286,8 +286,6 @@ server <- function(input, output, session) {
                                                                    "Average heart rate", data)
         output$avgPace_box <- trackeRapp:::render_summary_box("avgPace",
                                                               "Average pace", data)
-        ## output$avgAltitude_box <- trackeRapp:::render_summary_box("avgAltitude",
-        ##                                                           "Average altitude", data)
         output$total_elevation_gain_box <- trackeRapp:::render_summary_box("total_elevation_gain",
                                                                            "Total elevation gain", data)
         output$avgTemperature_box <- trackeRapp:::render_summary_box("avgTemperature",
@@ -323,8 +321,8 @@ server <- function(input, output, session) {
             })
 
             deselected_data <- reactive({
-                sessions <- seq_along(data$object)[data$is_location_data]
-                sessions <- sessions[!(sessions %in% data$selected_sessions)]
+                sessions <- seq_along(data$object)[data$is_location_data]                
+                sessions <- sessions[!(sessions %in% data$selected_sessions)]                
                 if (length(sessions)) {
                     out <- trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
                     out$col <- ifelse(out$sport == "running",
@@ -349,19 +347,15 @@ server <- function(input, output, session) {
 
             ## Update map based on current selection
             observeEvent(data$selected_sessions, {
-                ## Profile memory usage
-                ## print(pryr:::object_size(data))
-
                 withProgress(message = 'Map', value = 0, {
                     sel <- selected_data()
                     des <- deselected_data()
                     incProgress(1/2, detail = "Preparing routes")
                     ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-
-                    incProgress(1/1, detail = "Mapping")
+                    incProgress(1/1, detail = "Mapping")                    
                     if (!is.null(des)) {
                         p <- mapdeck::mapdeck_update(map_id = "map")
-                        p <- mapdeck::clear_path(p, "deselection_path")
+                        p <- mapdeck::clear_path(p, "deselection_path")                        
                         p <- mapdeck::add_path(p,
                                                data = des,
                                                stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),
@@ -382,14 +376,16 @@ server <- function(input, output, session) {
                                                update_view = TRUE,
                                                focus_layer = TRUE)
                         centroids <- sf::st_centroid(sel)
-                        p <- mapdeck::add_screengrid(p,
-                                                     data = centroids,
-                                                     colour_range = rev(colorspace::sequential_hcl(h = 10, power = 1, c = 65, l = 70, n = 6)),
-                                                     cell_size = 20,
-                                                     opacity = 0.1)
+                        if (!isTRUE(grepl("safar", input$browser, ignore.case = TRUE))) {
+                            p <- mapdeck::add_screengrid(p,
+                                                         data = centroids,
+                                                         colour_range = rev(colorspace::sequential_hcl(h = 10, power = 1, c = 65, l = 70, n = 6)),
+                                                         cell_size = 20,
+                                                         opacity = 0.1)
+                        }
                     }
                 })
-            }, priority = -3)
+            })
         }
 
         ## Sessions summaries plots

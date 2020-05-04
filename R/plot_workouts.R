@@ -144,7 +144,7 @@ plot_workouts <- function(data,
            paper_bgcolor = "rgba(0, 0, 0, 0)") %>%
         ## for list of modebar buttons, see
         ## https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js
-        config(collaborate = FALSE, displaylogo = FALSE,
+        config(displaylogo = FALSE,
                modeBarButtonsToRemove = list("zoomIn2d",
                                              "zoomOut2d",
                                              "autoScale2d",
