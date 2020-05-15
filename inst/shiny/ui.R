@@ -44,7 +44,7 @@ ui <- tagList(
                       shinydashboard::sidebarMenu(
                                           br(),
                                           fileInput("processedDataPath",
-                                                    "Import processed data (rda)",
+                                                    "Import processed data (rds)",
                                                     multiple = FALSE,
                                                     buttonLabel = icon("folder-open"),
                                                     accept = c(".rds")),
