@@ -44,7 +44,7 @@ ui <- tagList(
                       shinydashboard::sidebarMenu(
                                           br(),
                                           fileInput("processedDataPath",
-                                                    "Import processed data (rda)",
+                                                    "Import processed data (rds)",
                                                     multiple = FALSE,
                                                     buttonLabel = icon("folder-open"),
                                                     accept = c(".rds")),
@@ -149,7 +149,9 @@ ui <- tagList(
                       ## Browser checks
                       tags$head(tags$script(src="bowser.min.js")),
                       tags$head(tags$script(src="buttons.js")),
-                      shinyjs::extendShinyjs(text = opts$custom_js),
+                      shinyjs::extendShinyjs(text = opts$custom_js,
+                                             functions = c("window.onbeforeunload",
+                                                           "collapse", "reset_page", "no_sports")),
                       ## A hack to load the right js
                       mapdeck::mapdeckOutput(outputId = "dummy_map")
                       ))))

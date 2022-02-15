@@ -1,9 +1,9 @@
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/trackeRapp)](https://cran.r-project.org/package=trackeRapp)
-[![Travis-CI Build Status](https://travis-ci.org/trackerproject/trackeRapp.svg?branch=master)](https://travis-ci.org/trackerproject/trackeRapp)
+[![Travis-CI Build
+Status](https://travis-ci.org/trackerproject/trackeRapp.svg?branch=master)](https://travis-ci.org/trackerproject/trackeRapp)
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-trackeRapp <img src="README_files/hex_trackeRapp.svg" width="320" align="right">
-================================================================================
+# trackeRapp <img src="README_files/hex_trackeRapp.svg" width="320" align="right">
 
 [**trackeRapp**](https://trackerapp.com) is a
 [**shiny**](http://shiny.rstudio.com) interface for the analysis and
@@ -22,8 +22,7 @@ structured R object, and finally to export that object so that it can be
 used for future analyses not only within **trackeRapp** but also for
 more advanced modelling in R.
 
-Installation
-------------
+## Installation
 
 **trackeRapp** can be installed by typing
 
@@ -32,11 +31,10 @@ Installation
 The development version of **trackeRapp** can also be installed directly
 from github by doing
 
-    # install.packages("devtools")
-    devtools::install_github("trackerproject/trackeRapp")
+    # install.packages("remotes")
+    remotes::install_github("trackerproject/trackeRapp")
 
-Getting started
----------------
+## Getting started
 
 See the [**tour de
 trackeRapp**](https://trackerproject.github.io/trackeRapp/) pages for
@@ -74,16 +72,14 @@ Session summaries
 
 <img src="README_files/selected_workouts.png" width="95%" style="display: block; margin: auto;" />
 
-Video channel
--------------
+## Video channel
 
 **trackeRapp** has a dedicated [YouTube
 channel](https://www.youtube.com/channel/UCY6y-pw8d1kek1WAIWiVhhw). The
 channel features video tutorials about **trackeRapp** and the workflow
 it provides.
 
-Launching the user-interface
-----------------------------
+## Launching the user-interface
 
 The web-interface can be accessed remotely at
 <https://www.trackerapp.com> or on a local machine by doing:
@@ -93,8 +89,7 @@ The web-interface can be accessed remotely at
     # Open the interface in the browser
     trackeR_app()
 
-Code of Conduct
----------------
+## Code of Conduct
 
 Please note that this project is released with a [Contributor Code of
 Conduct](CONDUCT.md). By participating in this project you agree to

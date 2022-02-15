@@ -35,7 +35,7 @@ server <- function(input, output, session) {
     shinyjs::runjs('$(document).on("click", ".dropdown-menu", function (e) {
                      e.stopPropagation();
                     });
-                    window.onbeforeunload = function(e) {
+                    shinyjs.window.onbeforeunload = function(e) {
                     e = e || window.event;
                     if (e) {
                      e.returnValue = "Sure?";
@@ -65,7 +65,7 @@ server <- function(input, output, session) {
     observeEvent(input$uploadButton, {
         no_raw_directory_selected <- is.null(input$rawDataDirectory$datapath)
         no_processed_file_selected <- is.null(input$processedDataPath$datapath)
-        
+
         if (no_raw_directory_selected & no_processed_file_selected) {
             trackeRapp:::show_warning_no_data_selected()
         }
@@ -82,7 +82,7 @@ server <- function(input, output, session) {
                 to <- file.path(dirname(from), basename(input$rawDataDirectory$name))
                 file.rename(from, to)
                 directory <- dirname(to[1])
-                ## Process raw data               
+                ## Process raw data
                 raw_data <- trackeRapp:::read_directory_shiny(
                                              directory = directory,
                                              timezone = "GMT",
@@ -148,7 +148,7 @@ server <- function(input, output, session) {
     ## Sessions selected from plots using box/lasso selection
     observeEvent(plotly::event_data("plotly_selected"), {
         trackeRapp:::generate_selected_sessions_object(data, input,
-                                                       plot_selection = TRUE)    
+                                                       plot_selection = TRUE)
         DT::selectRows(proxy = proxy, selected = data$selected_sessions)
         shinyWidgets::updatePickerInput(session = session, inputId = "metricsSelected",
                                         selected = selected_metrics(),
@@ -205,7 +205,7 @@ server <- function(input, output, session) {
 
     ##  Uploading sample dataset
     observeEvent(input$uploadSampleDataset, {
-        removeModal()        
+        removeModal()
         filepath <- system.file("extdata/sample.rds", package = "trackeRapp")
         data$object <- readRDS(filepath)
         ## See helper file
@@ -226,14 +226,6 @@ server <- function(input, output, session) {
 
     ## Message and actions on firefox issues
     shinyjs::runjs('Shiny.setInputValue("browser", bowser.name);')
-    ## observeEvent(input$browser, {
-    ##     if (grepl("firef", input$browser, ignore.case = TRUE)) {
-    ##         shinyjs::show(id = "firefoxmessage")
-    ##         shinyjs::disable(id = "resetButton")
-    ##         shinyjs::disable(id = "uploadButton")
-    ##         shinyjs::disable(id = "download_data")
-    ##     }
-    ## })
 
     ## Session summaries page
     observeEvent(input$createDashboard, {
@@ -321,8 +313,8 @@ server <- function(input, output, session) {
             })
 
             deselected_data <- reactive({
-                sessions <- seq_along(data$object)[data$is_location_data]                
-                sessions <- sessions[!(sessions %in% data$selected_sessions)]                
+                sessions <- seq_along(data$object)[data$is_location_data]
+                sessions <- sessions[!(sessions %in% data$selected_sessions)]
                 if (length(sessions)) {
                     out <- trackeRapp:::get_coords(data, sessions = sessions, keep = opts$coordinates_keep)
                     out$col <- ifelse(out$sport == "running",
@@ -352,10 +344,10 @@ server <- function(input, output, session) {
                     des <- deselected_data()
                     incProgress(1/2, detail = "Preparing routes")
                     ## FIXME: mapdeck gets confused with the tooltips if we do not do the below
-                    incProgress(1/1, detail = "Mapping")                    
+                    incProgress(1/1, detail = "Mapping")
                     if (!is.null(des)) {
                         p <- mapdeck::mapdeck_update(map_id = "map")
-                        p <- mapdeck::clear_path(p, "deselection_path")                        
+                        p <- mapdeck::clear_path(p, "deselection_path")
                         p <- mapdeck::add_path(p,
                                                data = des,
                                                stroke_colour = paste0(opts$summary_plots_deselected_colour, "80"),

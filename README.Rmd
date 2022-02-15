@@ -38,8 +38,8 @@ install.packages("trackeRapp")
 The development version of **trackeRapp** can also be installed directly from github by doing
 
 ```{r eval = FALSE}
-# install.packages("devtools")
-devtools::install_github("trackerproject/trackeRapp")
+# install.packages("remotes")
+remotes::install_github("trackerproject/trackeRapp")
 ```
 
 ## Getting started
