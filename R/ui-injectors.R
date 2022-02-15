@@ -293,7 +293,7 @@ create_summary_timeline_boxes <- function() {
                          id = "summary_box",
                          width = 6,
                          collapsible = TRUE,
-                         title = tagList(icon("reorder"), "Workout summary"),
+                         title = tagList(icon("bars"), "Workout summary"),
                          DTOutput("summary", height = "365px")),
                      box(
                          id = "workout_timeline_box",

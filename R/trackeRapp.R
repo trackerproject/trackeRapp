@@ -19,7 +19,7 @@
 #' videos, explanation of the workflow and visualizations that
 #' \pkg{trackeRapp} offers, and to, generally, learn more about
 #' \pkg{trackeRapp} and all of its capabilities.
-#' 
+#'
 #'
 #' @section Video channel:
 #' \pkg{trackeRapp} has a dedicated YouTube channel at
